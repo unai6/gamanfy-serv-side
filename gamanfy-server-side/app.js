@@ -57,7 +57,7 @@ app.use(
     origin: [process.env.PUBLIC_DOMAIN],
   })
 ); */
-var allowCrossDomain = function(req, res, next) {
+let allowCrossDomain = function(req, res, next) {
   res.header('Access-Control-Allow-Origin', [process.env.PUBLIC_DOMAIN], 'https://gamanfy-c2371.firebaseapp.com');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
