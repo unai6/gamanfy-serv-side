@@ -51,7 +51,7 @@ app.use(
 );
 
 // CORS MIDDLEWARE SETUP
-let whitelist = [[process.env.PUBLIC_DOMAIN]]
+let whitelist = [[process.env.PUBLIC_DOMAIN], 'https://gamanfy-c2371.firebaseapp.com/']
 let corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
