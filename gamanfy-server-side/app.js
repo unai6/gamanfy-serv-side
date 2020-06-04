@@ -12,7 +12,7 @@ const logger = require('morgan');
 const hbs = require('hbs')
 
 const indexRouter = require('./routes/index');
-const userAuthRouter= require('./routes/auth/userAuth.js')
+const userAuthRouter = require('./routes/auth/userAuth.js')
 const companyAuthRouter = require('./routes/auth/companyAuth.js')
 
 
@@ -29,12 +29,12 @@ mongoose
     useUnifiedTopology: true,
     keepAlive: true,
     useNewUrlParser: true,
-    useFindAndModify: false 
+    useFindAndModify: false
   })
   .then(() => console.log(`Connected to database`))
   .catch((err) => console.error(err));
 
-  // SESSION MIDDLEWARE
+// SESSION MIDDLEWARE
 app.use(
   session({
     store: new MongoStore({
@@ -57,15 +57,18 @@ app.use(
     origin: [process.env.PUBLIC_DOMAIN],
   })
 ); */
-var allowCrossDomain = function(req, res, next) {
+var allowCrossDomain = function (req, res, next) {
   res.header('Access-Control-Allow-Origin', [process.env.PUBLIC_DOMAIN]);
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  // res.header('Access-Control-Allow-Credentials', true)
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, HEAD');
+  res.header('Access-Control-Allow-Headers', "'origin, content-type, accept, authorization, x-requested-with," + "append, delete, entries, foreach, get, has, keys, set, values'");
+  res.header("Access-Control-Max-Age", '3600')
+  res.header('Access-Control-Allow-Credentials', true)
 
   next();
 }
 app.use(allowCrossDomain);
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
@@ -84,7 +87,7 @@ app.use('/auth-co', companyAuthRouter);
 
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
