@@ -34,6 +34,26 @@ mongoose
   .then(() => console.log(`Connected to database`))
   .catch((err) => console.error(err));
 
+  // CORS MIDDLEWARE SETUP
+ /*   app.use(
+    cors({
+      credentials: true,
+      origin: [process.env.PUBLIC_DOMAIN, process.env.APP_DOMAIN]
+    })
+  );  */
+  
+  let allowCrossDomain = function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', [process.env.PUBLIC_DOMAIN]);
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, HEAD');
+    res.header('Access-Control-Allow-Headers', "'Origin, Content-Type, Accept, Authorization, X-Requested-With," + "Append, Delete, Entries, Foreach, Get, Has, Keys, Set, lues'");
+    res.header("Access-Control-Max-Age", '3600');
+    res.header('Access-Control-Allow-Credentials', true);
+    res.header('Vary', 'Origin');
+  
+    next();
+  }
+  app.use(allowCrossDomain) ; 
+
 // SESSION MIDDLEWARE
 app.use(
   session({
@@ -50,21 +70,6 @@ app.use(
   })
 );
 
-// CORS MIDDLEWARE SETUP
-/*  app.use(
-  cors({
-    credentials: true,
-    origin: [process.env.PUBLIC_DOMAIN, process.env.APP_DOMAIN]
-  })
-); */ 
- 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', [process.env.PUBLIC_DOMAIN]);
-  res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-COntrol-Allow-Request-Method');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-  res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
-  next();
-})  
 
 
 // view engine setup
