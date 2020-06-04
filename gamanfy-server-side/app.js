@@ -72,9 +72,9 @@ app.use(
   res.header('Access-Control-Allow-Credentials', true)
 
   next();
-} */
+} 
 
-app.use(allowCrossDomain);
+app.use(allowCrossDomain);*/
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
