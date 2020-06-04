@@ -58,14 +58,12 @@ app.use(
   })
 ); */
 var allowCrossDomain = function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', [process.env.PUBLIC_DOMAIN]);
-  res.header('Access-Control-Allow-Methods', 'OPTIONS, GET,PUT,POST,DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  res.header('Access-Control-Allow-Credentials', true)
-
-  next();
+  res.header("Access-Control-Allow-Origin", "*"); // allow requests from any other server
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE'); // allow these verbs
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Cache-Control");
 }
-app.use(allowCrossDomain);
+  app.use(allowCrossDomain); // plumbing it in as middleware
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
