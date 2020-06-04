@@ -12,9 +12,9 @@ const logger = require('morgan');
 const hbs = require('hbs')
 
 const indexRouter = require('./routes/index');
-const userAuthRouter = require('./routes/auth/userAuth.js')
-const companyAuthRouter = require('./routes/auth/companyAuth.js')
-
+const userAuthRouter = require('./routes/auth/userAuth.js');
+const companyAuthRouter = require('./routes/auth/companyAuth.js');
+const offersRouter = require('./routes/offers/offers.js');
 
 
 const app = express();
@@ -53,7 +53,7 @@ app.use(
 // CORS MIDDLEWARE SETUP
  app.use(
   cors({
-    credentials: true,
+ /*    credentials: true, */
     origin: [process.env.PUBLIC_DOMAIN, process.env.APP_DOMAIN]
   })
 ); 
@@ -83,6 +83,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/auth', userAuthRouter);
 app.use('/auth-co', companyAuthRouter);
+app.use('/offers', offersRouter);
 
 
 
