@@ -53,7 +53,7 @@ app.use(
 // CORS MIDDLEWARE SETUP
  app.use(
   cors({
- /*    credentials: true, */
+    credentials: true,
     origin: [process.env.PUBLIC_DOMAIN, process.env.APP_DOMAIN]
   })
 ); 
