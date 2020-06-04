@@ -95,7 +95,7 @@ router.post(
                     if (err) { return res.status(500).send({ msg: err.message }); }
                     res.status(200).send('A verification email has been sent to ' + newUser.email + '.');
                 });
-
+                console.log(newUser.firstName)
                 res.status(200).json(newUser);
 
             }
