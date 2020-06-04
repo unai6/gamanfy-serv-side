@@ -68,7 +68,7 @@ app.use(
 }
 app.use(allowCrossDomain) */;
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", [process.env.PUBLIC_DOMAIN]  );
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
