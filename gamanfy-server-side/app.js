@@ -57,16 +57,28 @@ app.use(
     origin: [process.env.PUBLIC_DOMAIN],
   })
 ); */
-var allowCrossDomain = function (req, res, next) {
+/* var allowCrossDomain = function (req, res, next) {
   res.header('Access-Control-Allow-Origin', [process.env.PUBLIC_DOMAIN]);
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, HEAD');
   res.header('Access-Control-Allow-Headers', "'origin, content-type, accept, authorization, x-requested-with," + "append, delete, entries, foreach, get, has, keys, set, values'");
-  res.header("Access-Control-Max-Age", '3600')
-  res.header('Access-Control-Allow-Credentials', true)
+  res.header("Access-Control-Max-Age", '3600');
+  res.header('Access-Control-Allow-Credentials', true);
 
   next();
 }
-app.use(allowCrossDomain);
+app.use(allowCrossDomain) */;
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PATCH, DELETE, OPTIONS"
+  );
+  next();
+});
 
 
 // view engine setup
