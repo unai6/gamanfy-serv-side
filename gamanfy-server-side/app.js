@@ -61,7 +61,7 @@ app.use(
 var allowCrossDomain = function (req, res, next) {
   res.header('Access-Control-Allow-Origin', [process.env.PUBLIC_DOMAIN]);
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, HEAD');
-  res.header('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, Authorization, X-Requested-With,'+ 'Append, Delete, Entries, Foreach, Get, Has, Keys, Set, lues');
+  res.header('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, Authorization, X-Requested-With');
   res.header("Access-Control-Max-Age", '3600');
   res.header('Access-Control-Allow-Credentials', true);
 
