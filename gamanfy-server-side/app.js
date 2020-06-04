@@ -58,9 +58,11 @@ app.use(
   })
 ); */
 var allowCrossDomain = function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", [process.env.PUBLIC_DOMAIN]); // allow requests from any other server
+  res.header("Access-Control-Allow-Origin", process.env.PUBLIC_DOMAIN ); // allow requests from any other server
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE'); // allow these verbs
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Cache-Control");
+  res.header("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept, Cache-Control");
+  res.header('Access-Control-Allow-Credentials', 'true');
+  next();
 }
   app.use(allowCrossDomain); // plumbing it in as middleware
 
