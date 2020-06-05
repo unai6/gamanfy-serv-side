@@ -35,24 +35,13 @@ mongoose
   .catch((err) => console.error(err));
 
   // CORS MIDDLEWARE SETUP
- /*   app.use(
+  app.use(
     cors({
       credentials: true,
       origin: [process.env.PUBLIC_DOMAIN, process.env.APP_DOMAIN]
     })
-  );  */
-  
-  let allowCrossDomain = function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', [process.env.PUBLIC_DOMAIN]);
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, HEAD');
-    res.header('Access-Control-Allow-Headers', "'Origin, Content-Type, Accept, Authorization, X-Requested-With," + "Append, Delete, Entries, Foreach, Get, Has, Keys, Set, lues'");
-    res.header("Access-Control-Max-Age", '3600');
-    res.header('Access-Control-Allow-Credentials', true);
-    res.header('Vary', [process.env.PUBLIC_DOMAIN]);
-  
-    next();
-  }
-  app.use(allowCrossDomain) ; 
+  );  
+
 
 // SESSION MIDDLEWARE
 app.use(
