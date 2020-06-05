@@ -27,6 +27,7 @@ const companySchema = new Schema({
   yearsExp: String,
   website: String,
   numberOfEmployees: String,
+  description:String,
 },
 
   {

@@ -170,10 +170,10 @@ router.post('/company/:companyId/complete-profile', async (req, res, next) => {
     try {
         const { companyId } = req.params;
         const checkCompany = await Company.findById(companyId);
-        const { companyName, taxId, countryCode, country, provinceCode, provinceDescription, provinceINEcode, municipalityINEcode, street, number, zip, provinceName, municipality, website, phoneNumber, numberOfEmployees, _01_Administración_gubernamental, _02_Aeronáutica_aviación, _03_Agricultura, _04_Alimentación_y_bebidas, _05_Almacenamiento, _06_Arquitectura_y_planificación, _07_Artes_escénicas, _08_Artesanía, _09_Artículos_de_consumo, _10_Artículos_de_lujo_y_joyas, _11_Artículos_deportivos, _12_Atención_a_la_salud_mental, _13_Atención_sanitaria_y_hospitalaria, _14_Automación_industrial, _15_Banca, _16_Bellas_artes, _17_Bienes_inmobiliarios, _18_Biotecnología, _19_Construcción, _20_Consultoría, _21_Contabilidad, _22_Cosmética, _23_Deportes, _24_Derecho, _25_Desarrollo_de_programación, _26_Diseño, _27_Diseño_gráfico, _28_Dotación_y_selección_de_personal, _29_Educación_primaria_secundaria, _30_Energía_renovable_y_medio_ambiente, _31_Enseñanza_superior, _32_Entretenimiento, _33_Equipos_informáticos } = req.body;
+        const { description, companyName, taxId, countryCode, country, provinceCode, provinceDescription, provinceINEcode, municipalityINEcode, street, number, zip, provinceName, municipality, website, phoneNumber, numberOfEmployees, _01_Administración_gubernamental, _02_Aeronáutica_aviación, _03_Agricultura, _04_Alimentación_y_bebidas, _05_Almacenamiento, _06_Arquitectura_y_planificación, _07_Artes_escénicas, _08_Artesanía, _09_Artículos_de_consumo, _10_Artículos_de_lujo_y_joyas, _11_Artículos_deportivos, _12_Atención_a_la_salud_mental, _13_Atención_sanitaria_y_hospitalaria, _14_Automación_industrial, _15_Banca, _16_Bellas_artes, _17_Bienes_inmobiliarios, _18_Biotecnología, _19_Construcción, _20_Consultoría, _21_Contabilidad, _22_Cosmética, _23_Deportes, _24_Derecho, _25_Desarrollo_de_programación, _26_Diseño, _27_Diseño_gráfico, _28_Dotación_y_selección_de_personal, _29_Educación_primaria_secundaria, _30_Energía_renovable_y_medio_ambiente, _31_Enseñanza_superior, _32_Entretenimiento, _33_Equipos_informáticos } = req.body;
         let addressId = await Address.create({ countryCode, country, provinceINEcode, municipalityINEcode, street, number, zip, municipality, provinceName, provinceCode, provinceDescription });
         let sectorId = await Sector.create({ _01_Administración_gubernamental, _02_Aeronáutica_aviación, _03_Agricultura, _04_Alimentación_y_bebidas, _05_Almacenamiento, _06_Arquitectura_y_planificación, _07_Artes_escénicas, _08_Artesanía, _09_Artículos_de_consumo, _10_Artículos_de_lujo_y_joyas, _11_Artículos_deportivos, _12_Atención_a_la_salud_mental, _13_Atención_sanitaria_y_hospitalaria, _14_Automación_industrial, _15_Banca, _16_Bellas_artes, _17_Bienes_inmobiliarios, _18_Biotecnología, _19_Construcción, _20_Consultoría, _21_Contabilidad, _22_Cosmética, _23_Deportes, _24_Derecho, _25_Desarrollo_de_programación, _26_Diseño, _27_Diseño_gráfico, _28_Dotación_y_selección_de_personal, _29_Educación_primaria_secundaria, _30_Energía_renovable_y_medio_ambiente, _31_Enseñanza_superior, _32_Entretenimiento, _33_Equipos_informáticos });
-        const updatedCompany = await Company.findByIdAndUpdate(checkCompany, { companyName, sectorId, taxId, addressId, website, phoneNumber, numberOfEmployees, website }, { new: true })
+        const updatedCompany = await Company.findByIdAndUpdate(checkCompany, { description, companyName, sectorId, taxId, addressId, website, phoneNumber, numberOfEmployees, website }, { new: true })
         req.session.currentUser = updatedCompany;
         res.status(200).json({ updatedCompany });
 
@@ -195,7 +195,7 @@ router.post('/company/:companyId/edit-profile', async (req, res, next) => {
         //addresses
         const { countryCode, provinceINEcode, municipalityINEcode, street, number, zip, provinceName, provinceCode, provinceDescription, municipalityCode, municipalityDescription } = req.body;
         //company
-        const { companyName, email, password, isHeadHunter, taxId, contactPerson, yearsExp, website, phoneNumber, numberOfEmployees, country, city } = req.body;
+        const {description, companyName, email, password, isHeadHunter, taxId, contactPerson, yearsExp, website, phoneNumber, numberOfEmployees, country, city } = req.body;
         console.log(req.session.currentUser)
 
         let addressId = await Address.findByIdAndUpdate(checkCompany.addressId, { $set: { province: { provinceName, provinceCode, provinceDescription }, municipality: { municipalityCode, municipalityDescription } }, countryCode, country, provinceINEcode, municipalityINEcode, street, number, zip }, { new: true });
@@ -204,7 +204,7 @@ router.post('/company/:companyId/edit-profile', async (req, res, next) => {
 
         const salt = bcrypt.genSaltSync(saltRounds);
         const hashPass = bcrypt.hashSync(password, salt);
-        const updatedCompany = await Company.findByIdAndUpdate(checkCompany, { addressId, sectorId, companyName, firstName, lastName, email, password: hashPass, isHeadHunter, taxId, contactPerson, yearsExp, website, phoneNumber, numberOfEmployees, city, country }, { new: true });
+        const updatedCompany = await Company.findByIdAndUpdate(checkCompany, { description, addressId, sectorId, companyName, firstName, lastName, email, password: hashPass, isHeadHunter, taxId, contactPerson, yearsExp, website, phoneNumber, numberOfEmployees, city, country }, { new: true });
 
         req.session.currentUser = updatedCompany;
         res.status(200).json({ updatedCompany });
