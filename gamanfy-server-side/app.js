@@ -57,9 +57,6 @@ mongoose
       cors({
         credentials: true,
         origin: [process.env.PUBLIC_DOMAIN],
-        methods:['GET,HEAD,PUT,PATCH,POST,DELETE, OPTIONS'],
-        allowedHeaders:'Content-Type, Authorization',
-        preflightContinue:true,
         maxAge:3600
       })
       );  
