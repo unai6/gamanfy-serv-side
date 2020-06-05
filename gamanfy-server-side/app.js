@@ -34,35 +34,34 @@ mongoose
   .then(() => console.log(`Connected to database`))
   .catch((err) => console.error(err));
 
-  // CORS MIDDLEWARE SETUP
+  
+  
+  // SESSION MIDDLEWARE
   app.use(
-    cors({
-      credentials: true,
-      origin: [process.env.PUBLIC_DOMAIN],
-      methods:['GET,HEAD,PUT,PATCH,POST,DELETE, OPTIONS'],
-      allowedHeaders:'Content-Type, Authorization',
-      preflightContinue:false,
-      maxAge:3600
+    session({
+      store: new MongoStore({
+        mongooseConnection: mongoose.connection,
+        ttl: 24 * 60 * 60, // 1 day
+      }),
+      secret: process.env.SECRET_SESSION,
+      resave: true,
+      saveUninitialized: true,
+      cookie: {
+        maxAge: 24 * 60 * 60 * 1000,
+      },
     })
-    );  
-
-
-// SESSION MIDDLEWARE
-app.use(
-  session({
-    store: new MongoStore({
-      mongooseConnection: mongoose.connection,
-      ttl: 24 * 60 * 60, // 1 day
-    }),
-    secret: process.env.SECRET_SESSION,
-    resave: true,
-    saveUninitialized: true,
-    cookie: {
-      maxAge: 24 * 60 * 60 * 1000,
-    },
-  })
-);
-
+    );
+    
+    // CORS MIDDLEWARE SETUP
+    app.use(
+      cors({
+        credentials: true,
+        origin: [process.env.PUBLIC_DOMAIN],
+        methods:['GET,HEAD,PUT,PATCH,POST,DELETE, OPTIONS'],
+        allowedHeaders:'Content-Type, Authorization',
+        maxAge:3600
+      })
+      );  
 
 
 // view engine setup
