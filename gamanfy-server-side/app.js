@@ -39,7 +39,7 @@ mongoose
     cors({
       credentials: true,
       origin: [process.env.PUBLIC_DOMAIN],
-      methods:['GET,HEAD,PUT,PATCH,POST,DELETE'],
+      methods:['GET,HEAD,PUT,PATCH,POST,DELETE, OPTIONS'],
       allowedHeaders:'Content-Type, Authorization',
       preflightContinue:false,
       maxAge:3600
