@@ -38,7 +38,7 @@ mongoose
   app.use(
     cors({
       credentials: true,
-      origin: [process.env.PUBLIC_DOMAIN, process.env.APP_DOMAIN]
+      origin: [process.env.PUBLIC_DOMAIN]
     })
   );  
 
