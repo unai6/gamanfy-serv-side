@@ -38,7 +38,11 @@ mongoose
   app.use(
     cors({
       credentials: true,
-      origin: [process.env.PUBLIC_DOMAIN]
+      origin: [process.env.PUBLIC_DOMAIN],
+      methods:'GET,HEAD,PUT,PATCH,POST,DELETE',
+      allowedHeaders:'Content-Type,Authorization',
+      preflightContinue:true,
+      optionsSuccessStatus:204
     })
   );  
 
