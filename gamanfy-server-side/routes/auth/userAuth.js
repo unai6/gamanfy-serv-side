@@ -66,7 +66,7 @@ router.post(
                     if (err) { return res.status(500).send({ msg: err.message }); }
                 });
 
-                let transporter = nodemailer.createTransport({
+                let transporter = await nodemailer.createTransport({
 
                     host: 'smtp.ionos.es',
                     port: 587,
