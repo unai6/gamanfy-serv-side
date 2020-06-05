@@ -45,6 +45,7 @@ mongoose
       optionsSuccessStatus:204
     })
   );  
+  console.log(cors)
 
 
 // SESSION MIDDLEWARE
