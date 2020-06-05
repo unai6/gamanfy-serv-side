@@ -39,13 +39,13 @@ mongoose
     cors({
       credentials: true,
       origin: [process.env.PUBLIC_DOMAIN],
-      methods:'GET,HEAD,PUT,PATCH,POST,DELETE',
+      methods:['GET,HEAD,PUT,PATCH,POST,DELETE'],
       allowedHeaders:'Content-Type,Authorization',
-      preflightContinue:true,
-      optionsSuccessStatus:204
+      preflightContinue:false,
+      optionsSuccessStatus:204,
+      maxAge:3600
     })
-  );  
-  console.log(cors)
+    );  
 
 
 // SESSION MIDDLEWARE
