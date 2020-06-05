@@ -40,9 +40,8 @@ mongoose
       credentials: true,
       origin: [process.env.PUBLIC_DOMAIN],
       methods:['GET,HEAD,PUT,PATCH,POST,DELETE'],
-      allowedHeaders:'Content-Type,Authorization',
+      allowedHeaders:'Content-Type, Authorization',
       preflightContinue:false,
-      optionsSuccessStatus:204,
       maxAge:3600
     })
     );  
