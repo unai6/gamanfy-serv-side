@@ -56,7 +56,7 @@ mongoose
     app.use(
       cors({
         credentials: true,
-        origin:['http://localhost:3000', 'https://gamanfy-c2371.firebaseapp.com/']
+        origin:["http://localhost:3000", "https://gamanfy-c2371.firebaseapp.com/"]
       })
       );  
 
