@@ -50,7 +50,7 @@ router.post(
             } else if(password !== repeatPassword){
                 return res.json('Passwords must match');
             }
-            const emailExists = await InfluencerUser.findOne({ email }, 'email');
+            const emailExists = await InfluencerUser.findOne({ email });
 
             if (emailExists) {
                 console.log('email already exists in db');
