@@ -36,7 +36,7 @@ const jobOfferSchema = new Schema  ({
 
       jobOfferData:[{
             type:{type:String},
-            name:{type:String},
+            jobName:{type:String},
             onDate: {type:String},
             offDate: {type:String},
             processState: {type:Boolean, default: false},
@@ -47,16 +47,18 @@ const jobOfferSchema = new Schema  ({
             personsOnCharge: {type:String},
             contractType: {type:Schema.Types.ObjectId, ref:'Contract'},     
             jobDescription:[{
+                  type:{type: String},
                   mainMission: String,
                   jobDescription:String,
                   team:String
             }],
             manager:[{
+                  type:{type: String},
                   managerDescription:String,
                   managerName: String
             }],
 
-            killerQuestions: {type:Schema.Types.ObjectId, ref:'Contract'}
+            killerQuestions: {type:Schema.Types.ObjectId, ref:'KillerQ'}
             
       }],
 
@@ -87,7 +89,6 @@ const jobOfferSchema = new Schema  ({
             question3:{type:String},
             question4:{type:String},
             question5:{type:String},
-
       }]
 
 

@@ -56,8 +56,7 @@ mongoose
     app.use(
       cors({
         credentials: true,
-        origin: [process.env.PUBLIC_DOMAIN],
-        maxAge:3600
+        origin:['http://localhost:3000', 'https://gamanfy-c2371.firebaseapp.com/']
       })
       );  
 
