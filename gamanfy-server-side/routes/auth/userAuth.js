@@ -177,7 +177,6 @@ router.post('/user/:userId/complete-profile', async (req, res, next) => {
         const checkUser = await InfluencerUser.findById(userId);
 
         let addressId = await Address.create({ countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip });
-        // await addressId.findByIdAndUpdate(checkUser.addressId, { $set: { province: { provinceName, provinceCode, provinceDescription }, municipality: { municipalityCode, municipalityDescription } }, countryCode, country, provinceINEcode, municipalityINEcode, street, number, zip }, { new: true });
         let sectorId = await Sector.create({ _01_Administración_gubernamental, _02_Aeronáutica_aviación, _03_Agricultura, _04_Alimentación_y_bebidas, _05_Almacenamiento, _06_Arquitectura_y_planificación, _07_Artes_escénicas, _08_Artesanía, _09_Artículos_de_consumo, _10_Artículos_de_lujo_y_joyas, _11_Artículos_deportivos, _12_Atención_a_la_salud_mental, _13_Atención_sanitaria_y_hospitalaria, _14_Automación_industrial, _15_Banca, _16_Bellas_artes, _17_Bienes_inmobiliarios, _18_Biotecnología, _19_Construcción, _20_Consultoría, _21_Contabilidad, _22_Cosmética, _23_Deportes, _24_Derecho, _25_Desarrollo_de_programación, _26_Diseño, _27_Diseño_gráfico, _28_Dotación_y_selección_de_personal, _29_Educación_primaria_secundaria, _30_Energía_renovable_y_medio_ambiente, _31_Enseñanza_superior, _32_Entretenimiento, _33_Equipos_informáticos });
         if (checkUser.isCompany) {
             const companyUser = await CompanyUser.create({ sectorId, addressId, companyName, documentType, numberOfEmployees, documentNumber, website, city, country });
@@ -217,22 +216,25 @@ router.post('/user/:userId/edit-profile', async (req, res, next) => {
         const { countryCode, provinceINEcode, municipalityINEcode, street, number, zip, provinceName, provinceCode, provinceDescription, municipalityCode, municipalityDescription } = req.body;
         //influencerUser
         const { firstName, lastName, email, password, isCompany, country, phoneNumber, city, birthDate, urlLinkedin, hasExp, actualPosition, yearsExp, actualSalary, profileDescription, yearsInPosition } = req.body;
-        let addressId = await Address.findByIdAndUpdate(checkUser.addressId, { $set: { province: { provinceName, provinceCode, provinceDescription }, municipality: { municipalityCode, municipalityDescription } }, countryCode, country, provinceINEcode, municipalityINEcode, street, number, zip }, { new: true });
-        let sectorId = await Sector.findOneAndUpdate({ _01_Administración_gubernamental, _02_Aeronáutica_aviación, _03_Agricultura, _04_Alimentación_y_bebidas, _05_Almacenamiento, _06_Arquitectura_y_planificación, _07_Artes_escénicas, _08_Artesanía, _09_Artículos_de_consumo, _10_Artículos_de_lujo_y_joyas, _11_Artículos_deportivos, _12_Atención_a_la_salud_mental, _13_Atención_sanitaria_y_hospitalaria, _14_Automación_industrial, _15_Banca, _16_Bellas_artes, _17_Bienes_inmobiliarios, _18_Biotecnología, _19_Construcción, _20_Consultoría, _21_Contabilidad, _22_Cosmética, _23_Deportes, _24_Derecho, _25_Desarrollo_de_programación, _26_Diseño, _27_Diseño_gráfico, _28_Dotación_y_selección_de_personal, _29_Educación_primaria_secundaria, _30_Energía_renovable_y_medio_ambiente, _31_Enseñanza_superior, _32_Entretenimiento, _33_Equipos_informáticos });
-
+      
        
         if (checkUser.isCompany) {
             const salt = bcrypt.genSaltSync(saltRounds);
             const hashPass = bcrypt.hashSync(password, salt);
+            let addressId = await Address.findByIdAndUpdate(checkUser.addressId, { $set: { province: { provinceName, provinceCode, provinceDescription }, municipality: { municipalityCode, municipalityDescription } }, countryCode, country, provinceINEcode, municipalityINEcode, street, number, zip }, { new: true });
+            let sectorId = await Sector.findOneAndUpdate({ _01_Administración_gubernamental, _02_Aeronáutica_aviación, _03_Agricultura, _04_Alimentación_y_bebidas, _05_Almacenamiento, _06_Arquitectura_y_planificación, _07_Artes_escénicas, _08_Artesanía, _09_Artículos_de_consumo, _10_Artículos_de_lujo_y_joyas, _11_Artículos_deportivos, _12_Atención_a_la_salud_mental, _13_Atención_sanitaria_y_hospitalaria, _14_Automación_industrial, _15_Banca, _16_Bellas_artes, _17_Bienes_inmobiliarios, _18_Biotecnología, _19_Construcción, _20_Consultoría, _21_Contabilidad, _22_Cosmética, _23_Deportes, _24_Derecho, _25_Desarrollo_de_programación, _26_Diseño, _27_Diseño_gráfico, _28_Dotación_y_selección_de_personal, _29_Educación_primaria_secundaria, _30_Energía_renovable_y_medio_ambiente, _31_Enseñanza_superior, _32_Entretenimiento, _33_Equipos_informáticos });    
             const isCompanyUser = await CompanyUser.findOneAndUpdate({companyName, contactPerson, documentType, numberOfEmployees, documentNumber, website, city, country });
             const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { firstName, lastName, addressId, sectorId, isCompanyUser, phoneNumber, password: hashPass, email }, { new: true });
             req.session.currentUser = updatedUser;
             res.status(200).json({ updatedUser });
-
-        } else if (checkUser.isCompany === false) {
+        
+        
+        } else if (checkUser.isCompany === false || checkUser.isCompany === null) {
+            // console.log(checkUser)
             const salt = bcrypt.genSaltSync(saltRounds);
             const hashPass = bcrypt.hashSync(password, salt);
-            const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { isCompany, firstName, lastName, email, password: hashPass, addressId, sectorId, city, country, phoneNumber, urlLinkedin, birthDate, yearsExp, actualPosition, yearsExp, actualSalary, hasExp, profileDescription, yearsInPosition }, { new: true });
+            let addressId = await Address.findByIdAndUpdate(checkUser.addressId, { $set: { province: { provinceName, provinceCode, provinceDescription }, municipality: { municipalityCode, municipalityDescription } }, countryCode, country, provinceINEcode, municipalityINEcode, street, number, zip }, { new: true });
+            const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { isCompany, firstName, lastName, email, password: hashPass, addressId, city, country, phoneNumber, urlLinkedin, birthDate, actualPosition, yearsExp, actualSalary, hasExp, profileDescription, yearsInPosition }, { new: true });
             console.log(currentUser)
             req.session.currentUser = updatedUser;
             res.status(200).json({ updatedUser });

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const jobOfferSchema = new Schema  ({
+const jobOfferSchema = new Schema  ([{
 
       scorePerRec : {type: String, default:'5'},
       moneyPerRec:String,
@@ -92,7 +92,7 @@ const jobOfferSchema = new Schema  ({
       }]
 
 
-})
+}])
 
 
 

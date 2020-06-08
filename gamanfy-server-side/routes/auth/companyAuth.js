@@ -204,7 +204,7 @@ router.post('/company/:companyId/edit-profile', async (req, res, next) => {
 
         const salt = bcrypt.genSaltSync(saltRounds);
         const hashPass = bcrypt.hashSync(password, salt);
-        let updatedCompany = await Company.findByIdAndUpdate(checkCompany, { description, companyName, firstName, lastName, email, password: hashPass, isHeadHunter, taxId, contactPerson, yearsExp, website, phoneNumber, numberOfEmployees, city, country }, { new: true });
+        let updatedCompany = await Company.findByIdAndUpdate(checkCompany, {addressId, sectorId, description, companyName, firstName, lastName, email, password: hashPass, isHeadHunter, taxId, contactPerson, yearsExp, website, phoneNumber, numberOfEmployees, city, country }, { new: true });
         req.session.currentUser = updatedCompany;
         
         res.status(200).json({ updatedCompany });
