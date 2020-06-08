@@ -25,11 +25,6 @@ const {
     validationLoggin,
 } = require("../../helpers/middlewares");
 
-router.get('/user/signup', (req, res, next) => {
-    res.render('signupFormTest.hbs')
-
-});
-
 router.post(
     '/user/signup',
 
