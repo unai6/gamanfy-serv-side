@@ -120,7 +120,7 @@ router.post('/user/login',
 
             console.log(findUser)
             if (email === findUser.email) {
-            jwt.sign({ findUser }, process.env.SECRET_KEY, { expiresIn: process.env.TOKEN_EXPIRES }, (err, token) => {
+            jwt.sign( findUser , process.env.SECRET_KEY, { expiresIn: process.env.TOKEN_EXPIRES }, (err, token) => {
                     if (err) {
                         next(err);
                     }
