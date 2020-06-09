@@ -120,14 +120,14 @@ router.post('/user/login',
 
             console.log(findUser)
             if (email === findUser.email) {
-                let getToken = jwt.sign({ findUser }, process.env.SECRET_KEY, { expiresIn: process.env.TOKEN_EXPIRES }, (err, token) => {
+             jwt.sign({ findUser }, process.env.SECRET_KEY, { expiresIn: process.env.TOKEN_EXPIRES }, (err, token) => {
                     if (err) { next(err) }
                     res.json({
                         ok: true,
                         user: findUser,
                         token,
                     });
-                    return getToken;
+                   
                 });
 
 
@@ -232,10 +232,10 @@ router.post('/user/:userId/edit-profile', async (req, res, next) => {
 })
 
 
-router.get('/user/:userId/dashboard', checkToken, (req, res) => {
+router.get('/user/:userId/dashboard', checkToken, async (req, res) => {
     const { userId } = req.params
 
-    jwt.verify(req.token, process.env.SECRET_KEY,  userId , (err, authorizedData) => {
+    await jwt.verify(req.token, process.env.SECRET_KEY,  userId , (err, authorizedData) => {
         if (err) {
 
             res.status(403).json('Protected route, you need an auth Token');
