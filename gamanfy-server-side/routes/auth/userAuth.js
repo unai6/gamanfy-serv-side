@@ -126,7 +126,7 @@ router.post('/user/login',
                     }
                     res.json({
                         ok: true,
-                        user: findUser,
+                        userId: findUser._id,
                         token,
                     });
                 });
