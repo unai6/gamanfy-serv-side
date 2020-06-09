@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const sectorSchema = new Schema({
-
+sector:String,
 _01_Administración_gubernamental: String,
 _02_Aeronáutica_aviación: String,
 _03_Agricultura: String,

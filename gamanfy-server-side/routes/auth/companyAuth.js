@@ -21,6 +21,7 @@ const {
     isLoggedIn,
     isNotLoggedIn,
     validationLoggin,
+    checkToken
 } = require("../../helpers/middlewares");
 
 
@@ -78,7 +79,7 @@ router.post(
                     from: process.env.HOST_MAIL,
                     to: newCompany.email,
                     subject: 'Account Verification Token',
-                    text: `Welcome to Gamanfy ${newCompany.firstName}.\n Please verify your account by clicking the link: ${process.env.PUBLIC_DOMAIN}/auth-co/confirmation/${token.token}\n`
+                    text: `Welcome to Gamanfy ${newCompany.firstName}.\n Please verify your account by clicking the link: ${process.env.PUBLIC_DOMAIN}/auth-co/confirmation/${newCompany._id}/${token.token}\n`
                 };
 
                 transporter.sendMail(mailOptions, function (err) {
@@ -96,7 +97,7 @@ router.post(
         };
     });
 
-    router.post(`/confirmation/:companyToken`, confirmationToken, (req, res, next) => {
+    router.post(`/confirmation/:companyId/:companyToken`, confirmationToken, (req, res, next) => {
     });
     
     router.post(`/resend`, resendToken, (req, res,next) =>{
@@ -147,32 +148,14 @@ router.post('/company/login',
     });
 
 
-const checkToken = (req, res, next) => {
-    const header = req.headers['authorization'];
-
-    if (typeof header !== 'undefined') {
-
-        const bearer = header.split(' ');
-        const token = bearer[1];
-
-        req.token = token;
-
-        next();
-    } else {
-
-        res.sendStatus(403);
-    };
-};
-
-
 router.post('/company/:companyId/complete-profile', async (req, res, next) => {
 
     try {
         const { companyId } = req.params;
         const checkCompany = await Company.findById(companyId);
-        const { description, companyName, taxId, countryCode, country, provinceCode, provinceDescription, provinceINEcode, municipalityINEcode, street, number, zip, provinceName, municipality, website, phoneNumber, numberOfEmployees, _01_Administración_gubernamental, _02_Aeronáutica_aviación, _03_Agricultura, _04_Alimentación_y_bebidas, _05_Almacenamiento, _06_Arquitectura_y_planificación, _07_Artes_escénicas, _08_Artesanía, _09_Artículos_de_consumo, _10_Artículos_de_lujo_y_joyas, _11_Artículos_deportivos, _12_Atención_a_la_salud_mental, _13_Atención_sanitaria_y_hospitalaria, _14_Automación_industrial, _15_Banca, _16_Bellas_artes, _17_Bienes_inmobiliarios, _18_Biotecnología, _19_Construcción, _20_Consultoría, _21_Contabilidad, _22_Cosmética, _23_Deportes, _24_Derecho, _25_Desarrollo_de_programación, _26_Diseño, _27_Diseño_gráfico, _28_Dotación_y_selección_de_personal, _29_Educación_primaria_secundaria, _30_Energía_renovable_y_medio_ambiente, _31_Enseñanza_superior, _32_Entretenimiento, _33_Equipos_informáticos } = req.body;
+        const { description, companyName, taxId, countryCode, country, provinceCode, provinceDescription, provinceINEcode, municipalityINEcode, street, number, zip, provinceName, municipality, website, phoneNumber, numberOfEmployees } = req.body;
         let addressId = await Address.create({ countryCode, country, provinceINEcode, municipalityINEcode, street, number, zip, municipality, provinceName, provinceCode, provinceDescription });
-        let sectorId = await Sector.create({ _01_Administración_gubernamental, _02_Aeronáutica_aviación, _03_Agricultura, _04_Alimentación_y_bebidas, _05_Almacenamiento, _06_Arquitectura_y_planificación, _07_Artes_escénicas, _08_Artesanía, _09_Artículos_de_consumo, _10_Artículos_de_lujo_y_joyas, _11_Artículos_deportivos, _12_Atención_a_la_salud_mental, _13_Atención_sanitaria_y_hospitalaria, _14_Automación_industrial, _15_Banca, _16_Bellas_artes, _17_Bienes_inmobiliarios, _18_Biotecnología, _19_Construcción, _20_Consultoría, _21_Contabilidad, _22_Cosmética, _23_Deportes, _24_Derecho, _25_Desarrollo_de_programación, _26_Diseño, _27_Diseño_gráfico, _28_Dotación_y_selección_de_personal, _29_Educación_primaria_secundaria, _30_Energía_renovable_y_medio_ambiente, _31_Enseñanza_superior, _32_Entretenimiento, _33_Equipos_informáticos });
+        let sectorId = await Sector.create(req.body);
         const updatedCompany = await Company.findByIdAndUpdate(checkCompany, { description, companyName, sectorId, taxId, addressId, website, phoneNumber, numberOfEmployees, website }, { new: true })
         req.session.currentUser = updatedCompany;
         res.status(200).json({ updatedCompany });

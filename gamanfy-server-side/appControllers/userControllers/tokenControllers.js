@@ -10,7 +10,7 @@ exports.confirmationToken = function (req, res, next) {
         if (!token) return res.status(400).send({ type: 'not-verified', msg: 'We were unable to find a valid token. Your token my have expired.' });
         console.log(token)
         
-        InfluencerUser.findOne({ email: req.body.email }, function (err, userinDB) {
+        InfluencerUser.findOne({ email: req.body.email, userId: req.body.userId }, function (err, userinDB) {
         
             if (!userinDB) return res.status(400).send({ msg: 'We were unable to find a user for this token.' });
             if (userinDB.isVerified) return res.status(400).send({ type: 'already-verified', msg: 'This user has already been verified.' });
@@ -105,7 +105,7 @@ const {email} = req.body;
                     from: process.env.HOST_MAIL,
                     to: email,
                     subject: 'Account Verification Token',
-                    text: `To validate your account \n Pleas click on the link: ${process.env.PUBLIC_DOMAIN}/auth/confirmation/${token.token}\n`
+                    text: `To validate your account \n Pleas click on the link: ${process.env.PUBLIC_DOMAIN}/auth/confirmation/${token._userId}/${token.token}\n`
                 };
 
                 transporter.sendMail(mailOptions, function (err) {
