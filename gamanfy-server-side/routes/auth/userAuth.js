@@ -116,18 +116,19 @@ router.post('/user/login',
         const { email, password } = req.body;
 
         try {
-            const findUser = await InfluencerUser.findOne({ email });
+            const findUser = await InfluencerUser.findOne( {email: req.body.email} );
 
             console.log(findUser)
             if (email === findUser.email) {
-             jwt.sign({ findUser }, process.env.SECRET_KEY, { expiresIn: process.env.TOKEN_EXPIRES }, (err, token) => {
-                    if (err) { next(err) }
+            jwt.sign({ findUser }, process.env.SECRET_KEY, { expiresIn: process.env.TOKEN_EXPIRES }, (err, token) => {
+                    if (err) {
+                        next(err);
+                    }
                     res.json({
                         ok: true,
                         user: findUser,
                         token,
                     });
-                   
                 });
 
 
