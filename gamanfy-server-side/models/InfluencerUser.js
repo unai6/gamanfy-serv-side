@@ -10,8 +10,6 @@ const influencerUserSchema = new Schema({
     birthDate: {type:Date},
     email: { type: String, required: [true, "Email is mandatory and unique"], unique: true },
     password: { type: String, require: [true, "password is mandatory"] },
-    passwordResetToken: String,
-    passwordResetExpires: Date,
     addressId: {type: Schema.Types.ObjectId, ref: 'Address'},
     phoneNumber: String,
     country: String,

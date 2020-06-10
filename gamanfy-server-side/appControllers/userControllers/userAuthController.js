@@ -1,7 +1,7 @@
-const InfluencerUser = require('../models/InfluencerUser');
+const InfluencerUser = require('../../models/InfluencerUser');
 
 const bcrypt = require("bcrypt");
-const {signToken} = require('../helpers/signToken');
+const {signToken} = require('../../helpers/signToken');
 
 
 exports.login = async (req, res) => {

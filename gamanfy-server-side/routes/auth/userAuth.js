@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const createError = require("http-errors");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
@@ -12,12 +11,12 @@ const CompanyUser = require('../../models/CompanyUser');
 const UserToken = require('../../models/UserToken');
 const Address = require('../../models/Address');
 const Sector = require('../../models/Sector');
+const userAuthController = require('../../appControllers/userControllers/userAuthController');
 
 const {
     confirmationToken,
     resendToken
 } = require('../../appControllers/userControllers/tokenControllers');
-const authController = require('../../appControllers/authController');
 
 const {
     isLoggedIn,
@@ -107,9 +106,8 @@ router.post(`/confirmation/:userId/:userToken`, confirmationToken);
 router.post('/resend', resendToken);
 
 
-
 router.post('/user/login', 
-  authController.login
+  userAuthController.login
 );
 
 router.post('/user/:userId/complete-profile', async (req, res, next) => {

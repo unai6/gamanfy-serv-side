@@ -11,6 +11,7 @@ const CompanyToken = require('../../models/CompanyToken');
 const Sector = require('../../models/Sector');
 const Address = require('../../models/Address');
 
+const companyAuthController = require('../../appControllers/companyControllers/companyAuthController');
 const {
     confirmationToken,
     resendToken
@@ -104,49 +105,9 @@ router.post(
     });
     
 
-router.post('/company/login',
-    isNotLoggedIn(),
-    validationLoggin(),
-    async (req, res, next) => {
-        const { email, password } = req.body;
-
-        try {
-            const findCompany = await Company.findOne({ email });
-
-            console.log(findCompany)
-            if (email === findCompany.email) {
-                let getToken = jwt.sign({ findCompany }, process.env.SECRET_KEY, { expiresIn: process.env.TOKEN_EXPIRES }, (err, token) => {
-                    if (err) { next(err) }
-                    res.json({
-                        ok: true,
-                        user: findCompany,
-                        token,
-                    });
-                    return getToken;
-                });
-
-
-            } else if (!findCompany) {
-                next(createError(404))
-            } else if (bcrypt.compareSync(password, findCompany.password)) {
-                req.session.currentUser = findCompany;
-                res.status(200).json(findCompany);
-                return;
-
-            } else if (!findCompany.isVerified) {
-                return res.status(401).send({ type: 'not-verified', msg: 'Your account has no verification' });
-
-            } else {
-                console.log('ERROR company not found')
-                next(createError(404));
-
-            };
-
-        } catch (error) {
-            next(error);
-        };
-    });
-
+    router.post('/company/login', 
+    companyAuthController.companyLogin
+  );
 
 router.post('/company/:companyId/complete-profile', async (req, res, next) => {
 
