@@ -15,7 +15,7 @@ const companySchema = new Schema({
   sectorId: { type: Schema.Types.ObjectId, ref: 'Sector' },
   addressId: {type: Schema.Types.ObjectId, ref: 'Address'},
   postedOffers : { type:Schema.Types.ObjectId, ref:'JobOffer'},
-  country:String,
+  countryName:String,
   city: String, 
   street: String,
   number:String,

@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const companyUserSchema = new Schema  ({
     companyName: String,
     taxId: String,
-    country: String,
+    countryName: String,
     city:String,
     addressId : {type: Schema.Types.ObjectId, ref: 'Address'},
     documentType: String,

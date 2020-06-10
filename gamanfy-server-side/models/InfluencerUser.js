@@ -12,7 +12,7 @@ const influencerUserSchema = new Schema({
     password: { type: String, require: [true, "password is mandatory"] },
     addressId: {type: Schema.Types.ObjectId, ref: 'Address'},
     phoneNumber: String,
-    country: String,
+    countryName: String,
     city: String,
     urlLinkedin: String,
     isCompany: { type: Boolean, default: false },

@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const addressSchema = new Schema({
 
     countryCode: String,
+    countryName:String,
     country: String,
     provinceINEcode: String,
     municipalityINEcode: String,

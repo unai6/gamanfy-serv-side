@@ -4,7 +4,6 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
 exports.confirmationToken = function (req, res, next) {
-    
     const {token, email} = req.body
     UserToken.findOne(token, function (err, token) {
         if (!token) return res.status(400).send({ type: 'not-verified', msg: 'We were unable to find a valid token. Your token my have expired.' });
@@ -12,7 +11,7 @@ exports.confirmationToken = function (req, res, next) {
         
         InfluencerUser.findOne({ email: req.body.email, userId: req.body.userId }, function (err, userinDB) {
         
-            if (!userinDB) return res.status(400).send({ msg: 'We were unable to find a user for this token.' });
+            if (!userinDB) return res.status(404).send({ msg: 'We were unable to find a user for this token.' });
             if (userinDB.isVerified) return res.status(400).send({ type: 'already-verified', msg: 'This user has already been verified.' });
             userinDB.isVerified = true;
             userinDB.save(function (err) {
