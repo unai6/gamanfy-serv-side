@@ -107,16 +107,18 @@ router.post('/resend', resendToken);
 
 router.post('/user/login', userAuthController.login);
 
-router.post('/user/:userId/complete-profile', async (req, res, next) => {
+router.post('/user/:userId/:isCompany/complete-profile', async (req, res, next) => {
 
     try {
-        const { userId } = req.params
+        let { userId, isCompany} = req.params;
         const { companyName, documentType, documentNumber, website, city, country, phoneNumber, numberOfEmployees, urlLinkedin, birthDate, hasExp, countryCode, countryName, provinceINEcode, municipalityINEcode, municipalityCode, municipalityDescription, street, number, zip, invited, webCreated } = req.body;
         const checkUser = await InfluencerUser.findById(userId);
-
+         isCompany = checkUser.isCompany
+        
         let addressId = await Address.create({ countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip });
         let sectorId = await Sector.create(req.body);
         if (checkUser.isCompany) {
+          
             const companyUser = await CompanyUser.create({ sectorId, addressId, companyName, documentType, numberOfEmployees, documentNumber, website, city, country });
             const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { companyUser, addressId }, { new: true });
             req.session.currentUser = updatedUser;
