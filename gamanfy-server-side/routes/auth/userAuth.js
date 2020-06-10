@@ -83,7 +83,7 @@ router.post(
                     from: process.env.HOST_MAIL,
                     to: newUser.email,
                     subject: 'Account Verification Token',
-                    text: `Welcome to Gamanfy ${newUser.firstName}.\n Please verify your account by clicking the link: ${process.env.PUBLIC_DOMAIN}/auth/confirmation/${newUser._id}/${token.token}\n`
+                    text: `Welcome to Gamanfy ${newUser.firstName}.\n Please verify your account by clicking the link: ${req.headers.host}/auth/confirmation/${newUser._id}/${token.token}\n`
                 };
 
                 await transporter.sendMail(mailOptions, function (err) {
@@ -105,10 +105,7 @@ router.post(`/confirmation/:userId/:userToken`, confirmationToken);
 
 router.post('/resend', resendToken);
 
-
-router.post('/user/login', 
-  userAuthController.login
-);
+router.post('/user/login', userAuthController.login);
 
 router.post('/user/:userId/complete-profile', async (req, res, next) => {
 
