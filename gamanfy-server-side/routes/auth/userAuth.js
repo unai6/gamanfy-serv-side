@@ -17,7 +17,7 @@ const {
     confirmationToken,
     resendToken
 } = require('../../appControllers/userControllers/tokenControllers');
-
+const authController = require('../../appControllers/authController');
 
 const {
     isLoggedIn,
@@ -102,49 +102,15 @@ router.post(
     });
 
 
-router.post(`/confirmation/:userId/:userToken`, confirmationToken, (req, res, next) => {
-});
+router.post(`/confirmation/:userId/:userToken`, confirmationToken);
 
-router.post('/resend', resendToken, (req, res, next) => {
-});
+router.post('/resend', resendToken);
 
 
-router.post('/user/login',
-    isNotLoggedIn(),
-    validationLoggin(),
 
-    (req, res) => {
-        const { email, password } = req.body
-        InfluencerUser.findOne({ email }, (err, findUser) => {
-            if (err || findUser === null) {
-              res.json({
-                errorMessage: `There isn't an account with email ${email}.`
-              });
-              return;
-            }
-
-        if (findUser.email === email && bcrypt.compareSync(password, findUser.password)) {
-           /*  const payload = {
-                check: true
-            };
-            const token = jwt.sign(payload, process.env.SECRET_KEY, {
-                expiresIn: process.env.TOKEN_EXPIRES
-            });
-            res.json({
-                mensaje: 'Autenticación correcta',
-                token: token
-            }); */
-            res.json({message: 'succesfully login'})
-
-        } else if(findUser.isVerified === false){
-        res.json({error: 'user is not verified'})
-
-        } else {
-            res.json({ mensaje: "Usuario o contraseña incorrectos" })
-        }
-        req.session.currentUser = findUser;
-    })
-});
+router.post('/user/login', 
+  authController.login
+);
 
 
 
