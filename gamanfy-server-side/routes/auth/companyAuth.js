@@ -80,7 +80,7 @@ router.post(
                     from: process.env.HOST_MAIL,
                     to: newCompany.email,
                     subject: 'Account Verification Token',
-                    text: `Welcome to Gamanfy ${newCompany.firstName}.\n Please verify your account by clicking the link: ${process.env.PUBLIC_DOMAIN}/auth-co/confirmation/${newCompany._id}/${token.token}\n`
+                    text: `Welcome to Gamanfy ${newCompany.firstName}.\n Please verify your account by clicking the link: https://gamanfy-c2371.web.app/auth-co/confirmation/${newCompany._id}/${token.token}\n`
                 };
 
                 transporter.sendMail(mailOptions, function (err) {

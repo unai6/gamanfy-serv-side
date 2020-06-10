@@ -105,7 +105,7 @@ const {email} = req.body;
                     from: process.env.HOST_MAIL,
                     to: email,
                     subject: 'Account Verification Token',
-                    text: `To validate your account \n Pleas click on the link: ${process.env.PUBLIC_DOMAIN}/auth/confirmation/${token._userId}/${token.token}\n`
+                    text: `To validate your account \n Pleas click on the link: https://gamanfy-c2371.web.app/auth/confirmation/${token._userId}/${token.token}\n`
                 };
 
                 transporter.sendMail(mailOptions, function (err) {
