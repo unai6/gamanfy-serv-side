@@ -112,8 +112,6 @@ router.post('/user/login',
   authController.login
 );
 
-
-
 router.post('/user/:userId/complete-profile', async (req, res, next) => {
 
     try {
