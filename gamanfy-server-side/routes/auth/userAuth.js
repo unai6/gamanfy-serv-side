@@ -124,7 +124,7 @@ router.post('/user/login',
             }
 
         if (findUser.email === email && bcrypt.compareSync(password, findUser.password)) {
-            const payload = {
+           /*  const payload = {
                 check: true
             };
             const token = jwt.sign(payload, process.env.SECRET_KEY, {
@@ -133,7 +133,8 @@ router.post('/user/login',
             res.json({
                 mensaje: 'Autenticación correcta',
                 token: token
-            });
+            }); */
+            res.json({message: 'succesfully login'})
 
         } else if(findUser.isVerified === false){
         res.json({error: 'user is not verified'})
