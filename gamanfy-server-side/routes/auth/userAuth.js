@@ -43,7 +43,7 @@ router.post(
                 isCompany = true
             } else if (isCandidate === 'on') {
                 isCandidate = true
-            } else if(password !== repeatPassword){
+            } else if (password !== repeatPassword) {
                 return res.json('Passwords must match');
             }
             const emailExists = await InfluencerUser.findOne({ email });
@@ -87,7 +87,7 @@ router.post(
                     text: `Welcome to Gamanfy ${newUser.firstName}.\n Please verify your account by clicking the link: ${process.env.PUBLIC_DOMAIN}/auth/confirmation/${newUser._id}/${token.token}\n`
                 };
 
-               await transporter.sendMail(mailOptions, function (err) {
+                await transporter.sendMail(mailOptions, function (err) {
                     if (err) { return res.status(500).send({ msg: err.message }); }
                     res.status(200).send('A verification email has been sent to ' + newUser.email + '.');
                 });
@@ -98,65 +98,54 @@ router.post(
         } catch (error) {
             next(error);
         };
-    
+
     });
 
 
 router.post(`/confirmation/:userId/:userToken`, confirmationToken, (req, res, next) => {
 });
 
-router.post('/resend', resendToken, (req, res,next) =>{
+router.post('/resend', resendToken, (req, res, next) => {
 });
 
 
 router.post('/user/login',
     isNotLoggedIn(),
     validationLoggin(),
-    async (req, res, next) => {
 
-        const {password, email} = req.body;
-        
-        try {
+    (req, res) => {
+        const { email, password } = req.body
+        InfluencerUser.findOne({ email }, (err, findUser) => {
+            if (err || findUser === null) {
+              res.json({
+                errorMessage: `There isn't an account with email ${email}.`
+              });
+              return;
+            }
 
-            InfluencerUser.findOne({ email }, (err, findUser) => {
-                if (err || findUser === null) {
-                  res.json(
-                    {err: `There isn't an account with email ${email}.`
-                    });
-                  return;
-                }
-            
-
-            if (bcrypt.compareSync(password, findUser.password)) {
-                
-                const payload ={
-                    check:true
-                };
-
-            jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: process.env.TOKEN_EXPIRES }, (err, token) => {
-                    if (err) {
-                        next(err);
-                    }
-                    res.json({
-                        ok: true,
-                        user: {
-                            userId:findUser.id,
-                            email:findUser.email
-                        },
-                        token
-                    });
-                });
-                return;
-             }
-             req.session.currentUser = findUser;
+        if (findUser.email === email && bcrypt.compareSync(password, findUser.password)) {
+            const payload = {
+                check: true
+            };
+            const token = jwt.sign(payload, process.env.SECRET_KEY, {
+                expiresIn: process.env.TOKEN_EXPIRES
+            });
+            res.json({
+                mensaje: 'Autenticación correcta',
+                token: token
             });
 
-         }catch (error){
-        res.json({error: 'An error occured while logging in'})
-    }
+        } else if(findUser.isVerified === false){
+        res.json({error: 'user is not verified'})
+
+        } else {
+            res.json({ mensaje: "Usuario o contraseña incorrectos" })
+        }
+        req.session.currentUser = findUser;
+    })
 });
 
- 
+
 
 router.post('/user/:userId/complete-profile', async (req, res, next) => {
 
@@ -205,19 +194,19 @@ router.post('/user/:userId/edit-profile', async (req, res, next) => {
         const { countryCode, provinceINEcode, municipalityINEcode, street, number, zip, provinceName, provinceCode, provinceDescription, municipalityCode, municipalityDescription } = req.body;
         //influencerUser
         const { firstName, lastName, email, password, isCompany, country, phoneNumber, city, birthDate, urlLinkedin, hasExp, actualPosition, yearsExp, actualSalary, profileDescription, yearsInPosition } = req.body;
-      
-       
+
+
         if (checkUser.isCompany) {
             const salt = bcrypt.genSaltSync(saltRounds);
             const hashPass = bcrypt.hashSync(password, salt);
             let addressId = await Address.findByIdAndUpdate(checkUser.addressId, { $set: { province: { provinceName, provinceCode, provinceDescription }, municipality: { municipalityCode, municipalityDescription } }, countryCode, country, provinceINEcode, municipalityINEcode, street, number, zip }, { new: true });
-            let sectorId = await Sector.findOneAndUpdate({ _01_Administración_gubernamental, _02_Aeronáutica_aviación, _03_Agricultura, _04_Alimentación_y_bebidas, _05_Almacenamiento, _06_Arquitectura_y_planificación, _07_Artes_escénicas, _08_Artesanía, _09_Artículos_de_consumo, _10_Artículos_de_lujo_y_joyas, _11_Artículos_deportivos, _12_Atención_a_la_salud_mental, _13_Atención_sanitaria_y_hospitalaria, _14_Automación_industrial, _15_Banca, _16_Bellas_artes, _17_Bienes_inmobiliarios, _18_Biotecnología, _19_Construcción, _20_Consultoría, _21_Contabilidad, _22_Cosmética, _23_Deportes, _24_Derecho, _25_Desarrollo_de_programación, _26_Diseño, _27_Diseño_gráfico, _28_Dotación_y_selección_de_personal, _29_Educación_primaria_secundaria, _30_Energía_renovable_y_medio_ambiente, _31_Enseñanza_superior, _32_Entretenimiento, _33_Equipos_informáticos });    
-            const isCompanyUser = await CompanyUser.findOneAndUpdate({companyName, contactPerson, documentType, numberOfEmployees, documentNumber, website, city, country });
+            let sectorId = await Sector.findOneAndUpdate({ _01_Administración_gubernamental, _02_Aeronáutica_aviación, _03_Agricultura, _04_Alimentación_y_bebidas, _05_Almacenamiento, _06_Arquitectura_y_planificación, _07_Artes_escénicas, _08_Artesanía, _09_Artículos_de_consumo, _10_Artículos_de_lujo_y_joyas, _11_Artículos_deportivos, _12_Atención_a_la_salud_mental, _13_Atención_sanitaria_y_hospitalaria, _14_Automación_industrial, _15_Banca, _16_Bellas_artes, _17_Bienes_inmobiliarios, _18_Biotecnología, _19_Construcción, _20_Consultoría, _21_Contabilidad, _22_Cosmética, _23_Deportes, _24_Derecho, _25_Desarrollo_de_programación, _26_Diseño, _27_Diseño_gráfico, _28_Dotación_y_selección_de_personal, _29_Educación_primaria_secundaria, _30_Energía_renovable_y_medio_ambiente, _31_Enseñanza_superior, _32_Entretenimiento, _33_Equipos_informáticos });
+            const isCompanyUser = await CompanyUser.findOneAndUpdate({ companyName, contactPerson, documentType, numberOfEmployees, documentNumber, website, city, country });
             const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { firstName, lastName, addressId, sectorId, isCompanyUser, phoneNumber, password: hashPass, email }, { new: true });
             req.session.currentUser = updatedUser;
             res.status(200).json({ updatedUser });
-        
-        
+
+
         } else if (checkUser.isCompany === false || checkUser.isCompany === null) {
             // console.log(checkUser)
             const salt = bcrypt.genSaltSync(saltRounds);
@@ -240,7 +229,7 @@ router.post('/user/:userId/edit-profile', async (req, res, next) => {
 router.get('/user/:userId/dashboard', checkToken, async (req, res) => {
     const { userId } = req.params
 
-    await jwt.verify(req.token, process.env.SECRET_KEY,  userId , (err, authorizedData) => {
+    await jwt.verify(req.token, process.env.SECRET_KEY, userId, (err, authorizedData) => {
         if (err) {
 
             res.status(403).json('Protected route, you need an auth Token');
