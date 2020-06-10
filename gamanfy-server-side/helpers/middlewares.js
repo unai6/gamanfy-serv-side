@@ -10,7 +10,7 @@ exports.isLoggedIn = () => (req, res, next) => {
 
 exports.isNotLoggedIn = () => (req, res, next) => {
   if (!req.session.currentUser) next();
-  else next(createError(403));
+  else res.status(404).json('No session founded')
 };
 
 exports.validationLoggin = () => (req, res, next) => {

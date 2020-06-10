@@ -113,13 +113,27 @@ router.post('/user/login',
     isNotLoggedIn(),
     validationLoggin(),
     async (req, res, next) => {
-        const { email, password } = req.body;
 
+        const {password, email} = req.body;
+        
         try {
-            const findUser = await InfluencerUser.findOne( {email: req.body.email} );
+
+            InfluencerUser.findOne({ email }, (err, findUser) => {
+                if (err || findUser === null) {
+                  res.json(
+                    {err: `There isn't an account with email ${email}.`
+                    });
+                  return;
+                }
             
-            if (findUser) {
-            jwt.sign( {findUser}, process.env.SECRET_KEY, { expiresIn: process.env.TOKEN_EXPIRES }, (err, token) => {
+
+            if (bcrypt.compareSync(password, findUser.password)) {
+                
+                const payload ={
+                    check:true
+                };
+
+            jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: process.env.TOKEN_EXPIRES }, (err, token) => {
                     if (err) {
                         next(err);
                     }
@@ -132,29 +146,17 @@ router.post('/user/login',
                         token
                     });
                 });
-
-
-            } else if (!findUser) {
-                next(createError(404))
-            } else if (bcrypt.compareSync(password, findUser.password)) {
-                req.session.currentUser = findUser;
-                res.status(200).json(findUser);
                 return;
+             }
+             req.session.currentUser = findUser;
+            });
 
-            } else if (!findUser.isVerified) {
-                return res.status(401).send({ type: 'not-verified', msg: 'Your account has no verification' });
+         }catch (error){
+        res.json({error: 'An error occured while logging in'})
+    }
+});
 
-            } else {
-                console.log('ERROR user not found')
-                next(createError(404));
-
-            };
-
-        } catch (error) {
-            next(error);
-        };
-    });
-
+ 
 
 router.post('/user/:userId/complete-profile', async (req, res, next) => {
 
