@@ -17,7 +17,7 @@ router.get('/dashboard', async (req, res, next) => {
     try{
         const allOffers = await Offers.find();
         allOffers.length !== 0
-          ? res.json({allOfers})
+          ? res.json({allOffers})
           : res.json({message: "No products found!"});
 
     }catch (error){
