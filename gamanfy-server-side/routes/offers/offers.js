@@ -15,7 +15,7 @@ const Address = require('../../models/Address');
 router.get('/dashboard', async (req, res, next) => {
 
     try{
-        const allOffers = await Offers.find();
+        const allOffers = await Offers.find({limit:10});
         allOffers.length !== 0
           ? res.json(allOfers)
           : res.send("No products found!");
@@ -45,14 +45,14 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
         const { processNum, description, website, recruiter } = req.body;
         
         //job offer data
-        const { jobName, onDate, offDate, processState, isRemote, personsOnCharge } = req.body;
+        const { jobName, onDate, offDate, processState, isRemote, personsOnCharge, team} = req.body;
             //job description
             const { mainMission, jobDescription }= req.body;
             //manager
             const {managerDescription, managerName } = req.body;
         
         //job address
-        const {countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip} = req.body;
+        const {countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip, cityForOffer} = req.body;
         
         //category
         const { employee, specialist, intermediateResp, Direction, DirectiveCouncil, Cofounder} = req.body;
@@ -68,19 +68,28 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
         const {question1, question2, question3, question4, question5} = req.body;
         
         
-    const company = Company.findById(companyId)
-    let addressId = await Address.create({ countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip });
+    const company = await Company.findById(companyId)
+    let addressId = await Address.create({ countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip, cityForOffer });
     let sectorId = await Sector.create(req.body);
-    let categoryId = await Category.create({employee, specialist, intermediateResp, Direction, DirectiveCouncil, Cofounder});
-    let contractId = await Contract.create({autonomo, contratoDeDuraciónDeterminada, deRelevo, fijoDiscontinuo, formativo, Indefinido, aTiempoParcial, otrosContratos});
-    let postOffer = await Offers.create({addressId, sectorId, categoryId, contractId, scorePerRec,  moneyPerRec, sourcingWithInfluencer, exclusiveHeadHunter,
-        personalityTest, videoInterview, kitOnBoardgingGamanfy, totalFee, processNum, description, website, recruiter, 
-        jobName, onDate, offDate, processState, isRemote, personsOnCharge, mainMission, jobDescription, managerDescription, managerName,
-        minGrossSalary, maxGrossSalary, variableRetribution, quantityVariableRetribution, showMoney, minExp, minStudies, keyKnowledge, keyCompetences, minReqDescription, Language, LangugageLevel,
-        question1, question2, question3, question4, question5
-    });
+    let categoryId = await Category.create(req.body);
+    let contractId = await Contract.create(req.body);
+    let postedOffers = await Offers.create({
+       scorePerRec,
+       moneyPerRec,
+       contractServices,
+       additionalServices,
+       gamanfyFee,
+       companyData,
+       
+       jobOfferData: { jobName, onDate, offDate, processState, isRemote, personsOnCharge, team, mainMission, jobDescription,
+       managerDescription, managerName,
+       },
+        addressId,
+        sectorId,
 
-    let updatedCompany = await Company.findByIdAndUpdate(company, {addressId, sectorId, postOffer}, {new:true})
+        
+        });                                                      
+    let updatedCompany = await Company.findByIdAndUpdate(company, { $push: { postedOffers : postedOffers._id } } ,{ new:true })
     req.session.currentUser = updatedCompany;
     res.status(200).json({ updatedCompany });
 

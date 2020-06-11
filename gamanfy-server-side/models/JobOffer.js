@@ -2,8 +2,30 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const jobOfferSchema = new Schema  ([{
-
       scorePerRec : {type: String, default:'5'},
+      moneyPerRec:String,
+      contractServices: {type: Object, required:true},
+      additionalServices:{type: Object, required:true},
+      gamanfyFee:{type: Object, required:true},
+      companyData:{type: Object, required:true},
+      jobOfferData:{type:Object, required:true},
+      addressId: {type: Schema.Types.ObjectId, ref: 'Address', required:true},
+      sectorId: {type: Schema.Types.ObjectId, ref: 'Sector', required:true},
+      retribution:{type:Object, required:true},
+      minRequirements:{type:Object, required:true},
+       videoInterviewQuestions:{type:Object, required:true}
+}])
+
+
+
+
+   const JobOffer = mongoose.model("JobOffer", jobOfferSchema);
+
+module.exports = JobOffer;
+
+
+/* 
+scorePerRec : {type: String, default:'5'},
       moneyPerRec:String,
       contractServices : [{
             type:{type:String},
@@ -12,9 +34,9 @@ const jobOfferSchema = new Schema  ([{
       }],
       additionalServices :[{
             type: {type:String},
-            personalityTest:{type:Boolean, default: false},
-            videoInterview : {type: Boolean, default: false},
-            kitOnBoardgingGamanfy: {type: Boolean, default: false}
+            hasPersonalityTest:{type:Boolean, default: false},
+            hasVideoInterview : {type: Boolean, default: false},
+            hasVitOnBoardgingGamanfy: {type: Boolean, default: false}
       }],
       gamanfyFee:[{
             type:{type:String},
@@ -89,14 +111,5 @@ const jobOfferSchema = new Schema  ([{
             question3:{type:String},
             question4:{type:String},
             question5:{type:String},
-      }]
+      }] */
 
-
-}])
-
-
-
-
-   const JobOffer = mongoose.model("JobOffer", jobOfferSchema);
-
-module.exports = JobOffer;

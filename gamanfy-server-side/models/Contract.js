@@ -3,7 +3,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const contractSchema = new Schema({
+contract: String
 
+ /* Tipos de contrato 
+    
     autonomo: String,
     contratoDeDuraciónDeterminada:String,
     deRelevo: String,
@@ -11,7 +14,7 @@ const contractSchema = new Schema({
     formativo:String,
     Indefinido:String,
     aTiempoParcial:String,
-    otrosContratos:String
+    otrosContratos:String */
 
 },
 

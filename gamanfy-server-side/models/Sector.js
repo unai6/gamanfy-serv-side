@@ -4,6 +4,10 @@ const Schema = mongoose.Schema;
 
 const sectorSchema = new Schema({
 sector:String,
+
+/* 
+Tipos de sector
+
 _01_Administración_gubernamental: String,
 _02_Aeronáutica_aviación: String,
 _03_Agricultura: String,
@@ -37,7 +41,7 @@ _30_Energía_renovable_y_medio_ambiente: String,
 _31_Enseñanza_superior: String,
 _32_Entretenimiento: String,
 _33_Equipos_informáticos: String
-
+ */
 })
 
 

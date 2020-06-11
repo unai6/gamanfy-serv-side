@@ -14,7 +14,7 @@ const companySchema = new Schema({
   password: { type: String, require: [true, "password is mandatory"] },
   sectorId: { type: Schema.Types.ObjectId, ref: 'Sector' },
   addressId: {type: Schema.Types.ObjectId, ref: 'Address'},
-  postedOffers : { type:Schema.Types.ObjectId, ref:'JobOffer'},
+  postedOffers : [{ type:Schema.Types.ObjectId, ref:'JobOffer'}],
   countryName:String,
   city: String, 
   phoneNumber:String,

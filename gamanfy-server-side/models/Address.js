@@ -5,6 +5,7 @@ const addressSchema = new Schema({
 
     countryCode: String,
     countryName:String,
+    cityForOffer:String,
     provinceINEcode: String,
     municipalityINEcode: String,
     street: String,
