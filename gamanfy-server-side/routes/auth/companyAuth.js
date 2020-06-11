@@ -80,8 +80,10 @@ router.post(
                     from: process.env.HOST_MAIL,
                     to: newCompany.email,
                     subject: 'Account Verification Token',
-                    text: `Welcome to Gamanfy ${newCompany.firstName}.\n Please verify your account by clicking the link: https://gamanfy-c2371.web.app/auth-co/confirmation/${newCompany._id}/${token.token}\n`
+                    text: `Welcome to Gamanfy ${newCompany.firstName}.\n Please verify your account by clicking the link: ${process.env.PUBLIC_DOMAIN}/auth-co/confirmation/${newCompany._id}/${token.token}\n`
                 };
+                   // https://gamanfy-c2371.web.app/auth-co/confirmation/${newCompany._id}/${token.token}/${newCompany.isCompany}\n
+                // ${process.env.PUBLIC_DOMAIN}/auth/confirmation/${newCompany._id}/${token.token}/${newCompany.isCompany}\n`
 
                 transporter.sendMail(mailOptions, function (err) {
                     if (err) { return res.status(500).send({ msg: err.message }); }
@@ -114,17 +116,18 @@ router.post('/company/:companyId/complete-profile', async (req, res, next) => {
     try {
         const { companyId } = req.params;
         const checkCompany = await Company.findById(companyId);
-        const { description, companyName, taxId, countryCode, countryName, provinceCode, provinceDescription, provinceINEcode, municipalityINEcode, street, number, zip, provinceName, municipality, website, phoneNumber, numberOfEmployees } = req.body;
-        let addressId = await Address.create({ countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip, municipality, provinceName, provinceCode, provinceDescription });
+        const { yearsExp, contactPerson, description, city, companyName, taxId, countryCode, countryName, 
+            provinceINEcode, municipalityINEcode, street, number, zip, municipality, website, phoneNumber, numberOfEmployees } = req.body;
+        let addressId = await Address.create({ countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip });
         let sectorId = await Sector.create(req.body);
-        const updatedCompany = await Company.findByIdAndUpdate(checkCompany, { description, companyName, sectorId, taxId, addressId, website, phoneNumber, numberOfEmployees, website }, { new: true })
+        const updatedCompany = await Company.findByIdAndUpdate(checkCompany, { yearsExp, city, countryName, contactPerson, description, 
+            companyName, sectorId, taxId, addressId, website, phoneNumber, numberOfEmployees}, { new: true })
         req.session.currentUser = updatedCompany;
         res.status(200).json({ updatedCompany });
 
     } catch (error) {
         res.status(400).json({ error: 'An error occured while completing company profile' })
     }
-
 })
 
 router.post('/company/:companyId/edit-profile', async (req, res, next) => {
