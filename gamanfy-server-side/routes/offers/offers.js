@@ -15,10 +15,10 @@ const Address = require('../../models/Address');
 router.get('/dashboard', async (req, res, next) => {
 
     try{
-        const allOffers = await Offers.find({limit:10});
+        const allOffers = await Offers.find();
         allOffers.length !== 0
-          ? res.json(allOfers)
-          : res.send("No products found!");
+          ? res.json({allOfers})
+          : res.json({message: "No products found!"});
 
     }catch (error){
         res.status(404).json({error:'An error occurred while bringing offers'});
@@ -33,14 +33,14 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
         const {scorePerRec,  moneyPerRec } = req.body;
         
         //contract services
-        const { sourcingWithInfluencer, exclusiveHeadHunter } = req.body;
+        const { hasSourcingWithInfluencer, hasExclusiveHeadHunter } = req.body;
         
         //additional services
-        const { personalityTest, videoInterview, kitOnBoardgingGamanfy } = req.body;
+        const { hasPersonalityTest, hasVideoInterview, hasKitOnBoardgingGamanfy } = req.body;
         
         //gamanfy fee plus additional services
-        const {totalFee} = req.body;
-        
+        const {totalFee, sourcingWithInfluencer, exclusiveHeadHunter, personalityTest, videoInterview, kitOnBoardgingGamanfy} = req.body;
+    
         //company data 
         const { processNum, description, website, recruiter } = req.body;
         
@@ -74,20 +74,19 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
     let categoryId = await Category.create(req.body);
     let contractId = await Contract.create(req.body);
     let postedOffers = await Offers.create({
-       scorePerRec,
+       scorePerRec, 
        moneyPerRec,
-       contractServices,
-       additionalServices,
-       gamanfyFee,
-       companyData,
-       
+        contractServices :{hasSourcingWithInfluencer, hasExclusiveHeadHunter}, 
+        additionalServices:{hasPersonalityTest, hasVideoInterview, hasKitOnBoardgingGamanfy},
+        gamanfyFee:{totalFee, sourcingWithInfluencer, exclusiveHeadHunter, personalityTest, videoInterview, kitOnBoardgingGamanfy}, 
+        companyData:{processNum, description, website, recruiter },
        jobOfferData: { jobName, onDate, offDate, processState, isRemote, personsOnCharge, team, mainMission, jobDescription,
        managerDescription, managerName,
        },
-        addressId,
-        sectorId,
-
-        
+        addressId, sectorId, 
+        retribution:{minGrossSalary, maxGrossSalary, variableRetribution, quantityVariableRetribution, showMoney},
+         minRequirements:{minExp, minStudies, keyKnowledge, keyCompetences, minReqDescription, Language, LangugageLevel },
+          videoInterviewQuestions:{question1, question2, question3, question4, question5}
         });                                                      
     let updatedCompany = await Company.findByIdAndUpdate(company, { $push: { postedOffers : postedOffers._id } } ,{ new:true })
     req.session.currentUser = updatedCompany;

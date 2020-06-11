@@ -13,7 +13,7 @@ const jobOfferSchema = new Schema  ([{
       sectorId: {type: Schema.Types.ObjectId, ref: 'Sector', required:true},
       retribution:{type:Object, required:true},
       minRequirements:{type:Object, required:true},
-       videoInterviewQuestions:{type:Object, required:true}
+      videoInterviewQuestions:{type:Object, required:true}
 }])
 
 
