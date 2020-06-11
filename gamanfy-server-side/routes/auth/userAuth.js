@@ -83,7 +83,7 @@ router.post(
                     from: process.env.HOST_MAIL,
                     to: newUser.email,
                     subject: 'Account Verification Token',
-                    text: `Welcome to Gamanfy ${newUser.firstName}.\n Please verify your account by clicking the link: https://gamanfy-c2371.web.app/auth/confirmation/${newUser._id}/${token.token}/${newUser.isCompany}\n`
+                    text: `Welcome to Gamanfy ${newUser.firstName}.\n Please verify your account by clicking the link:  ${process.env.PUBLIC_DOMAIN}/auth/confirmation/${newUser._id}/${token.token}/${newUser.isCompany}\n`
                 };
                 // https://gamanfy-c2371.web.app/auth/confirmation/${newUser._id}/${token.token}/${newUser.isCompany}\n
                 // ${process.env.PUBLIC_DOMAIN}/auth/confirmation/${newUser._id}/${token.token}/${newUser.isCompany}\n`
@@ -108,19 +108,24 @@ router.post('/resend', resendToken);
 
 router.post('/user/login', userAuthController.login);
 
-router.post('/user/:userId/:isCompany/complete-profile', async (req, res, next) => {
+router.post('/user/:userId/:isaCompany/complete-profile', async (req, res, next) => {
 
     try {
-        let { userId, isCompany} = req.params;
-        const { companyName, documentType, documentNumber, website, city,  phoneNumber, numberOfEmployees, urlLinkedin, birthDate, hasExp, countryCode, countryName, provinceINEcode, municipalityINEcode, municipalityCode, municipalityDescription, street, number, zip, invited, webCreated } = req.body;
-        const checkUser = await InfluencerUser.findById(userId);
-        isCompany = checkUser.isCompany
+        let { isaCompany, userId} = req.params;
         
+        const { companyName, documentType, documentNumber, contactPerson, taxId, website, city,  phoneNumber, numberOfEmployees,
+             urlLinkedin, birthDate, hasExp, countryCode, countryName, provinceINEcode, municipalityINEcode, municipalityCode,
+              municipalityDescription, street, number, zip, invited, webCreated } = req.body;
+
+        const checkUser = await InfluencerUser.findById(userId);
+        isaCompany = checkUser.isCompany
+
         let addressId = await Address.create({ countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip });
         let sectorId = await Sector.create(req.body);
         if (checkUser.isCompany) {
-          
-            const companyUser = await CompanyUser.create({ sectorId, addressId, companyName, documentType, numberOfEmployees, documentNumber, website, city, country });
+            const companyUser = await CompanyUser.create({ sectorId, addressId, phoneNumber, taxId, companyName, contactPerson, 
+                documentType, numberOfEmployees, documentNumber, website, city, countryName });
+
             const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { companyUser, addressId }, { new: true });
             req.session.currentUser = updatedUser;
             res.status(200).json({ updatedUser });
@@ -138,7 +143,7 @@ router.post('/user/:userId/:isCompany/complete-profile', async (req, res, next) 
         };
 
     } catch (error) {
-        res.status(500).json({ error: 'An error ocurred while saving data' })
+        res.status(400).json({ error: 'An error ocurred while saving data' })
     }
 
 });
