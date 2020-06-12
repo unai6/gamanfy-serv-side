@@ -107,7 +107,7 @@ router.put('/:companyId/:offerId/edit-offer', async (req, res) => {
 
         let { companyId, offerId } = req.params;
         //scorepunc
-        const { scorePerRec, moneyPerRec } = req.body;
+        const { scorePerRec, moneyPerRec, sector, category, contract } = req.body;
 
         //contract services
         const { hasSourcingWithInfluencer, hasExclusiveHeadHunter } = req.body;
@@ -146,10 +146,10 @@ router.put('/:companyId/:offerId/edit-offer', async (req, res) => {
 
         let myCompany = await Company.findById(companyId);
         let offerInDB = await Offers.findById(offerId);
-        let addressId = await Address.create({ countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip, cityForOffer });
-        let sectorId = await Sector.create(req.body);
-        let categoryId = await Category.create(req.body);
-        let contractId = await Contract.create(req.body);
+        let addressId = await Address.findByIdAndUpdate(myCompany.addressId, { countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip, cityForOffer }, {new:true});
+        let sectorId = await Sector.findByIdAndUpdate(myCompany.sectorId, {sector}, {new:true});
+        let categoryId = await Category.findByIdAndUpdate(myCompany.categoryId, {category}, {new:true});
+        let contractId = await Contract.findByIdAndUpdate(myCompany.contractId, {contract}, {new:true});
 
         let updatedOffer = await Offers.findByIdAndUpdate(offerInDB._id, {
             $set: {
