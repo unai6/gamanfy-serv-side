@@ -100,4 +100,82 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
 });
 
 
+router.put('/:companyId/:offerId/edit-offer', async (req, res) => {
+    
+    
+    try {
+        
+        let { companyId, offerId } = req.params;
+        //scorepunc
+        const { scorePerRec, moneyPerRec } = req.body;
+
+        //contract services
+        const { hasSourcingWithInfluencer, hasExclusiveHeadHunter } = req.body;
+
+        //additional services
+        const { hasPersonalityTest, hasVideoInterview, hasKitOnBoardgingGamanfy } = req.body;
+
+        //gamanfy fee plus additional services
+        const { totalFee, sourcingWithInfluencer, exclusiveHeadHunter, personalityTest, videoInterview, kitOnBoardgingGamanfy } = req.body;
+
+        //company data 
+        const { processNum, description, website, recruiter } = req.body;
+
+        //job offer data
+        const { jobName, onDate, offDate, processState, isRemote, personsOnCharge, team } = req.body;
+        //job description
+        const { mainMission, jobDescription } = req.body;
+        //manager
+        const { managerDescription, managerName } = req.body;
+
+        //job address
+        const { countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip, cityForOffer } = req.body;
+
+        //category
+        const { employee, specialist, intermediateResp, direction, directiveCouncil, cofounder } = req.body;
+
+        //contract
+        const { autonomo, contratoDeDuraciónDeterminada, deRelevo, fijoDiscontinuo, formativo, Indefinido, aTiempoParcial, otrosContratos } = req.body;
+
+        //retribution
+        const { minGrossSalary, maxGrossSalary, variableRetribution, quantityVariableRetribution, showMoney } = req.body;
+        // min requirements
+        const { minExp, minStudies, keyKnowledge, keyCompetences, minReqDescription, Language, LangugageLevel } = req.body;
+        //interview Questions
+        const { question1, question2, question3, question4, question5 } = req.body;
+        
+        let myCompany = await Company.findById(companyId);
+        let offerInDB = await Offers.findById(offerId);
+        let addressId = await Address.create({ countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip, cityForOffer });
+        let sectorId = await Sector.create(req.body);
+        let categoryId = await Category.create(req.body);
+        let contractId = await Contract.create(req.body);
+
+        let updatedOffer = await Offers.findByIdAndUpdate(offerInDB._id, {
+            $set: {
+                contractServices: { hasSourcingWithInfluencer, hasExclusiveHeadHunter },
+                additionalServices: { hasPersonalityTest, hasVideoInterview, hasKitOnBoardgingGamanfy },
+                gamanfyFee: { totalFee, sourcingWithInfluencer, exclusiveHeadHunter, personalityTest, videoInterview, kitOnBoardgingGamanfy },
+                companyData: { processNum, description, website, recruiter },
+                jobOfferData: {
+                    jobName, onDate, offDate, processState, isRemote, personsOnCharge, team, mainMission, jobDescription,
+                    managerDescription, managerName,
+                },
+                retribution: { minGrossSalary, maxGrossSalary, variableRetribution, quantityVariableRetribution, showMoney },
+                minRequirements: { minExp, minStudies, keyKnowledge, keyCompetences, minReqDescription, Language, LangugageLevel },
+                videoInterviewQuestions: { question1, question2, question3, question4, question5 },
+                scorePerRec, moneyPerRec, addressId, sectorId, categoryId, contractId}, }, { new: true });
+        
+        let updatedCompany = Company.findByIdAndUpdate(myCompany._id, {updatedOffer}, {new:true})
+
+        res.status(200).json({ updatedOffer });
+
+    } catch (error) {
+        res.status(400).json({ error: 'An error occurred while retrieving offers' })
+    }
+
+
+})
+
+
 module.exports = router
