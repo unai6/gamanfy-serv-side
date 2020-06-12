@@ -6,6 +6,7 @@ const companyUserSchema = new Schema  ({
     taxId: String,
     countryName: String,
     city:String,
+    phoneNumber:String,
     addressId : {type: Schema.Types.ObjectId, ref: 'Address'},
     documentType: String,
     documentNumber: String,

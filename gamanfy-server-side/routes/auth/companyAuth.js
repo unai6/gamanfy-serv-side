@@ -136,7 +136,7 @@ router.put('/company/:companyId/edit-profile', async (req, res, next) => {
     try {
         const { companyId } = req.params;
         const checkCompany = await Company.findById(companyId);
-       console.log(checkCompany)
+       //console.log(checkCompany)
         //sectors
         const {sector}= req.body;
         const { countryCode, provinceINEcode, municipalityINEcode, street, number, zip, province,  municipality } = req.body;
