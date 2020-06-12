@@ -88,7 +88,7 @@ router.post(
                 // https://gamanfy-c2371.web.app/auth/confirmation/${newUser._id}/${token.token}/${newUser.isCompany}\n
                 // ${process.env.PUBLIC_DOMAIN}/auth/confirmation/${newUser._id}/${token.token}/${newUser.isCompany}\n`
                 await transporter.sendMail(mailOptions, function (err) {
-                    if (err) { return res.status(500).send({ msg: err.message }); } 
+                    if (err) { return res.status(500).send({ msg: err.message }); }
                     res.status(200).send('A verification email has been sent to ' + newUser.email + '.');
                 });
                 console.log(newUser.firstName)
@@ -111,22 +111,25 @@ router.post('/user/login', userAuthController.login);
 router.post('/user/:userId/:isaCompany/complete-profile', async (req, res, next) => {
 
     try {
-        let { isaCompany, userId} = req.params;
-        
-        const { companyName, documentType, documentNumber, contactPerson, taxId, website, city,  phoneNumber, numberOfEmployees,
-             urlLinkedin, birthDate, hasExp, countryCode, countryName, provinceINEcode, municipalityINEcode,
-              street, number, zip, invited, webCreated, province, municipality  } = req.body;
+        let { isaCompany, userId } = req.params;
+
+        const { companyName, documentType, documentNumber, contactPerson, taxId, website, city, phoneNumber, numberOfEmployees,
+            urlLinkedin, birthDate, hasExp, countryCode, countryName, provinceINEcode, municipalityINEcode,
+            street, number, zip, invited, webCreated, province, municipality } = req.body;
 
         const checkUser = await InfluencerUser.findById(userId);
         isaCompany = checkUser.isCompany
 
         let addressId = await Address.create({
-            province, municipality, countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip });
-        
+            province, municipality, countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip
+        });
+
         let sectorId = await Sector.create(req.body);
         if (checkUser.isCompany) {
-            const companyUser = await CompanyUser.create({ sectorId, addressId, phoneNumber, taxId, companyName, contactPerson, 
-                documentType, numberOfEmployees, documentNumber, website, city, countryName });
+            const companyUser = await CompanyUser.create({
+                sectorId, addressId, phoneNumber, taxId, companyName, contactPerson,
+                documentType, numberOfEmployees, documentNumber, website, city, countryName
+            });
 
             const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { companyUser, addressId }, { new: true });
             req.session.currentUser = updatedUser;
@@ -134,7 +137,7 @@ router.post('/user/:userId/:isaCompany/complete-profile', async (req, res, next)
 
 
         } else if (checkUser.isCompany === false) {
-            const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { addressId, city,  phoneNumber, urlLinkedin, birthDate, hasExp }, { new: true });
+            const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { addressId, city, phoneNumber, urlLinkedin, birthDate, hasExp }, { new: true });
             req.session.currentUser = updatedUser;
             res.status(200).json({ updatedUser });
 
@@ -160,50 +163,55 @@ router.put('/user/:userId/edit-profile', async (req, res, next) => {
         let { userId } = req.params;
 
         const isCompanyUser = await InfluencerUser.findById(userId).populate('companyUser');
-
         let { companyName, documentType, documentNumber, contactPerson, taxId, website, city, phoneNumber, numberOfEmployees,
             urlLinkedin, birthDate, hasExp, countryCode, countryName, provinceINEcode, municipalityINEcode,
-            street, number, zip, invited, webCreated, province, municipality, sector, email, firstName, lastName, isCompany, isCandidate, yearsExp,
-            actualPosition, password, yearsInPosition, actualCompany, profileDescription
-        } = req.body;
-         
-        if(isCompanyUser.isCompany){
-            
-            let addressId = await Address.findByIdAndUpdate(isCompanyUser.companyUser.addressId, {province, municipality, countryCode, 
-                countryName, provinceINEcode, municipalityINEcode, street, number, zip});
+            street, number, zip, invited, webCreated, province, municipality, sector, email, firstName, lastName, isCompany, isCandidate,
+            yearsExp, actualPosition, yearsInPosition, actualCompany, profileDescription, actualSalary, password } = req.body;
 
-            let sectorId = await Sector.findByIdAndUpdate(isCompanyUser.companyUser.sectorId, {sector});
-            
-            let companyUser = await CompanyUser.findByIdAndUpdate(isCompanyUser.companyUser, { sectorId, addressId, phoneNumber, 
-                taxId, companyName, contactPerson, documentType, numberOfEmployees, documentNumber, website, city, countryName});
-            
+        if (isCompanyUser.isCompany) {
+
             const salt = bcrypt.genSaltSync(saltRounds);
             const hashPass = bcrypt.hashSync(password, salt);
-            let updatedUser = await InfluencerUser.findByIdAndUpdate(isCompanyUser, {companyUser, addressId, email, password:hashPass, firstName, lastName, phoneNumber});
 
-            req.session.currentUser = updatedUser ;
-            res.status(200).json({message:'company user updated correctly'})
+            let addressId = await Address.findByIdAndUpdate(isCompanyUser.companyUser.addressId, {
+                province, municipality, countryCode,
+                countryName, provinceINEcode, municipalityINEcode, street, number, zip });
+
+            let sectorId = await Sector.findByIdAndUpdate(isCompanyUser.companyUser.sectorId, { sector });
+
+            let companyUser = await CompanyUser.findByIdAndUpdate(isCompanyUser.companyUser, {
+                sectorId, addressId, phoneNumber, taxId, companyName, contactPerson, documentType, numberOfEmployees, documentNumber, 
+                website, city, countryName
+            });
+            
+            let updatedUser = await InfluencerUser.findByIdAndUpdate(isCompanyUser, {
+                companyUser, addressId, email, password: hashPass, firstName, lastName, phoneNumber
+            });
+
+            req.session.currentUser = updatedUser;
+            res.status(200).json({ message: 'company user updated correctly' });
 
         } else {
-            let addressId = await Address.findByIdAndUpdate(isCompanyUser.addressId, {province, municipality, countryCode, 
-                countryName, provinceINEcode, municipalityINEcode, street, number, zip});
+            let addressId = await Address.findByIdAndUpdate(isCompanyUser.addressId, {
+                province, municipality, countryCode,
+                countryName, provinceINEcode, municipalityINEcode, street, number, zip
+            });
             const salt = bcrypt.genSaltSync(saltRounds);
             const hashPass = bcrypt.hashSync(password, salt);
+            let updatedUser = await InfluencerUser.findByIdAndUpdate(isCompanyUser._id, {
+                firstName, lastName, password: hashPass, birthDate, email, addressId,
+                phoneNumber, countryName, city, urlLinkedin, isCompany, isCandidate, hasExp, yearsExp, actualPosition, yearsInPosition,
+                actualCompany, profileDescription, actualSalary
+            });
 
-            let updatedUser = await InfluencerUser.findByIdAndUpdate(isCompanyUser._id, {firstName, lastName, password:hashPass, birthDate, email, 
-                    addressId, phoneNumber, countryName, city, urlLinkedin, isCompany, isCandidate, hasExp, yearsExp, actualPosition,
-                    yearsInPosition, actualCompany, profileDescription
-                });
+            req.session.currentUser = updatedUser;
+            res.status(200).json({ message: 'influencer user updated correctly' })
 
-                req.session.currentUser = updatedUser;
-                res.status(200).json({message: 'influencer user updated correctly'})
-                
-            res.json({message:'it is not a company user'})
         };
 
     } catch (error) {
         res.status(400).json({ message: 'An error occured while editing user profile' });
-    }   
+    }
 
 });
 
