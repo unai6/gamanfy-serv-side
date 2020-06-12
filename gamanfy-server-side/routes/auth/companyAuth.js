@@ -134,23 +134,21 @@ router.put('/company/:companyId/edit-profile', async (req, res, next) => {
 
 
     try {
+        
         const { companyId } = req.params;
         const checkCompany = await Company.findById(companyId);
-       //console.log(checkCompany)
-        //sectors
-        const {sector}= req.body;
-        const { countryCode, provinceINEcode, municipalityINEcode, street, number, zip, province,  municipality } = req.body;
-        //company
-        const {firstName, lastName, description, companyName, email, password, isHeadHunter, taxId, contactPerson, yearsExp, website, phoneNumber, numberOfEmployees, countryName, city } = req.body;
-       
-
+        let {sector,  province, municipality, countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip,
+            isHeadHunter, companyName, firstName, lastName, email, password, city, phoneNumber, taxId, contactPerson, 
+            yearsExp, website, numberOfEmployees, description} = req.body;
+            const salt = bcrypt.genSaltSync(saltRounds);
+            const hashPass = bcrypt.hashSync(password, salt);
+            
         let addressId = await Address.findByIdAndUpdate(checkCompany.addressId, { province, municipality, countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip }, { new: true });
         let sectorId = await Sector.findByIdAndUpdate(checkCompany.sectorId, {sector}, { new: true });
-
-
-        const salt = bcrypt.genSaltSync(saltRounds);
-        const hashPass = bcrypt.hashSync(password, salt);
-        let updatedCompany = await Company.findByIdAndUpdate(checkCompany._id, {addressId, sectorId, description, companyName, firstName, lastName, email, password: hashPass, isHeadHunter, taxId, contactPerson, yearsExp, website, phoneNumber, numberOfEmployees, city, countryName }, { new: true });
+        let updatedCompany = await Company.findByIdAndUpdate(checkCompany._id, {addressId, sectorId,  isHeadHunter, companyName, firstName,
+            lastName, email, password:hashPass, countryName, city, phoneNumber, taxId, contactPerson, 
+            yearsExp, website, numberOfEmployees, description }, { new: true });
+      
         req.session.currentUser = updatedCompany;
         
         res.status(200).json({ updatedCompany });
