@@ -101,10 +101,10 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
 
 
 router.put('/:companyId/:offerId/edit-offer', async (req, res) => {
-    
-    
+
+
     try {
-        
+
         let { companyId, offerId } = req.params;
         //scorepunc
         const { scorePerRec, moneyPerRec } = req.body;
@@ -143,7 +143,7 @@ router.put('/:companyId/:offerId/edit-offer', async (req, res) => {
         const { minExp, minStudies, keyKnowledge, keyCompetences, minReqDescription, Language, LangugageLevel } = req.body;
         //interview Questions
         const { question1, question2, question3, question4, question5 } = req.body;
-        
+
         let myCompany = await Company.findById(companyId);
         let offerInDB = await Offers.findById(offerId);
         let addressId = await Address.create({ countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip, cityForOffer });
@@ -164,18 +164,37 @@ router.put('/:companyId/:offerId/edit-offer', async (req, res) => {
                 retribution: { minGrossSalary, maxGrossSalary, variableRetribution, quantityVariableRetribution, showMoney },
                 minRequirements: { minExp, minStudies, keyKnowledge, keyCompetences, minReqDescription, Language, LangugageLevel },
                 videoInterviewQuestions: { question1, question2, question3, question4, question5 },
-                scorePerRec, moneyPerRec, addressId, sectorId, categoryId, contractId}, }, { new: true });
-        
-        let updatedCompany = Company.findByIdAndUpdate(myCompany._id, {updatedOffer}, {new:true})
+                scorePerRec, moneyPerRec, addressId, sectorId, categoryId, contractId
+            },
+        }, { new: true });
+
+        let updatedCompany = Company.findByIdAndUpdate(myCompany._id, { updatedOffer }, { new: true })
 
         res.status(200).json({ updatedOffer });
 
     } catch (error) {
         res.status(400).json({ error: 'An error occurred while retrieving offers' })
+    };
+});
+
+
+router.post('/:companyId/:offerId/delete-offer', async (req, res) => {
+    try {
+        const { companyId, offerId } = req.params;
+        let updatedCompany = await Company.findByIdAndUpdate(companyId, { $pull : { postedOffers : { $in : [ offerId ] } } }, { multi:true });
+        await Offers.findByIdAndRemove(offerId)
+        
+        req.session.currentUser = updatedCompany;
+        res.status(200).json({message:'offer deleted succesfully'});
+    
+    } catch (error) {
+        res.status(400).json({message: 'An error occurred while trying to delete the offer'});
     }
 
 
 })
+
+
 
 
 module.exports = router
