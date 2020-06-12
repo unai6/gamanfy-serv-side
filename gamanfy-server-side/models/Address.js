@@ -11,18 +11,8 @@ const addressSchema = new Schema({
     street: String,
     number: String,
     zip: String,
-    province: [{
-       type:{ type: String},
-       provinceName: {type: String}, 
-       provinceCode: {type: String},
-       provinceDescription: {type:String}
-    }],
-
-    municipality: [{
-        type: {type: String},
-        municipalityCode: {type: String },
-        municipalityDescription: {type: String}
-    }]
+    province: String,
+    municipality: String
 },
 
     {
@@ -33,3 +23,16 @@ const addressSchema = new Schema({
 const Address = mongoose.model("Address", addressSchema);
 
 module.exports = Address;
+
+/*    province: [{
+       type:{ type: String},
+       provinceName: {type: String}, 
+       provinceCode: {type: String},
+    }], 
+    
+      municipality: [{
+        type: {type: String},
+        municipalityCode: {type: String },
+        municipalityDescription: {type: String}
+    }]
+},*/
