@@ -11,6 +11,8 @@ const jobOfferSchema = new Schema  ([{
       jobOfferData:{type:Object, required:true},
       addressId: {type: Schema.Types.ObjectId, ref: 'Address', required:true},
       sectorId: {type: Schema.Types.ObjectId, ref: 'Sector', required:true},
+      categoryId:{type: Schema.Types.ObjectId, ref: 'Category', required:true},
+      contractId:{type: Schema.Types.ObjectId, ref: 'Contract', required:true},
       retribution:{type:Object, required:true},
       minRequirements:{type:Object, required:true},
       videoInterviewQuestions:{type:Object, required:true}

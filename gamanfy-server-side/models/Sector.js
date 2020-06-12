@@ -5,6 +5,15 @@ const Schema = mongoose.Schema;
 const sectorSchema = new Schema({
 sector:String,
 
+})
+
+
+
+
+const Sector = mongoose.model("Sector", sectorSchema);
+
+module.exports = Sector;
+
 /* 
 Tipos de sector
 
@@ -42,11 +51,3 @@ _31_Enseñanza_superior: String,
 _32_Entretenimiento: String,
 _33_Equipos_informáticos: String
  */
-})
-
-
-
-
-const Sector = mongoose.model("Sector", sectorSchema);
-
-module.exports = Sector;
