@@ -29,8 +29,7 @@ router.get('/getData/:companyId', async (req, res) => {
 
     try{ const {companyId} = req.params;
 
-    let getCompanyData = await Company.findById(companyId);
-
+    let getCompanyData = await Company.findById(companyId).populate("postedOffers")
     res.status(200).json(getCompanyData);
         
     }catch(error){
@@ -57,7 +56,7 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
 
         //company data 
         let { processNum, description, website, recruiter } = req.body;
-
+        processNum = company.processNum
         //job offer data
         const { jobName, onDate, offDate, processState, isRemote, personsOnCharge, team } = req.body;
         //job description
@@ -82,7 +81,7 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
         const { question1, question2, question3, question4, question5 } = req.body;
 
 
-        const company = await Company.findById(companyId);
+        let company = await Company.findById(companyId) ;
         
 
         if(company.description !== '' || null){
