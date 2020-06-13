@@ -15,10 +15,10 @@ const Address = require('../../models/Address');
 router.get('/dashboard', async (req, res, next) => {
 
     try {
-        const allOffers = await Offers.find();
+        let allOffers = await Offers.find({"contractServices.hasSourcingWithInfluencer" : true}).limit(10);
         allOffers.length !== 0
             ? res.json({ allOffers })
-            : res.json({ message: "No products found!" });
+            : res.status(404).json({ message: "No products found!" });
 
     } catch (error) {
         res.status(404).json({ error: 'An error occurred while bringing offers' });

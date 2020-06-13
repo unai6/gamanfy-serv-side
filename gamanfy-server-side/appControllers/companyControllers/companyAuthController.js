@@ -16,10 +16,11 @@ exports.companyLogin = async (req, res) => {
 
     const token = signToken(user, remember);
     res.status(200).json({
-      token,
+      token,  
       user: {
         userId: user.id,
-        email: user.email
+        email: user.email,
+        firstName:user.firstName
       }
     })
   } catch (error) {
