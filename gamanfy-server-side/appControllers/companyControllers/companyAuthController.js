@@ -1,4 +1,4 @@
-const Company = require('../../models/InfluencerUser');
+const Company = require('../../models/Company');
 
 const bcrypt = require("bcrypt");
 const {signToken} = require('../../helpers/signToken');

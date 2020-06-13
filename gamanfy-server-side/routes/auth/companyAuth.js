@@ -160,8 +160,9 @@ router.put('/company/:companyId/edit-profile', async (req, res, next) => {
 });
 
 
-router.get('/company/:companyId/dashboard', checkToken, (req, res) => {
+router.get('/company/:companyId/dashboard', checkToken, async (req, res) => {
     const { companyId } = req.params
+    let getUserData = await Company.findById(companyId);
 
     jwt.verify(req.token, process.env.SECRET_KEY, { companyId }, (err, authorizedData) => {
         if (err) {
@@ -171,14 +172,30 @@ router.get('/company/:companyId/dashboard', checkToken, (req, res) => {
 
             res.json({
                 message: 'Successful login',
-                authorizedData
+                authorizedData,
+                getUserData
             });
 
             res.status(200).json('Successful connection to protected route');
+            res.json(getUserData)
         }
     });
 });
 
+
+router.get('/company/getData/:companyId', async (req, res) => {
+
+    try{ const {companyId} = req.params;
+
+    let getCompanyData = await Company.findById(companyId);
+
+    res.status(200).json(getCompanyData);
+    
+    }catch(error){
+        res.status(400).json({mssg: 'error'})
+    }
+   
+})
 
 router.post("/company/logout", isLoggedIn(), (req, res, next) => {
     req.session.destroy();

@@ -240,7 +240,6 @@ router.get('/user/:userId/dashboard', checkToken, async (req, res) => {
 });
 
 
-
 router.post("/user/logout", isLoggedIn(), (req, res, next) => {
     req.session.destroy();
     res.status(204).send();

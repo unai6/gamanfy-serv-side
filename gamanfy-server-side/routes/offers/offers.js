@@ -25,6 +25,20 @@ router.get('/dashboard', async (req, res, next) => {
     }
 });
 
+router.get('/getData/:companyId', async (req, res) => {
+
+    try{ const {companyId} = req.params;
+
+    let getCompanyData = await Company.findById(companyId);
+
+    res.status(200).json(getCompanyData);
+        
+    }catch(error){
+        res.status(400).json({mssg: 'error'})
+    }
+   
+})
+
 router.post('/:companyId/post-job-offer', async (req, res, next) => {
 
     try {
@@ -36,13 +50,13 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
         const { hasSourcingWithInfluencer, hasExclusiveHeadHunter } = req.body;
 
         //additional services
-        const { hasPersonalityTest, hasVideoInterview, hasKitOnBoardgingGamanfy } = req.body;
+        const { hasPersonalityTest, hasVideoInterview, hasKitOnBoardingGamanfy } = req.body;
 
         //gamanfy fee plus additional services
         const { totalFee, sourcingWithInfluencer, exclusiveHeadHunter, personalityTest, videoInterview, kitOnBoardgingGamanfy } = req.body;
 
         //company data 
-        const { processNum, description, website, recruiter } = req.body;
+        let { processNum, description, website, recruiter } = req.body;
 
         //job offer data
         const { jobName, onDate, offDate, processState, isRemote, personsOnCharge, team } = req.body;
@@ -68,7 +82,13 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
         const { question1, question2, question3, question4, question5 } = req.body;
 
 
-        const company = await Company.findById(companyId)
+        const company = await Company.findById(companyId);
+        
+
+        if(company.description !== '' || null){
+            description = company.description
+        };
+
         let addressId = await Address.create({ countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip, cityForOffer });
         let sectorId = await Sector.create(req.body);
         let categoryId = await Category.create(req.body);
@@ -77,7 +97,7 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
             scorePerRec,
             moneyPerRec,
             contractServices: { hasSourcingWithInfluencer, hasExclusiveHeadHunter },
-            additionalServices: { hasPersonalityTest, hasVideoInterview, hasKitOnBoardgingGamanfy },
+            additionalServices: { hasPersonalityTest, hasVideoInterview, hasKitOnBoardingGamanfy },
             gamanfyFee: { totalFee, sourcingWithInfluencer, exclusiveHeadHunter, personalityTest, videoInterview, kitOnBoardgingGamanfy },
             companyData: { processNum, description, website, recruiter },
             jobOfferData: {
@@ -113,7 +133,7 @@ router.put('/:companyId/:offerId/edit-offer', async (req, res) => {
         const { hasSourcingWithInfluencer, hasExclusiveHeadHunter } = req.body;
 
         //additional services
-        const { hasPersonalityTest, hasVideoInterview, hasKitOnBoardgingGamanfy } = req.body;
+        const { hasPersonalityTest, hasVideoInterview, hasKitOnBoardingGamanfy } = req.body;
 
         //gamanfy fee plus additional services
         const { totalFee, sourcingWithInfluencer, exclusiveHeadHunter, personalityTest, videoInterview, kitOnBoardgingGamanfy } = req.body;
@@ -154,7 +174,7 @@ router.put('/:companyId/:offerId/edit-offer', async (req, res) => {
         let updatedOffer = await Offers.findByIdAndUpdate(offerInDB._id, {
             $set: {
                 contractServices: { hasSourcingWithInfluencer, hasExclusiveHeadHunter },
-                additionalServices: { hasPersonalityTest, hasVideoInterview, hasKitOnBoardgingGamanfy },
+                additionalServices: { hasPersonalityTest, hasVideoInterview, hasKitOnBoardingGamanfy },
                 gamanfyFee: { totalFee, sourcingWithInfluencer, exclusiveHeadHunter, personalityTest, videoInterview, kitOnBoardgingGamanfy },
                 companyData: { processNum, description, website, recruiter },
                 jobOfferData: {

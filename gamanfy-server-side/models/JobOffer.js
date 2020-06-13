@@ -30,7 +30,7 @@ module.exports = JobOffer;
 scorePerRec : {type: String, default:'5'},
       moneyPerRec:String,
       contractServices : [{
-            type:{type:String},
+            
             sourcingWithInfluencer : {type:Boolean, default: false},
             exclusiveHeadHunter : {type:Boolean, default:false}
       }],
