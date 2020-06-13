@@ -164,7 +164,8 @@ router.get('/company/:companyId/dashboard', checkToken, async (req, res) => {
     const { companyId } = req.params
     let getUserData = await Company.findById(companyId);
 
-    jwt.verify(req.token, process.env.SECRET_KEY, { companyId }, (err, authorizedData) => {
+    if(getUserData.isVerified === true){ 
+          jwt.verify(req.token, process.env.SECRET_KEY, { companyId }, (err, authorizedData) => {
         if (err) {
 
             res.status(403).json('Protected route, you need an auth Token');
@@ -180,6 +181,10 @@ router.get('/company/:companyId/dashboard', checkToken, async (req, res) => {
             res.json(getUserData)
         }
     });
+    } else {
+        res.status(404).json('User is not verified')
+    }
+ 
 });
 
 
