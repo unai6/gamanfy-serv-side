@@ -63,7 +63,7 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
         //job description
         const { mainMission, jobDescription } = req.body;
         //manager
-        const { managerDescription, managerName } = req.body;
+        const { managerDescription, managerName } = req.body;   
 
         //job address
         const { countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip, cityForOffer } = req.body;
