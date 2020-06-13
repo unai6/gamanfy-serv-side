@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const crypto = require('crypto');
 const createError = require("http-errors");
 const Offers = require('../../models/JobOffer.js');
 const Contract = require('../../models/Contract');
@@ -56,7 +57,7 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
 
         //company data 
         let { processNum, description, website, recruiter } = req.body;
-        processNum = company.processNum
+        processNum = crypto.randomBytes(4).toString('hex')
         //job offer data
         const { jobName, onDate, offDate, processState, isRemote, personsOnCharge, team } = req.body;
         //job description
