@@ -85,8 +85,7 @@ router.post(
                     subject: 'Account Verification Token',
                     text: `Welcome to Gamanfy ${newUser.firstName}.\n Please verify your account by clicking the link:  ${process.env.PUBLIC_DOMAIN}/auth/confirmation/${newUser._id}/${token.token}/${newUser.isCompany}\n`
                 };
-                // https://gamanfy-c2371.web.app/auth/confirmation/${newUser._id}/${token.token}/${newUser.isCompany}\n
-                // ${process.env.PUBLIC_DOMAIN}/auth/confirmation/${newUser._id}/${token.token}/${newUser.isCompany}\n`
+               
                  transporter.sendMail(mailOptions, function (err) {
                     if (err) { return res.status(500).send({ msg: err.message }); }
                     res.status(200).send('A verification email has been sent to ' + newUser.email + '.');
