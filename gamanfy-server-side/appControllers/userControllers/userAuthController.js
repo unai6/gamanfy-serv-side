@@ -19,7 +19,8 @@ exports.login = async (req, res) => {
       token,
       user: {
         userId: user.id,
-        email: user.email
+        email: user.email,
+        isVerified: user.isVerified
       }
     })
   } catch (error) {

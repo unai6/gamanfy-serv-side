@@ -20,7 +20,8 @@ exports.companyLogin = async (req, res) => {
       user: {
         userId: user.id,
         email: user.email,
-        firstName:user.firstName
+        firstName:user.firstName,
+        isVerified: user.isVerified
       }
     })
   } catch (error) {

@@ -87,7 +87,7 @@ router.post(
                 };
                 // https://gamanfy-c2371.web.app/auth/confirmation/${newUser._id}/${token.token}/${newUser.isCompany}\n
                 // ${process.env.PUBLIC_DOMAIN}/auth/confirmation/${newUser._id}/${token.token}/${newUser.isCompany}\n`
-                await transporter.sendMail(mailOptions, function (err) {
+                 transporter.sendMail(mailOptions, function (err) {
                     if (err) { return res.status(500).send({ msg: err.message }); }
                     res.status(200).send('A verification email has been sent to ' + newUser.email + '.');
                 });
