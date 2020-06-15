@@ -19,6 +19,7 @@ exports.confirmationToken = function (req, res, next) {
             companyinDB.save(function (err) {
                 if (err) { return res.status(500).send({ msg: err.message }); }
                 try {
+                    
                     res
                     .cookie(process.env.PUBLIC_DOMAIN, {
                       maxAge: 432000000,
