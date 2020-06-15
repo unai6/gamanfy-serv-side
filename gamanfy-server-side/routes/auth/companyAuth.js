@@ -106,11 +106,9 @@ router.post(
         };
     });
 
-router.post(`/confirmation/:companyId/:companyToken`, confirmationToken, (req, res, next) => {
-});
+router.post(`/confirmation/:companyId/:companyToken`, confirmationToken);
 
-router.post(`/resend`, resendToken, (req, res, next) => {
-});
+router.post(`/resend`, resendToken);
 
 
 router.post('/company/login', companyAuthController.companyLogin);
