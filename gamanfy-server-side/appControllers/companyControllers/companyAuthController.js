@@ -21,7 +21,7 @@ exports.companyLogin = async (req, res) => {
       res.cookie(process.env.PUBLIC_DOMAIN, {
           maxAge: 432000000,
           httpOnly: true,
-          sameSite: 'none',
+          sameSite: true,
           secure: true,
         })
         .status(200)
