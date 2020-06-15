@@ -56,14 +56,14 @@ router.post(
                     if (err) { return res.status(500).send({ msg: err.message }); }
                 });
                 
-               res
+                res
                 .cookie(process.env.PUBLIC_DOMAIN, {
-                  maxAge:  432000000,
+                  maxAge: 432000000,
                   httpOnly: true,
-                  secure: true,
-                  sameSite: 'none',
+                  secure: false,
+                  sameSite: true,
                 })
-                .status(200); 
+                .status(200)
                 
                 let transporter = nodemailer.createTransport({
                     
@@ -128,16 +128,16 @@ router.post('/company/:companyId/complete-profile', async (req, res, next) => {
             yearsExp, city, countryName, contactPerson, description,
             companyName, sectorId, taxId, addressId, website, phoneNumber, numberOfEmployees
         }, { new: true });
-        
-        res
-        .cookie(process.env.PUBLIC_DOMAIN, {
-          maxAge:  432000000,
-          httpOnly: true,
-          secure: true,
-          sameSite: 'none',
-        })
-        .status(200); 
         res.status(200).json({ updatedCompany });
+
+        res
+      .cookie(process.env.PUBLIC_DOMAIN, {
+        maxAge: 432000000,
+        httpOnly: true,
+        secure: false,
+        sameSite: true,
+      })
+      .status(200) 
 
     } catch (error) {
         res.status(400).json({ error: 'An error occured while completing company profile' })

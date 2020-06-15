@@ -10,14 +10,14 @@ exports.companyLogin = async (req, res) => {
   try {
     let user = await Company.findOne({ email });
     res
-  .cookie(process.env.PUBLIC_DOMAIN, {
-    maxAge:  432000000,
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none',
-  })
-  .status(200)
-  
+      .cookie(process.env.PUBLIC_DOMAIN, {
+        maxAge: 432000000,
+        httpOnly: true,
+        secure: false,
+        sameSite: true,
+      })
+      .status(200)
+
     if (!user) return res.status(404).json({ msg: 'User not found' });
 
     const passCorrect = bcrypt.compareSync(password, user.password);
@@ -36,13 +36,13 @@ exports.companyLogin = async (req, res) => {
           isVerified: user.isVerified
         }
       });
-      
-    }
-    
-    
 
-    } catch (e) {
-      console.error(e);
-      res.status(500).json({ msg: "Server error" });
     }
+
+
+
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ msg: "Server error" });
   }
+}
