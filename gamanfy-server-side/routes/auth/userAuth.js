@@ -28,7 +28,7 @@ const {
 
 router.post(
     '/user/signup',
-    validationLoggin(),
+    
     async (req, res, next) => {
 
         let { email, password, repeatPassword, firstName, lastName, isCompany, isCandidate } = req.body;
@@ -244,7 +244,7 @@ router.get('/user/:userId/dashboard', checkToken, async (req, res) => {
 
 });
 
-router.post("/company/logout", async (req, res, next) => {
+router.post("/user/logout", async (req, res, next) => {
     try {
         res.clearCookie(process.env.PUBLIC_DOMAIN);
         res.status(200).json({ msg: "Log out sucesfully" });
