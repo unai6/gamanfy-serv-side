@@ -117,7 +117,6 @@ router.post('/company/:companyId/complete-profile', async (req, res, next) => {
 
     try {
   
-
         const { companyId } = req.params;
         const checkCompany = await Company.findById(companyId);
         const { yearsExp, contactPerson, description, city, companyName, taxId, countryCode, countryName,
