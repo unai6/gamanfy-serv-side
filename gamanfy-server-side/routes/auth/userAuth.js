@@ -19,14 +19,16 @@ const {
 } = require('../../appControllers/userControllers/tokenControllers');
 
 const {
-   
+    
     validationLoggin,
     checkToken
 } = require("../../helpers/middlewares");
 
+
+
 router.post(
     '/user/signup',
-
+    validationLoggin(),
     async (req, res, next) => {
 
         let { email, password, repeatPassword, firstName, lastName, isCompany, isCandidate } = req.body;

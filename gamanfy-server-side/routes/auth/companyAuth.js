@@ -28,9 +28,10 @@ const {
 
 router.post(
     '/company/signup',
-
-
-
+    
+    
+    
+    
     async (req, res, next) => {
 
         let { firstName, lastName, email, password, companyName, isHeadHunter } = req.body;
@@ -55,14 +56,14 @@ router.post(
                     if (err) { return res.status(500).send({ msg: err.message }); }
                 });
                 
-                res
+               res
                 .cookie(process.env.PUBLIC_DOMAIN, {
                   maxAge:  432000000,
                   httpOnly: true,
                   secure: true,
                   sameSite: 'none',
                 })
-                .status(200);
+                .status(200); 
                 
                 let transporter = nodemailer.createTransport({
                     
@@ -126,8 +127,16 @@ router.post('/company/:companyId/complete-profile', async (req, res, next) => {
         const updatedCompany = await Company.findByIdAndUpdate(checkCompany, {
             yearsExp, city, countryName, contactPerson, description,
             companyName, sectorId, taxId, addressId, website, phoneNumber, numberOfEmployees
-        }, { new: true })
-       
+        }, { new: true });
+        
+        res
+        .cookie(process.env.PUBLIC_DOMAIN, {
+          maxAge:  432000000,
+          httpOnly: true,
+          secure: true,
+          sameSite: 'none',
+        })
+        .status(200); 
         res.status(200).json({ updatedCompany });
 
     } catch (error) {
