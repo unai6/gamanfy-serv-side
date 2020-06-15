@@ -38,24 +38,15 @@ router.post(
 
         try {
             const emailExists = await Company.findOne({ email }, 'email');
-            res
-            .cookie(process.env.PUBLIC_DOMAIN, {
-              maxAge:  432000000,
-              httpOnly: true,
-              secure: true,
-              sameSite: 'none',
-            })
-            .status(200);
-            
             if (emailExists) {
-
+                
                 return res.json('email already exists in DB');
-
+                
             } else if (isHeadHunter === 'on') {
                 isHeadhunter = true
 
             } else {
-
+                
                 const salt = bcrypt.genSaltSync(saltRounds);
                 const hashPass = bcrypt.hashSync(password, salt);
                 const newCompany = await Company.create({ firstName, lastName, email, password: hashPass, companyName, isHeadHunter });
@@ -63,9 +54,18 @@ router.post(
                 token.save(function (err) {
                     if (err) { return res.status(500).send({ msg: err.message }); }
                 });
-
+                
+                res
+                .cookie(process.env.PUBLIC_DOMAIN, {
+                  maxAge:  432000000,
+                  httpOnly: true,
+                  secure: true,
+                  sameSite: 'none',
+                })
+                .status(200);
+                
                 let transporter = nodemailer.createTransport({
-
+                    
                     host: 'smtp.ionos.es',
                     port: 587,
                     logger: true,
