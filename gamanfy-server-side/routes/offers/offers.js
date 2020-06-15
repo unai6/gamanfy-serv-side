@@ -77,7 +77,7 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
         //retribution
         const { minGrossSalary, maxGrossSalary, variableRetribution, quantityVariableRetribution, showMoney } = req.body;
         // min requirements
-        const { minExp, minStudies, keyKnowledge, keyCompetences, minReqDescription, Language, LangugageLevel } = req.body;
+        const { minExp, minStudies, keyKnowledge, keyComp, minReqDescription, Language, LangugageLevel } = req.body;
         //interview Questions
         const { question1, question2, question3, question4, question5 } = req.body;
 
@@ -108,7 +108,8 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
             manager:{managerDescription, managerName},
             addressId, sectorId, categoryId, contractId,
             retribution: { minGrossSalary, maxGrossSalary, variableRetribution, quantityVariableRetribution, showMoney },
-            minRequirements: { minExp, minStudies, keyKnowledge, keyCompetences, minReqDescription, Language, LangugageLevel },
+            minRequirements: { minExp, minStudies, keyKnowledge, minReqDescription, Language, LangugageLevel },
+            keyCompetences:[keyComp],
             videoInterviewQuestions: { question1, question2, question3, question4, question5 }
         });
         let updatedCompany = await Company.findByIdAndUpdate(company, { $push: { postedOffers: postedOffers._id } }, { new: true })
@@ -161,7 +162,7 @@ router.put('/:companyId/:offerId/edit-offer', async (req, res) => {
         //retribution
         const { minGrossSalary, maxGrossSalary, variableRetribution, quantityVariableRetribution, showMoney } = req.body;
         // min requirements
-        const { minExp, minStudies, keyKnowledge, keyCompetences, minReqDescription, Language, LangugageLevel } = req.body;
+        const { minExp, minStudies, keyKnowledge, keyComp, minReqDescription, Language, LangugageLevel } = req.body;
         //interview Questions
         const { question1, question2, question3, question4, question5 } = req.body;
 
@@ -185,7 +186,8 @@ router.put('/:companyId/:offerId/edit-offer', async (req, res) => {
                 jobDescription : {mainMission, team, jobDescription},
                 manager:{managerDescription, managerName},
                 retribution: { minGrossSalary, maxGrossSalary, variableRetribution, quantityVariableRetribution, showMoney },
-                minRequirements: { minExp, minStudies, keyKnowledge, keyCompetences, minReqDescription, Language, LangugageLevel },
+                minRequirements: { minExp, minStudies, keyKnowledge, minReqDescription, Language, LangugageLevel },
+                keyCompetences :{keyComp},
                 videoInterviewQuestions: { question1, question2, question3, question4, question5 },
                 scorePerRec, moneyPerRec, addressId, sectorId, categoryId, contractId
             },

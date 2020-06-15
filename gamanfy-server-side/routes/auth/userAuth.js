@@ -152,7 +152,7 @@ router.post('/user/:userId/:isaCompany/complete-profile', async (req, res, next)
 
 
 
-router.put('/user/:userId/edit-profile', async (req, res, next) => {
+router.put('/user/:userId/edit-profile', checkToken, async (req, res, next) => {
 
     try {
 

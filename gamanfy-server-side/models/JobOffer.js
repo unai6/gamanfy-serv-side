@@ -15,6 +15,7 @@ const jobOfferSchema = new Schema  ([{
       contractId:{type: Schema.Types.ObjectId, ref: 'Contract', required:true},
       retribution:{type:Object, required:true},
       minRequirements:{type:Object, required:true},
+      keyCompetences:{type:Array, required:true},
       videoInterviewQuestions:{type:Object, required:true}
 }])
 
