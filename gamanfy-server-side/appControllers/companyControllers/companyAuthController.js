@@ -22,7 +22,7 @@ exports.companyLogin = async (req, res) => {
           maxAge: 432000000,
           httpOnly: true,
           secure: true,
-          sameSite: 'none',
+          sameSite: 'None',
         })
         .status(200)
       
