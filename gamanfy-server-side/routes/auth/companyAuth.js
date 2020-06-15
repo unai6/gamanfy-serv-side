@@ -123,7 +123,8 @@ router.post('/company/:companyId/complete-profile', async (req, res, next) => {
         secure: true,
         sameSite: 'none',
       })
-      .status(200) 
+      .status(200);
+      
         const { companyId } = req.params;
         const checkCompany = await Company.findById(companyId);
         const { yearsExp, contactPerson, description, city, companyName, taxId, countryCode, countryName,
