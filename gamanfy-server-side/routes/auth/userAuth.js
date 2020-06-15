@@ -19,17 +19,13 @@ const {
 } = require('../../appControllers/userControllers/tokenControllers');
 
 const {
-    isLoggedIn,
-    isNotLoggedIn,
+   
     validationLoggin,
     checkToken
 } = require("../../helpers/middlewares");
 
 router.post(
     '/user/signup',
-
-    isNotLoggedIn(),
-    validationLoggin(),
 
     async (req, res, next) => {
 

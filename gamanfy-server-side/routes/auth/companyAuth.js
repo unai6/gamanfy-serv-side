@@ -19,8 +19,7 @@ const {
 
 
 const {
-    isLoggedIn,
-    isNotLoggedIn,
+
     validationLoggin,
     checkToken
 } = require("../../helpers/middlewares");
@@ -30,8 +29,7 @@ const {
 router.post(
     '/company/signup',
 
-    isNotLoggedIn(),
-    validationLoggin(),
+
 
     async (req, res, next) => {
 
@@ -106,10 +104,7 @@ router.post(`/resend`, resendToken, (req, res, next) => {
 });
 
 
-router.post('/company/login',
-    companyAuthController.companyLogin,
-    
-);
+router.post('/company/login', companyAuthController.companyLogin);
 
 router.post('/company/:companyId/complete-profile', async (req, res, next) => {
 
