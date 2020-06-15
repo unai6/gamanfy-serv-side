@@ -17,11 +17,12 @@ exports.companyLogin = async (req, res) => {
       return res.status(401).json({ msg: 'Email or password not valid' })
       
     } else if (passCorrect) {
+      
       res.cookie(process.env.PUBLIC_DOMAIN, {
           maxAge: 432000000,
           httpOnly: true,
+          sameSite: 'none',
           secure: true,
-          sameSite: 'None',
         })
         .status(200)
       
