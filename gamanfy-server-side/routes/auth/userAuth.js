@@ -56,6 +56,7 @@ router.post(
                 const salt = bcrypt.genSaltSync(saltRounds);
                 const hashPass = bcrypt.hashSync(password, salt);
                 const newUser = await InfluencerUser.create({ email, password: hashPass, firstName, lastName, isCompany });
+                
                 const token = new UserToken({ _userId: newUser._id, token: crypto.randomBytes(16).toString('hex') });
                 await token.save(function (err) {
                     if (err) { return res.status(500).send({ msg: err.message }); }
@@ -105,7 +106,7 @@ router.post(`/confirmation/:userId/:userToken/:isCompany`, confirmationToken);
 
 router.post('/resend', resendToken);
 
-router.post('/user/login', userAuthController.login);
+router.post('/user/login',  userAuthController.login);
 
 router.post('/user/:userId/:isaCompany/complete-profile', async (req, res, next) => {
 
@@ -131,13 +132,11 @@ router.post('/user/:userId/:isaCompany/complete-profile', async (req, res, next)
             });
 
             const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { companyUser, addressId }, { new: true });
-            req.session.currentUser = updatedUser;
             res.status(200).json({ updatedUser });
 
 
         } else if (checkUser.isCompany === false) {
             const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { addressId, city, phoneNumber, urlLinkedin, birthDate, hasExp }, { new: true });
-            req.session.currentUser = updatedUser;
             res.status(200).json({ updatedUser });
 
         } else if (checkUser.isCandidate) {
@@ -187,7 +186,6 @@ router.put('/user/:userId/edit-profile', async (req, res, next) => {
                 companyUser, addressId, email, password: hashPass, firstName, lastName, phoneNumber
             });
 
-            req.session.currentUser = updatedUser;
             res.status(200).json({ message: 'company user updated correctly' });
 
         } else {
@@ -203,7 +201,6 @@ router.put('/user/:userId/edit-profile', async (req, res, next) => {
                 actualCompany, profileDescription, actualSalary
             });
 
-            req.session.currentUser = updatedUser;
             res.status(200).json({ message: 'influencer user updated correctly' })
 
         };
@@ -220,26 +217,36 @@ router.put('/user/:userId/edit-profile', async (req, res, next) => {
 
 
 router.get('/user/:userId/dashboard', checkToken, async (req, res) => {
-    const { userId } = req.params
+    try {
+        const { userId } = req.params
+        let getUserData = await Company.findById(userId);
 
-    await jwt.verify(req.token, process.env.SECRET_KEY, userId, (err, authorizedData) => {
-        if (err) {
+        if (getUserData.isVerified === true) {
+            jwt.verify(req.token, process.env.SECRET_KEY, { userId }, (err, authorizedData) => {
+                if (err) {
 
-            res.status(403).json('Protected route, you need an auth Token');
-        } else {
+                    res.status(403).json('Protected route, you need an auth Token');
+                } else {
 
-            res.json({
-                message: 'Successful login',
-                authorizedData
+                    res.json({
+                        message: 'Successful login',
+                        authorizedData,
+
+                    });
+
+                    res.status(200).json('Successful connection to protected route');
+                    res.json(getUserData)
+                }
             });
-
-            res.status(200).json('Successful connection to protected route');
+        } else {
+            res.status(404).json('User is not verified')
         }
-    });
+    } catch (error) { res.status(404).json('User is not verified') }
+
+
 });
 
-
-router.post("/user/logout", isLoggedIn(), (req, res, next) => {
+router.post("/user/logout", (req, res, next) => {
     req.session.destroy();
     res.status(204).send();
     return;

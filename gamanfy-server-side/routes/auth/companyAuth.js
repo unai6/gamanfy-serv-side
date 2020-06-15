@@ -89,7 +89,7 @@ router.post(
                     res.status(200).send('A verification email has been sent to ' + newCompany.email + '.');
                 });
 
-                req.session.currentUser = newCompany;
+             
 
                 res.status(200).json(newCompany);
 
@@ -107,7 +107,8 @@ router.post(`/resend`, resendToken, (req, res, next) => {
 
 
 router.post('/company/login',
-    companyAuthController.companyLogin
+    companyAuthController.companyLogin,
+    
 );
 
 router.post('/company/:companyId/complete-profile', async (req, res, next) => {
@@ -123,7 +124,7 @@ router.post('/company/:companyId/complete-profile', async (req, res, next) => {
             yearsExp, city, countryName, contactPerson, description,
             companyName, sectorId, taxId, addressId, website, phoneNumber, numberOfEmployees
         }, { new: true })
-        req.session.currentUser = updatedCompany;
+       
         res.status(200).json({ updatedCompany });
 
     } catch (error) {
@@ -152,7 +153,7 @@ router.put('/company/:companyId/edit-profile', async (req, res, next) => {
             yearsExp, website, numberOfEmployees, description
         }, { new: true });
 
-        req.session.currentUser = updatedCompany;
+      
 
         res.status(200).json({ updatedCompany });
 
@@ -210,10 +211,14 @@ router.get('/company/getData/:companyId', async (req, res) => {
 
 })
 
-router.post("/company/logout", isLoggedIn(), (req, res, next) => {
-    req.session.destroy();
-
-    res.status(204).send();
+router.post("/company/logout", async (req, res, next) => {
+    try {
+        res.clearCookie(process.env.PUBLIC_DOMAIN);
+        res.status(200).json({ msg: "Log out sucesfully" });
+      } catch (e) {
+        console.error(e);
+        res.status(500).json({ msg: "Server error" });
+      }
     return;
 });
 

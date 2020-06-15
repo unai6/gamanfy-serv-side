@@ -1,16 +1,17 @@
 const createError = require('http-errors');
 
 exports.isLoggedIn = () => (req, res, next) => {
-  if (req.session.currentUser){
-    console.log(req.session.currentUser)
-  next()
-  } 
-  else res.status(401).json('no user logged');
+  if (req.session.currentUser) next();
+  else next(createError(401));
 };
 
 exports.isNotLoggedIn = () => (req, res, next) => {
   if (!req.session.currentUser) next();
-  else res.status(404).json('No session founded')
+  else {
+      console.log("The user is already connected")
+      console.log(req.session.currentUser)
+      next(createError(403))
+  };
 };
 
 exports.validationLoggin = () => (req, res, next) => {

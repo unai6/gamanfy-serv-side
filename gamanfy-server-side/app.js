@@ -2,8 +2,6 @@ const cors = require("cors");
 require("dotenv").config();
 
 const mongoose = require("mongoose");
-const session = require("express-session");
-const MongoStore = require("connect-mongo")(session);
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -35,25 +33,7 @@ mongoose
   .catch((err) => console.error(err));
 
   
-  
-  // SESSION MIDDLEWARE
-  app.use(
-    session({
-      store: new MongoStore({
-        mongooseConnection: mongoose.connection,
-        ttl: 24 * 60 * 60, // 1 day
-      }),
-      secret: process.env.SECRET_SESSION,
-      resave: true,
-      saveUninitialized: true,
-      cookie: {
-        maxAge: 24 * 60 * 60 * 1000,
-        sameSite:"none",
-        secure:true
-      },
-    })
-    );
-    
+ 
     // CORS MIDDLEWARE SETUP
     app.use(
       cors({

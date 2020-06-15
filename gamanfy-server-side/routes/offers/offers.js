@@ -57,7 +57,7 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
 
         //company data 
         let { processNum, description, website, recruiter } = req.body;
-        processNum = crypto.randomBytes(4).toString('hex')
+        processNum = crypto.randomBytes(2).toString('hex')    
         //job offer data
         const { jobName, onDate, offDate, processState, isRemote, personsOnCharge, team } = req.body;
         //job description
@@ -98,19 +98,20 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
             moneyPerRec,
             contractServices: { hasSourcingWithInfluencer, hasExclusiveHeadHunter },
             additionalServices: { hasPersonalityTest, hasVideoInterview, hasKitOnBoardingGamanfy },
-            gamanfyFee: { totalFee, sourcingWithInfluencer, exclusiveHeadHunter, personalityTest, videoInterview, kitOnBoardgingGamanfy },
+            gamanfyFee: { totalFee},
             companyData: { processNum, description, website, recruiter },
             jobOfferData: {
-                jobName, onDate, offDate, processState, isRemote, personsOnCharge, team, mainMission, jobDescription,
-                managerDescription, managerName,
+                jobName, onDate, offDate, processState, isRemote, personsOnCharge,
+                
             },
+            jobDescription : {mainMission, team, jobDescription},
+            manager:{managerDescription, managerName},
             addressId, sectorId, categoryId, contractId,
             retribution: { minGrossSalary, maxGrossSalary, variableRetribution, quantityVariableRetribution, showMoney },
             minRequirements: { minExp, minStudies, keyKnowledge, keyCompetences, minReqDescription, Language, LangugageLevel },
             videoInterviewQuestions: { question1, question2, question3, question4, question5 }
         });
         let updatedCompany = await Company.findByIdAndUpdate(company, { $push: { postedOffers: postedOffers._id } }, { new: true })
-        req.session.currentUser = updatedCompany;
         res.status(200).json({ updatedCompany });
 
     } catch (error) {
@@ -136,7 +137,7 @@ router.put('/:companyId/:offerId/edit-offer', async (req, res) => {
         const { hasPersonalityTest, hasVideoInterview, hasKitOnBoardingGamanfy } = req.body;
 
         //gamanfy fee plus additional services
-        const { totalFee, sourcingWithInfluencer, exclusiveHeadHunter, personalityTest, videoInterview, kitOnBoardgingGamanfy } = req.body;
+        const { totalFee} = req.body;
 
         //company data 
         const { processNum, description, website, recruiter } = req.body;
@@ -175,12 +176,14 @@ router.put('/:companyId/:offerId/edit-offer', async (req, res) => {
             $set: {
                 contractServices: { hasSourcingWithInfluencer, hasExclusiveHeadHunter },
                 additionalServices: { hasPersonalityTest, hasVideoInterview, hasKitOnBoardingGamanfy },
-                gamanfyFee: { totalFee, sourcingWithInfluencer, exclusiveHeadHunter, personalityTest, videoInterview, kitOnBoardgingGamanfy },
+                gamanfyFee: { totalFee },
                 companyData: { processNum, description, website, recruiter },
                 jobOfferData: {
-                    jobName, onDate, offDate, processState, isRemote, personsOnCharge, team, mainMission, jobDescription,
-                    managerDescription, managerName,
+                    jobName, onDate, offDate, processState, isRemote, personsOnCharge,
+                    
                 },
+                jobDescription : {mainMission, team, jobDescription},
+                manager:{managerDescription, managerName},
                 retribution: { minGrossSalary, maxGrossSalary, variableRetribution, quantityVariableRetribution, showMoney },
                 minRequirements: { minExp, minStudies, keyKnowledge, keyCompetences, minReqDescription, Language, LangugageLevel },
                 videoInterviewQuestions: { question1, question2, question3, question4, question5 },
@@ -204,7 +207,6 @@ router.post('/:companyId/:offerId/delete-offer', async (req, res) => {
         let updatedCompany = await Company.findByIdAndUpdate(companyId, { $pull : { postedOffers : { $in : [ offerId ] } } }, { multi:true });
         await Offers.findByIdAndRemove(offerId)
         
-        req.session.currentUser = updatedCompany;
         res.status(200).json({message:'offer deleted succesfully'});
     
     } catch (error) {

@@ -28,8 +28,10 @@
     "mongoose-unique-validator": "^2.0.3",
     "morgan": "~1.9.1",
     "node-gyp": "^4.0.0",
+    "node-localstorage": "^2.1.6",
     "nodemailer": "^6.4.8",
     "react-paginate": "^6.3.2",
+    "store": "^2.0.12",
     "xoauth2": "^1.2.0"
   },
   "devDependencies": {
