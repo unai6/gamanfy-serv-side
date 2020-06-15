@@ -6,7 +6,15 @@ const nodemailer = require('nodemailer');
 exports.confirmationToken = function (req, res, next) {
 
     const {token, email} = req.body;
-
+    res
+    .cookie(process.env.PUBLIC_DOMAIN, {
+      maxAge: 432000000,
+      httpOnly: true,
+      secure: false,
+      sameSite: true,
+    })
+    .status(200);
+    
     CompanyToken.findOne(token, function (err, token) {
         if (!token) return res.status(400).send({ type: 'not-verified', msg: 'We were unable to find a valid token. Your token my have expired.' });
 
