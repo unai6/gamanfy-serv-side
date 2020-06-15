@@ -14,17 +14,17 @@ exports.confirmationToken = function (req, res, next) {
         Company.findOne({ email: req.body.email, companyId: req.body.companyId }, function (err, companyinDB) {
             if (!companyinDB) return res.status(400).send({ msg: 'We were unable to find a Company for this token.' });
             if (companyinDB.isVerified) return res.status(400).send({ type: 'already-verified', msg: 'This Company has already been verified.' });
-            res
-            .cookie(process.env.PUBLIC_DOMAIN, {
-              maxAge: 432000000,
-              httpOnly: true,
-              secure: true,
-              sameSite: 'none',
-            })
-            .status(200);
             
             companyinDB.isVerified = true;
             companyinDB.save(function (err) {
+                res
+                .cookie(process.env.PUBLIC_DOMAIN, {
+                  maxAge: 432000000,
+                  httpOnly: true,
+                  secure: true,
+                  sameSite: 'none',
+                })
+                .status(200);
                 if (err) { return res.status(500).send({ msg: err.message }); }
                 try {
                     
