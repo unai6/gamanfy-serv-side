@@ -18,10 +18,10 @@ exports.companyLogin = async (req, res) => {
       
     } else if (passCorrect) {
       
-      res.cookie(process.env.PUBLIC_DOMAIN, {
+      res.cookie(process.env.PUBLIC_DOMAIN || process.env.PUBLIC_DOMAIN, {
           maxAge: 432000000,
           httpOnly: true,
-          sameSite: true,
+          sameSite: 'none',
           secure: true,
         })
         .status(200)

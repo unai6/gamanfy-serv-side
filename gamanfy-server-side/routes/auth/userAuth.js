@@ -244,9 +244,14 @@ router.get('/user/:userId/dashboard', checkToken, async (req, res) => {
 
 });
 
-router.post("/user/logout", (req, res, next) => {
-    req.session.destroy();
-    res.status(204).send();
+router.post("/company/logout", async (req, res, next) => {
+    try {
+        res.clearCookie(process.env.PUBLIC_DOMAIN);
+        res.status(200).json({ msg: "Log out sucesfully" });
+      } catch (e) {
+        console.error(e);
+        res.status(500).json({ msg: "Server error" });
+      }
     return;
 });
 
