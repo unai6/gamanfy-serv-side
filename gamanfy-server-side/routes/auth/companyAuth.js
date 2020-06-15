@@ -116,6 +116,14 @@ router.post('/company/login', companyAuthController.companyLogin);
 router.post('/company/:companyId/complete-profile', async (req, res, next) => {
 
     try {
+        res
+      .cookie(process.env.PUBLIC_DOMAIN, {
+        maxAge: 432000000,
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+      })
+      .status(200) 
         const { companyId } = req.params;
         const checkCompany = await Company.findById(companyId);
         const { yearsExp, contactPerson, description, city, companyName, taxId, countryCode, countryName,
@@ -128,14 +136,6 @@ router.post('/company/:companyId/complete-profile', async (req, res, next) => {
         }, { new: true });
         res.status(200).json({ updatedCompany });
 
-        res
-      .cookie(process.env.PUBLIC_DOMAIN, {
-        maxAge: 432000000,
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-      })
-      .status(200) 
 
     } catch (error) {
         res.status(400).json({ error: 'An error occured while completing company profile' })
