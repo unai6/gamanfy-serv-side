@@ -132,8 +132,8 @@ router.post('/company/:companyId/complete-profile', async (req, res, next) => {
       .cookie(process.env.PUBLIC_DOMAIN, {
         maxAge: 432000000,
         httpOnly: true,
-        secure: false,
-        sameSite: true,
+        secure: true,
+        sameSite: 'none',
       })
       .status(200) 
 
