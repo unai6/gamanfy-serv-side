@@ -116,15 +116,8 @@ router.post('/company/login', companyAuthController.companyLogin);
 router.post('/company/:companyId/complete-profile', async (req, res, next) => {
 
     try {
-        res
-      .cookie(process.env.PUBLIC_DOMAIN, {
-        maxAge: 432000000,
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-      })
-      .status(200);
-      
+  
+
         const { companyId } = req.params;
         const checkCompany = await Company.findById(companyId);
         const { yearsExp, contactPerson, description, city, companyName, taxId, countryCode, countryName,
