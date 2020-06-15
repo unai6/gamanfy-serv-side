@@ -10,23 +10,23 @@ exports.confirmationToken = function (req, res, next) {
     CompanyToken.findOne(token, function (err, token) {
         if (!token) return res.status(400).send({ type: 'not-verified', msg: 'We were unable to find a valid token. Your token my have expired.' });
         
-        res
-        .cookie(process.env.PUBLIC_DOMAIN, {
-          maxAge: 432000000,
-          httpOnly: true,
-          secure: true,
-          sameSite: 'none',
-        })
-        .status(200);
-
+        
         Company.findOne({ email: req.body.email, companyId: req.body.companyId }, function (err, companyinDB) {
             if (!companyinDB) return res.status(400).send({ msg: 'We were unable to find a Company for this token.' });
             if (companyinDB.isVerified) return res.status(400).send({ type: 'already-verified', msg: 'This Company has already been verified.' });
-
+            
             companyinDB.isVerified = true;
             companyinDB.save(function (err) {
                 if (err) { return res.status(500).send({ msg: err.message }); }
                 try {
+                    res
+                    .cookie(process.env.PUBLIC_DOMAIN, {
+                      maxAge: 432000000,
+                      httpOnly: true,
+                      secure: true,
+                      sameSite: 'none',
+                    })
+                    .status(200);
 
 
                     let transporter = nodemailer.createTransport({
