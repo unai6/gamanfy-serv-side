@@ -6,6 +6,7 @@ let uniqueValidator = require('mongoose-unique-validator');
 const companySchema = new Schema({
 
   isVerified: { type: Boolean, default: false },
+  isCompleted : {type:Boolean, default: false},
   isHeadHunter: { type: Boolean, default: false },
   companyName: String,
   firstName:String,

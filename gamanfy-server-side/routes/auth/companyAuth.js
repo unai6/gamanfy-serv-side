@@ -113,27 +113,7 @@ router.post(`/resend`, resendToken);
 
 router.post('/company/login', companyAuthController.companyLogin);
 
-router.post('/company/:companyId/complete-profile', async (req, res, next) => {
-
-    try {
-  
-        const { companyId } = req.params;
-        const checkCompany = await Company.findById(companyId);
-        const { yearsExp, contactPerson, description, city, companyName, taxId, countryCode, countryName,
-            provinceINEcode, municipalityINEcode, street, number, zip, province, municipality, website, phoneNumber, numberOfEmployees } = req.body;
-        let addressId = await Address.create({ countryCode, countryName, provinceINEcode, municipalityINEcode, province, municipality, street, number, zip });
-        let sectorId = await Sector.create(req.body);
-        const updatedCompany = await Company.findByIdAndUpdate(checkCompany, {
-            yearsExp, city, countryName, contactPerson, description,
-            companyName, sectorId, taxId, addressId, website, phoneNumber, numberOfEmployees
-        }, { new: true });
-        res.status(200).json({ updatedCompany });
-
-
-    } catch (error) {
-        res.status(400).json({ error: 'An error occured while completing company profile' })
-    }
-})
+router.post('/company/:companyId/complete-profile', companyAuthController.companyCompleteProfile)
 
 router.put('/company/:companyId/edit-profile', checkToken, async (req, res, next) => {
 
@@ -150,6 +130,7 @@ router.put('/company/:companyId/edit-profile', checkToken, async (req, res, next
 
         let addressId = await Address.findByIdAndUpdate(checkCompany.addressId, { province, municipality, countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip }, { new: true });
         let sectorId = await Sector.findByIdAndUpdate(checkCompany.sectorId, { sector }, { new: true });
+       
         let updatedCompany = await Company.findByIdAndUpdate(checkCompany._id, {
             addressId, sectorId, isHeadHunter, companyName, firstName,
             lastName, email, password: hashPass, countryName, city, phoneNumber, taxId, contactPerson,

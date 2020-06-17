@@ -60,7 +60,7 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
         //job description
         const { mainMission, jobDescription } = req.body;
         //manager
-        const { managerDescription, managerName } = req.body;
+        const { managerDescription, managerLinkedin } = req.body;
         //job address
         const { countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip, cityForOffer } = req.body;
         //retribution
@@ -93,10 +93,10 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
                 jobName, onDate, offDate, processState, isRemote, personsOnCharge
             },
             jobDescription: { mainMission, team, jobDescription },
-            manager: { managerDescription, managerName },
+            manager: { managerDescription, managerLinkedin },
             addressId, sectorId, categoryId, contractId,
             retribution: { minGrossSalary, maxGrossSalary, variableRetribution, quantityVariableRetribution, showMoney },
-            minRequirements: { minExp, minStudies, keyKnowledge, minReqDescription, language, langugageLevel },
+            minRequirements: { minExp, minStudies, keyKnowledge, minReqDescription, language},
             keyCompetences: { keyComp },
             videoInterviewQuestions: { question1, question2, question3, question4, question5 }
         });
@@ -136,7 +136,7 @@ router.put('/:companyId/:offerId/edit-offer', async (req, res) => {
         //job description
         const { mainMission, jobDescription } = req.body;
         //manager
-        const { managerDescription, managerName } = req.body;
+        const { managerDescription, managerLinkedin } = req.body;
 
         //job address
         const { countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip, cityForOffer } = req.body;
@@ -165,9 +165,9 @@ router.put('/:companyId/:offerId/edit-offer', async (req, res) => {
                     jobName, onDate, offDate, processState, isRemote, personsOnCharge
                 },
                 jobDescription: { mainMission, team, jobDescription },
-                manager: { managerDescription, managerName },
+                manager: { managerDescription, managerLinkedin },
                 retribution: { minGrossSalary, maxGrossSalary, variableRetribution, quantityVariableRetribution, showMoney },
-                minRequirements: { minExp, minStudies, keyKnowledge, minReqDescription, language, langugageLevel },
+                minRequirements: { minExp, minStudies, keyKnowledge, minReqDescription, language},
                 keyCompetences: { keyComp },
                 videoInterviewQuestions: { question1, question2, question3, question4, question5 },
                 scorePerRec, moneyPerRec, addressId, sectorId, categoryId, contractId
