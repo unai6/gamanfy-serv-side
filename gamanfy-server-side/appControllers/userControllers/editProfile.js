@@ -4,7 +4,7 @@ const Address = require('../../models/Address');
 const Sector = require('../../models/Sector');
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const { signToken } = require('../../helpers/signToken');
+
 
 
 exports.editProfile = async (req, res, next) => {
@@ -26,15 +26,16 @@ exports.editProfile = async (req, res, next) => {
 
             let addressId = await Address.findByIdAndUpdate(isCompanyUser.companyUser.addressId, {
                 province, municipality, countryCode,
-                countryName, provinceINEcode, municipalityINEcode, street, number, zip });
+                countryName, provinceINEcode, municipalityINEcode, street, number, zip
+            });
 
             let sectorId = await Sector.findByIdAndUpdate(isCompanyUser.companyUser.sectorId, { sector });
 
             let companyUser = await CompanyUser.findByIdAndUpdate(isCompanyUser.companyUser, {
-                sectorId, addressId, phoneNumber, taxId, companyName, contactPerson, documentType, numberOfEmployees, documentNumber, 
+                sectorId, addressId, phoneNumber, taxId, companyName, contactPerson, documentType, numberOfEmployees, documentNumber,
                 website, city, countryName
             });
-            
+
             let updatedUser = await InfluencerUser.findByIdAndUpdate(isCompanyUser, {
                 companyUser, addressId, email, password: hashPass, firstName, lastName, phoneNumber
             });

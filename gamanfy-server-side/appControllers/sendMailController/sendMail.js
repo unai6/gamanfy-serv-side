@@ -3,7 +3,6 @@ exports.sendMail =  (req, res, next) => {
 
     try {
 
-
         let transporter =  nodemailer.createTransport({
 
             host: 'smtp.ionos.es',

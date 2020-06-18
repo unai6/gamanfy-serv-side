@@ -3,28 +3,29 @@ const Schema = mongoose.Schema;
 let uniqueValidator = require('mongoose-unique-validator');
 
 const influencerUserSchema = new Schema({
-    
+
     isVerified: { type: Boolean, default: false },
+    isCompleted: { type: Boolean, default: false },
     firstName: String,
     lastName: String,
-    birthDate: {type:Date},
+    birthDate: { type: Date },
     email: { type: String, required: [true, "Email is mandatory and unique"], unique: true },
     password: { type: String, require: [true, "password is mandatory"] },
-    addressId: {type: Schema.Types.ObjectId, ref: 'Address'},
+    addressId: { type: Schema.Types.ObjectId, ref: 'Address' },
     phoneNumber: String,
     countryName: String,
     city: String,
     urlLinkedin: String,
     isCompany: { type: Boolean, default: false },
-    isCandidate :{type:Boolean, default:false},
+    isCandidate: { type: Boolean, default: false },
     companyUser: { type: Schema.Types.ObjectId, ref: 'CompanyUser' },
     candidateUser: { type: Schema.Types.ObjectId, ref: 'CandidateUser' },
-    hasExp:{type:Boolean, default:false},
-    yearsExp:String,
-    actualPosition:String,
-    yearsInPosition:String,
+    hasExp: { type: Boolean, default: false },
+    yearsExp: String,
+    actualPosition: String,
+    yearsInPosition: String,
     actualCompany: String,
-    profileDescription : String,
+    profileDescription: String,
     actualSalary: String
 
 },

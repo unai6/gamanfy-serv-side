@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const sectorSchema = new Schema({
-sector:String
+    sector: String
 
 })
 
@@ -14,7 +14,7 @@ const Sector = mongoose.model("Sector", sectorSchema);
 
 module.exports = Sector;
 
-/* 
+/*
 Tipos de sector
 
 _01_Administración_gubernamental: String,
@@ -38,7 +38,7 @@ _18_Biotecnología: String,
 _19_Construcción: String,
 _20_Consultoría: String,
 _21_Contabilidad: String,
-_22_Cosmética: String, 
+_22_Cosmética: String,
 _23_Deportes: String,
 _24_Derecho: String,
 _25_Desarrollo_de_programación: String,

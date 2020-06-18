@@ -1,7 +1,7 @@
 const Company = require('../../models/Company');
 const jwt = require('jsonwebtoken');
 
-exports.getDashboard =  async (req, res) => {
+exports.getDashboard = async (req, res) => {
 
     try {
         const { companyId } = req.params

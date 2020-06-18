@@ -12,12 +12,10 @@ const {
 
 const getDashboardController= require('../../appControllers/userControllers/getDahsboard');
 const sendMailController = require('../../appControllers/sendMailController/sendMail');
-const {
-    
+const {  
     validationLoggin,
     checkToken
 } = require("../../helpers/middlewares");
-
 
 
 router.post('/user/signup', userAuthController.userSignup);

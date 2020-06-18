@@ -40,7 +40,8 @@ exports.login = async (req, res) => {
           userId: user.id,
           email: user.email,
           firstName: user.firstName,
-          isVerified: user.isVerified
+          isVerified: user.isVerified,
+          isCompleted:user.isCompleted
         }
       });
 
@@ -54,14 +55,14 @@ exports.login = async (req, res) => {
 exports.userCompleteProfile = async (req, res) => {
 
   try {
-    let { isaCompany, userId } = req.params;
+    let { userId } = req.params;
 
     const { companyName, documentType, documentNumber, contactPerson, taxId, website, city, phoneNumber, numberOfEmployees,
       urlLinkedin, birthDate, hasExp, countryCode, countryName, provinceINEcode, municipalityINEcode,
-      street, number, zip, invited, webCreated, province, municipality } = req.body;
+      street, number, zip, invited, webCreated, province, municipality, isCompleted } = req.body;
 
     const checkUser = await InfluencerUser.findById(userId);
-    isaCompany = checkUser.isCompany
+   
 
     let addressId = await Address.create({
       province, municipality, countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip
@@ -71,16 +72,55 @@ exports.userCompleteProfile = async (req, res) => {
     if (checkUser.isCompany) {
       const companyUser = await CompanyUser.create({
         sectorId, addressId, phoneNumber, taxId, companyName, contactPerson,
-        documentType, numberOfEmployees, documentNumber, website, city, countryName
+        documentType, numberOfEmployees, documentNumber, website, city, countryName, 
       });
 
-      const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { companyUser, addressId }, { new: true });
-      res.status(200).json({ updatedUser });
+
+      res.cookie(process.env.PUBLIC_DOMAIN || process.env.PUBLIC_DOMAIN, {
+        maxAge: 432000000,
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+      })
+        .status(200)
+
+      const token = signToken(checkUser)
+
+      const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { companyUser, addressId, isCompleted }, { new: true });
+      res.status(200).json({
+        updatedUser, token,
+        user: {
+          userId: checkUser.id,
+          email: checkUser.email,
+          firstName: checkUser.firstName,
+          isVerified: checkUser.isVerified,
+          isCompleted: checkUser.isCompleted
+        }
+      });
 
 
     } else if (checkUser.isCompany === false) {
-      const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { addressId, city, phoneNumber, urlLinkedin, birthDate, hasExp }, { new: true });
-      res.status(200).json({ updatedUser });
+      
+      res.cookie(process.env.PUBLIC_DOMAIN || process.env.PUBLIC_DOMAIN, {
+        maxAge: 432000000,
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+      })
+        .status(200)
+
+      const token = signToken(checkUser)
+      const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { addressId, city, phoneNumber, urlLinkedin, birthDate, hasExp, isCompleted }, { new: true });
+      res.status(200).json({
+        updatedUser, token,
+        user: {
+          userId: checkUser.id,
+          email: checkUser.email,
+          firstName: checkUser.firstName,
+          isVerified: checkUser.isVerified,
+          isCompleted: checkUser.isCompleted
+        }
+      });
 
     } else if (checkUser.isCandidate) {
       const candidateUser = await CandidateUser.create({ invited, webCreated });
@@ -124,7 +164,7 @@ exports.userSignup = async (req, res, next) => {
         if (err) { return res.status(500).send({ msg: err.message }); }
       });
 
-      let transporter =  nodemailer.createTransport({
+      let transporter = nodemailer.createTransport({
 
         host: 'smtp.ionos.es',
         port: 587,

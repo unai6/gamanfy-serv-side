@@ -1,22 +1,22 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const companyUserSchema = new Schema  ({
+const companyUserSchema = new Schema({
     companyName: String,
     taxId: String,
     countryName: String,
-    city:String,
-    phoneNumber:String,
-    addressId : {type: Schema.Types.ObjectId, ref: 'Address'},
+    city: String,
+    phoneNumber: String,
+    addressId: { type: Schema.Types.ObjectId, ref: 'Address' },
     documentType: String,
     documentNumber: String,
     numberOfEmployees: String,
     contactPerson: String,
-    phoneNumber:String,
+    phoneNumber: String,
     website: String,
-    description: String,   
-    sectorId:{type: Schema.Types.ObjectId, ref:'Sector'}
- 
+    description: String,
+    sectorId: { type: Schema.Types.ObjectId, ref: 'Sector' }
+
 },
     {
         timestamps: true

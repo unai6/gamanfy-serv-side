@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 const addressSchema = new Schema({
 
     countryCode: String,
-    countryName:String,
-    cityForOffer:String,
+    countryName: String,
+    cityForOffer: String,
     provinceINEcode: String,
     municipalityINEcode: String,
     street: String,
@@ -26,10 +26,10 @@ module.exports = Address;
 
 /*    province: [{
        type:{ type: String},
-       provinceName: {type: String}, 
+       provinceName: {type: String},
        provinceCode: {type: String},
-    }], 
-    
+    }],
+
       municipality: [{
         type: {type: String},
         municipalityCode: {type: String },

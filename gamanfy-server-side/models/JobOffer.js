@@ -1,38 +1,38 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const jobOfferSchema = new Schema  ([{
-      scorePerRec : {type: String, default:'5'},
-      moneyPerRec:String,
-      contractServices: {type: Object, required:true},
-      additionalServices:{type: Object, required:true},
-      gamanfyFee:{type: Object, required:true},
-      companyData:{type: Object, required:true},
-      jobOfferData:{type:Object, required:true},
-      addressId: {type: Schema.Types.ObjectId, ref: 'Address', required:true},
-      sectorId: {type: Schema.Types.ObjectId, ref: 'Sector', required:true},
-      categoryId:{type: Schema.Types.ObjectId, ref: 'Category', required:true},
-      contractId:{type: Schema.Types.ObjectId, ref: 'Contract', required:true},
-      retribution:{type:Object, required:true},
-      minRequirements:{type:Object, required:true},
-      manager:{type:Object, required:true},
-      keyCompetences:{type:Object, required:true},
-      videoInterviewQuestions:{type:Object, required:true}
+const jobOfferSchema = new Schema([{
+      scorePerRec: { type: String, default: '5' },
+      moneyPerRec: String,
+      contractServices: { type: Object, required: true },
+      additionalServices: { type: Object, required: true },
+      gamanfyFee: { type: Object, required: true },
+      companyData: { type: Object, required: true },
+      jobOfferData: { type: Object, required: true },
+      addressId: { type: Schema.Types.ObjectId, ref: 'Address', required: true },
+      sectorId: { type: Schema.Types.ObjectId, ref: 'Sector', required: true },
+      categoryId: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
+      contractId: { type: Schema.Types.ObjectId, ref: 'Contract', required: true },
+      retribution: { type: Object, required: true },
+      minRequirements: { type: Object, required: true },
+      manager: { type: Object, required: true },
+      keyCompetences: { type: Object, required: true },
+      videoInterviewQuestions: { type: Object, required: true }
 }])
 
 
 
 
-   const JobOffer = mongoose.model("JobOffer", jobOfferSchema);
+const JobOffer = mongoose.model("JobOffer", jobOfferSchema);
 
 module.exports = JobOffer;
 
 
-/* 
+/*
 scorePerRec : {type: String, default:'5'},
       moneyPerRec:String,
       contractServices : [{
-            
+
             sourcingWithInfluencer : {type:Boolean, default: false},
             exclusiveHeadHunter : {type:Boolean, default:false}
       }],
@@ -71,7 +71,7 @@ scorePerRec : {type: String, default:'5'},
             sector:{type:Schema.Types.ObjectId, ref:'Sector'},
             category:{type:Schema.Types.ObjectId, ref:'Category'},
             personsOnCharge: {type:String},
-            contractType: {type:Schema.Types.ObjectId, ref:'Contract'},     
+            contractType: {type:Schema.Types.ObjectId, ref:'Contract'},
             jobDescription:[{
                   type:{type: String},
                   mainMission: String,
@@ -85,7 +85,7 @@ scorePerRec : {type: String, default:'5'},
             }],
 
             killerQuestions: {type:Schema.Types.ObjectId, ref:'KillerQ'}
-            
+
       }],
 
       retribution:[{

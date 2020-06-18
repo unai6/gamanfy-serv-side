@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const killerqSchema = new Schema({
 
-   
+
 },
 
     {
