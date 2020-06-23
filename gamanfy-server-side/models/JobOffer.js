@@ -2,8 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const jobOfferSchema = new Schema([{
-      scorePerRec: { type: String, default: '5' },
+      scorePerRec: { type: String, default: '10' },
       moneyPerRec: String,
+      imgPath:{type:String, default:'https://image.flaticon.com/icons/svg/2472/2472458.svg'},
       contractServices: { type: Object, required: true },
       additionalServices: { type: Object, required: true },
       gamanfyFee: { type: Object, required: true },

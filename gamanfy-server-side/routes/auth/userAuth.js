@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
+const InfluencerUser = require("../../models/InfluencerUser");
 
+const uploader = require("../../config/cloudinary");
 
 const userAuthController = require('../../appControllers/userControllers/userAuthController');
 const userEditProfileController = require('../../appControllers/userControllers/editProfile');
@@ -23,6 +25,19 @@ router.post(`/confirmation/:userId/:userToken/:isCompany`, confirmationToken);
 router.post('/resend', resendToken);
 router.post('/user/login',  userAuthController.login);
 router.post('/user/:userId/:isaCompany/complete-profile', userAuthController.userCompleteProfile);
+
+
+router.post("/upload", uploader.single("imageUrl"), (req, res, next) => {
+  if (!req.file) {
+    next(new Error("No file uploaded!"));
+    return;
+  }
+
+  res.json({ secure_url: req.file.secure_url });
+});
+
+module.exports = router;
+    
 router.put('/user/:userId/edit-profile', checkToken, userEditProfileController.editProfile);
 router.get('/user/:userId/dashboard', checkToken, getDashboardController.getUserDashboard);
 
@@ -35,6 +50,21 @@ router.post("/user/logout", async (req, res, next) => {
         res.status(500).json({ msg: "Server error" });
       }
     return;
+});
+
+router.get('/user/getData/:userId', async (req, res) => {
+
+    try {
+        const { userId } = req.params;
+
+        let getUserData = await InfluencerUser.findById(userId);
+
+        res.status(200).json(getUserData);
+
+    } catch (error) {
+        res.status(400).json({ mssg: 'error' })
+    }
+
 });
 
 router.post('/send-mail', sendMailController.sendMail);

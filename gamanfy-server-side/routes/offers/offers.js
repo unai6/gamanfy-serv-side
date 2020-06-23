@@ -16,7 +16,7 @@ const Address = require('../../models/Address');
 router.get('/dashboard', async (req, res, next) => {
 
     try {
-        let allOffers = await Offers.find({ "contractServices.hasSourcingWithInfluencer": true }).limit(10);
+        let allOffers = await Offers.find({ "contractServices.hasSourcingWithInfluencer": true }).populate('addressId contractId sectorId').limit(10);
         allOffers.length !== 0
             ? res.json({ allOffers })
             : res.status(404).json({ message: "No products found!" });
@@ -53,7 +53,7 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
         //gamanfy fee plus additional services
         const { totalFee } = req.body;
         //company data 
-        let { processNum, description, website, recruiter } = req.body;
+        let { processNum, description, website, recruiter, companyName } = req.body;
         processNum = crypto.randomBytes(2).toString('hex')
         //job offer data
         const { jobName, onDate, offDate, processState, isRemote, personsOnCharge, team } = req.body;
@@ -66,7 +66,7 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
         //retribution
         const { minGrossSalary, maxGrossSalary, variableRetribution, quantityVariableRetribution, showMoney } = req.body;
         // min requirements
-        const { minExp, minStudies, keyKnowledge, keyComp, minReqDescription, language, langugageLevel } = req.body;
+        const { minExp, minStudies, keyKnowledge, keyComp, minReqDescription, language } = req.body;
         //interview Questions
         const { question1, question2, question3, question4, question5 } = req.body;
 
@@ -75,7 +75,9 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
 
 
         if (company.description !== '' || null) {
-            description = company.description
+            description = company.description;
+        } else if( company.companyName !== '' || null){
+            companyName = company.companyName;
         };
 
         let addressId = await Address.create({ countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip, cityForOffer });
@@ -88,7 +90,7 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
             contractServices: { hasSourcingWithInfluencer, hasExclusiveHeadHunter },
             additionalServices: { hasPersonalityTest, hasVideoInterview, hasKitOnBoardingGamanfy },
             gamanfyFee: { totalFee },
-            companyData: { processNum, description, website, recruiter },
+            companyData: { processNum, description, website, recruiter, companyName },
             jobOfferData: {
                 jobName, onDate, offDate, processState, isRemote, personsOnCharge
             },

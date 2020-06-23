@@ -53,13 +53,14 @@ exports.login = async (req, res) => {
 }
 
 exports.userCompleteProfile = async (req, res) => {
+  
 
   try {
     let { userId } = req.params;
 
     const { companyName, documentType, documentNumber, contactPerson, taxId, website, city, phoneNumber, numberOfEmployees,
       urlLinkedin, birthDate, hasExp, countryCode, countryName, provinceINEcode, municipalityINEcode,
-      street, number, zip, invited, webCreated, province, municipality, isCompleted } = req.body;
+      street, number, zip, invited, webCreated, province, municipality, isCompleted} = req.body;
 
     const checkUser = await InfluencerUser.findById(userId);
    
