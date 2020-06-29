@@ -1,6 +1,6 @@
-const cors = require("cors");
-require("dotenv").config();
 
+require("dotenv").config();
+const cors = require("cors");
 const mongoose = require("mongoose");
 const createError = require('http-errors');
 const express = require('express');
@@ -13,6 +13,7 @@ const indexRouter = require('./routes/index');
 const userAuthRouter = require('./routes/auth/userAuth.js');
 const companyAuthRouter = require('./routes/auth/companyAuth.js');
 const offersRouter = require('./routes/offers/offers.js');
+const recommendationsRouter = require('./routes/recommendations/recommendations.js')
 
 
 const app = express();
@@ -57,6 +58,7 @@ app.use('/', indexRouter);
 app.use('/auth', userAuthRouter);
 app.use('/auth-co', companyAuthRouter);
 app.use('/offers', offersRouter);
+app.use('/recommend', recommendationsRouter)
 
 
 

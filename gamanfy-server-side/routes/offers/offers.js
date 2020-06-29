@@ -110,6 +110,7 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
             },
             benefits:[benefits],
             jobDescription: { mainMission, team, jobDescription },
+            showMoney:showMoney,
             manager: { managerDescription, managerLinkedin },
             addressId, sectorId, categoryId, contractId,
             retribution: { minGrossSalary, maxGrossSalary, variableRetribution, quantityVariableRetribution, showMoney },
@@ -182,6 +183,7 @@ router.put('/:companyId/:offerId/edit-offer', async (req, res) => {
                     jobName, onDate, offDate, processState, isRemote, personsOnCharge
                 },
                 jobDescription: { mainMission, team, jobDescription },
+                showMoney:{showMoney},
                 manager: { managerDescription, managerLinkedin },
                 retribution: { minGrossSalary, maxGrossSalary, variableRetribution, quantityVariableRetribution, showMoney },
                 minRequirements: { minExp, minStudies, keyKnowledge, minReqDescription, language},
