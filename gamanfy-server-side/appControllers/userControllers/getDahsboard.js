@@ -4,7 +4,7 @@ const InfluencerUser = require('../../models/InfluencerUser');
 exports.getUserDashboard = async (req, res) => {
     try {
         const { userId } = req.params
-        let getUserData = await InfluencerUser.findById(userId);
+        let getUserData = await InfluencerUser.findById(userId).populate('companyUser');
 
         if (getUserData.isVerified === true) {
             jwt.verify(req.token, process.env.SECRET_KEY, { userId }, (err, authorizedData) => {

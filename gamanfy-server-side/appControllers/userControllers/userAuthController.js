@@ -54,7 +54,6 @@ exports.login = async (req, res) => {
 
 exports.userCompleteProfile = async (req, res) => {
   
-
   try {
     let { userId } = req.params;
 
@@ -70,6 +69,7 @@ exports.userCompleteProfile = async (req, res) => {
     });
 
     let sectorId = await Sector.create(req.body);
+
     if (checkUser.isCompany) {
       const companyUser = await CompanyUser.create({
         sectorId, addressId, phoneNumber, taxId, companyName, contactPerson,

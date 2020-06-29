@@ -10,6 +10,8 @@ const jobOfferSchema = new Schema([{
       gamanfyFee: { type: Object, required: true },
       companyData: { type: Object, required: true },
       jobOfferData: { type: Object, required: true },
+      jobDescription: {type:Object, required:true},
+      benefits:{type:Object},
       addressId: { type: Schema.Types.ObjectId, ref: 'Address', required: true },
       sectorId: { type: Schema.Types.ObjectId, ref: 'Sector', required: true },
       categoryId: { type: Schema.Types.ObjectId, ref: 'Category', required: true },

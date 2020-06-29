@@ -26,6 +26,19 @@ router.get('/dashboard', async (req, res, next) => {
     }
 });
 
+router.get('/offer-details/:offerId', async (req, res) => {
+    try {
+
+        let {offerId} = req.params;
+
+        let offer = await Offers.findById(offerId).populate('addressId sectorId contractId')
+        res.status(200).json({offer})
+
+    } catch(error) {
+        res.status(400).json('An error occurred while showing offer details')
+    }
+})
+
 router.get('/getData/:companyId', async (req, res) => {
 
     try {
@@ -69,7 +82,8 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
         const { minExp, minStudies, keyKnowledge, keyComp, minReqDescription, language } = req.body;
         //interview Questions
         const { question1, question2, question3, question4, question5 } = req.body;
-
+        //benfits
+        const {benefits} = req.body;
 
         let company = await Company.findById(companyId);
 
@@ -94,6 +108,7 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
             jobOfferData: {
                 jobName, onDate, offDate, processState, isRemote, personsOnCharge
             },
+            benefits:[benefits],
             jobDescription: { mainMission, team, jobDescription },
             manager: { managerDescription, managerLinkedin },
             addressId, sectorId, categoryId, contractId,

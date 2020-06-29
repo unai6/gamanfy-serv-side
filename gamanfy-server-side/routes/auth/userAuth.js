@@ -35,10 +35,8 @@ router.post("/upload", uploader.single("imageUrl"), (req, res, next) => {
 
   res.json({ secure_url: req.file.secure_url });
 });
-
-module.exports = router;
-    
-router.put('/user/:userId/edit-profile', checkToken, userEditProfileController.editProfile);
+ 
+router.put('/user/:userId/edit-profile', userEditProfileController.editProfile);
 router.get('/user/:userId/dashboard', checkToken, getDashboardController.getUserDashboard);
 
 router.post("/user/logout", async (req, res, next) => {
@@ -57,7 +55,7 @@ router.get('/user/getData/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
 
-        let getUserData = await InfluencerUser.findById(userId);
+        let getUserData = await InfluencerUser.findById(userId).populate('companyUser addressId');
 
         res.status(200).json(getUserData);
 

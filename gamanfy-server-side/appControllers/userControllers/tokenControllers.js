@@ -10,15 +10,7 @@ exports.confirmationToken = function (req, res, next) {
         console.log(token)
 
         InfluencerUser.findOne({ email: req.body.email, userId: req.body.userId }, function (err, userinDB) {
-            res
-                .cookie(process.env.PUBLIC_DOMAIN, {
-                    maxAge: 432000000,
-                    httpOnly: true,
-                    sameSite: 'none',
-                    secure: true,
-                })
-                .status(200);
-
+        
             if (!userinDB) return res.status(404).send({ msg: 'We were unable to find a user for this token.' });
             if (userinDB.isVerified) return res.status(400).send({ type: 'already-verified', msg: 'This user has already been verified.' });
             userinDB.isVerified = true;
