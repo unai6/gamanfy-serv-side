@@ -21,6 +21,7 @@ const jobOfferSchema = new Schema([{
       minRequirements: { type: Object, required: true },
       manager: { type: Object, required: true },
       keyCompetences: { type: Object, required: true },
+      keyKnowledge : {type:Object, required: true},
       videoInterviewQuestions: { type: Object, required: true }
 }])
 

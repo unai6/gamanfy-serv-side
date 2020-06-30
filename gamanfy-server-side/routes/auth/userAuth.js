@@ -25,6 +25,8 @@ router.post(`/confirmation/:userId/:userToken/:isCompany`, confirmationToken);
 router.post('/resend', resendToken);
 router.post('/user/login',  userAuthController.login);
 router.post('/user/:userId/:isaCompany/complete-profile', userAuthController.userCompleteProfile);
+router.put('/user/:userId/edit-profile', userEditProfileController.editProfile);
+router.get('/user/:userId/dashboard', checkToken, getDashboardController.getUserDashboard);
 
 
 router.post("/upload", uploader.single("imageUrl"), (req, res, next) => {
@@ -36,8 +38,6 @@ router.post("/upload", uploader.single("imageUrl"), (req, res, next) => {
   res.json({ secure_url: req.file.secure_url });
 });
  
-router.put('/user/:userId/edit-profile', userEditProfileController.editProfile);
-router.get('/user/:userId/dashboard', checkToken, getDashboardController.getUserDashboard);
 
 router.post("/user/logout", async (req, res, next) => {
     try {

@@ -79,7 +79,7 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
         //retribution
         const { minGrossSalary, maxGrossSalary, variableRetribution, quantityVariableRetribution, showMoney } = req.body;
         // min requirements
-        const { minExp, minStudies, keyKnowledge, keyComp, minReqDescription, language } = req.body;
+        const { minExp, minStudies, keyKnowledge, keyComp, minReqDescription, language, } = req.body;
         //interview Questions
         const { question1, question2, question3, question4, question5 } = req.body;
         //benfits
@@ -114,7 +114,8 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
             manager: { managerDescription, managerLinkedin },
             addressId, sectorId, categoryId, contractId,
             retribution: { minGrossSalary, maxGrossSalary, variableRetribution, quantityVariableRetribution, showMoney },
-            minRequirements: { minExp, minStudies, keyKnowledge, minReqDescription, language},
+            minRequirements: { minExp, minStudies, minReqDescription, language},
+            keyKnowledge:{keyKnowledge},
             keyCompetences: { keyComp },
             videoInterviewQuestions: { question1, question2, question3, question4, question5 }
         });
@@ -186,8 +187,9 @@ router.put('/:companyId/:offerId/edit-offer', async (req, res) => {
                 showMoney:{showMoney},
                 manager: { managerDescription, managerLinkedin },
                 retribution: { minGrossSalary, maxGrossSalary, variableRetribution, quantityVariableRetribution, showMoney },
-                minRequirements: { minExp, minStudies, keyKnowledge, minReqDescription, language},
+                minRequirements: { minExp, minStudies, minReqDescription, language},
                 keyCompetences: { keyComp },
+                keyKnowledge:{keyKnowledge},
                 videoInterviewQuestions: { question1, question2, question3, question4, question5 },
                 scorePerRec, moneyPerRec, addressId, sectorId, categoryId, contractId
             },

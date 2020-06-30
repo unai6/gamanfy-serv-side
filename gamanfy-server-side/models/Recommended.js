@@ -3,11 +3,13 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const recommendedSchema = new Schema({
-
     recommendationAccepted : {type: Boolean, default:false},
     inProcess : {type: Boolean, default:false},
     hired: {type: Boolean, default:false},
-    recommendedName: String
+    offerId: {type: Schema.Types.ObjectId, ref:'JobOffer'},
+    recommendedFirstName: String,
+    recommendedLastName: String,
+    recommendedEmail: String
 },
 
     {
