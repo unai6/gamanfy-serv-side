@@ -5,6 +5,7 @@ const Company = require('../../models/Company');
 const Offers = require('../../models/JobOffer.js');
 const Recommended = require('../../models/Recommended');
 const nodemailer = require('nodemailer');
+let inLineCss = require('nodemailer-juice');
 const Address = require("../../models/Address");
 
 
@@ -22,13 +23,12 @@ router.get('/:userId/dashboard', async (req, res) => {
         populate: {
           path: 'offerId',
           model: 'JobOffer',
-        
-          populate:{
-            path:'contractId addressId',
+          populate: {
+            path: 'contractId addressId',
           }
         }
       }
-        
+
       ).exec(function (err, offerIdPopulated) {
         if (err) {
           console.log(err)
@@ -36,8 +36,8 @@ router.get('/:userId/dashboard', async (req, res) => {
           res.status(200).json({ user: offerIdPopulated })
         }
       })
-      
-      
+
+
   } catch (error) {
     res.status(404).json({ error: 'No recommendations founded' })
   }
@@ -54,7 +54,9 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
     const influencerUserName = `${influencerUserId.firstName} ${influencerUserId.lastName}`;
     const theCompany = companyId.companyName;
     const theOffer = await Offers.findById(offerId);
-
+    const minGrossSalary = theOffer.retribution.minGrossSalary;
+    const maxGrossSalary = theOffer.retribution.maxGrossSalary;
+    
     let recommendedPeople = await Recommended.create({ recommendedEmail, recommendedFirstName, recommendedLastName })
 
     const updatedUser = await InfluencerUser.findByIdAndUpdate(userId, { $push: { recommendedPeople: recommendedPeople._id } }, { new: true })
@@ -75,17 +77,26 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
         user: process.env.HOST_MAIL,
         pass: process.env.HOST_MAIL_PASSWORD
       },
-
+      
     });
+    transporter.use('compile', inLineCss());
 
     let mailOptions = {
       from: process.env.HOST_MAIL,
       to: recommendedEmail,
       subject: 'Gamanfy, recomendación laboral',
-      text: `Hola ${recommendedEmail}, has sido recomendado por ${influencerUserName} para una oferta de trabajo en la empresa ${theCompany}.
-    Para más información haz click en el siguiente link y regístrate como Influencer para seguir adelante: ${process.env.PUBLIC_DOMAIN}/offer-details/${theOffer._id}\n
+      html: `
+      <style> div {font-weight:300; color:#050D4D;}</style>
+      <div>
+      Hola ${recommendedEmail}, has sido recomendado por <b>${influencerUserName}</b> para una oferta de trabajo en la empresa ${theCompany}.\n
+      <div>
+      Las condiciones que ofrece ${theCompany}, son las siguientes:<br/>
+        - Salario: <b>${minGrossSalary}-${maxGrossSalary}</b>
+      </div>
+    Para más información haz click en el siguiente link y regístrate como Influencer para seguir adelante:<style> p {color:#050D4D; font-weight:600}> </style> <p>${process.env.PUBLIC_DOMAIN}/offer-details/${theOffer._id}</p>\n
 
-    Si no te interesa la oferta haz click aquí ${process.env.PUBLIC_DOMAIN}/recommend/reject-rec/${recommendedPeople._id}\n
+    Si no te interesa la oferta haz click aquí <style> p {color:#050D4D; font-weight:600}> </style> <p>${process.env.PUBLIC_DOMAIN}/recommend/reject-rec/${recommendedPeople._id}</p>\n
+    </div>
     `
     };
 
@@ -98,7 +109,7 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
   } catch (error) {
     res.status(400).json({ error: 'An error occurred while sending recommendation' })
   }
-})
+});
 
 router.post('/reject-rec/:recommendationId', async (req, res) => {
   try {
