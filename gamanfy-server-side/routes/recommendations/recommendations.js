@@ -93,7 +93,9 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
       Las condiciones que ofrece <b>${theCompany}</b>, son las siguientes:<br/>
         - Salario: <b>${minGrossSalary}-${maxGrossSalary}</b>
       </div>
-    Para más información haz click en el siguiente link y regístrate como Influencer para seguir adelante:<style> p {color:#050D4D; font-weight:600}> </style> <p>${process.env.PUBLIC_DOMAIN}/offer-details/${theOffer._id}</p>\n
+    Para más información haz click en el siguiente link y <u> <a href='${process.env.PUBLIC_DOMAIN}/auth/user/signup' >Regístrate</a> </u> como Influencer para seguir adelante: <br/>
+  
+    Link a la Oferta: <style> p {color:#050D4D; font-weight:600}> </style> <p>${process.env.PUBLIC_DOMAIN}/offer-details/${theOffer._id}</p>\n
 
     Si no te interesa la oferta haz click aquí <style> p {color:#050D4D; font-weight:600}> </style> <p>${process.env.PUBLIC_DOMAIN}/recommend/reject-rec/${recommendedPeople._id}</p>\n
     </div>
