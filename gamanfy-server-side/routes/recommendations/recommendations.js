@@ -48,7 +48,7 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
   try {
 
     const { company, userId, offerId } = req.params;
-    const { recommendedEmail, recommendedFirstName, recommendedLastName } = req.body;
+    const { recommendedEmail, recommendedFirstName, recommendedLastName, whyRec } = req.body;
     const influencerUserId = await InfluencerUser.findById(userId).populate('recommendedPeople');
     const companyId = await Company.findById(company);
     const influencerUserName = `${influencerUserId.firstName} ${influencerUserId.lastName}`;
@@ -57,7 +57,7 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
     const minGrossSalary = theOffer.retribution.minGrossSalary;
     const maxGrossSalary = theOffer.retribution.maxGrossSalary;
     
-    let recommendedPeople = await Recommended.create({ recommendedEmail, recommendedFirstName, recommendedLastName })
+    let recommendedPeople = await Recommended.create({ recommendedEmail, recommendedFirstName, recommendedLastName, offerId:theOffer, whyRec })
 
     const updatedUser = await InfluencerUser.findByIdAndUpdate(userId, { $push: { recommendedPeople: recommendedPeople._id } }, { new: true })
     res.status(200).json({ updatedUser })
@@ -90,7 +90,7 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
       <div>
       Hola ${recommendedEmail}, has sido recomendado por <b>${influencerUserName}</b> para una oferta de trabajo en la empresa ${theCompany}.\n
       <div>
-      Las condiciones que ofrece ${theCompany}, son las siguientes:<br/>
+      Las condiciones que ofrece <b>${theCompany}</b>, son las siguientes:<br/>
         - Salario: <b>${minGrossSalary}-${maxGrossSalary}</b>
       </div>
     Para más información haz click en el siguiente link y regístrate como Influencer para seguir adelante:<style> p {color:#050D4D; font-weight:600}> </style> <p>${process.env.PUBLIC_DOMAIN}/offer-details/${theOffer._id}</p>\n

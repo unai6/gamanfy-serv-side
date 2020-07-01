@@ -104,7 +104,7 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
             contractServices: { hasSourcingWithInfluencer, hasExclusiveHeadHunter },
             additionalServices: { hasPersonalityTest, hasVideoInterview, hasKitOnBoardingGamanfy },
             gamanfyFee: { totalFee },
-            companyData: { processNum, description, website, recruiter, companyName },
+            companyData: { processNum, description, website, recruiter, companyName, companyId:company._id },
             jobOfferData: {
                 jobName, onDate, offDate, processState, isRemote, personsOnCharge
             },
