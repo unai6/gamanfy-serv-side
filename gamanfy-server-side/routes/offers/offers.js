@@ -44,9 +44,21 @@ router.get('/getData/:companyId', async (req, res) => {
     try {
         const { companyId } = req.params;
 
-        let getCompanyData = await Company.findById(companyId).populate("postedOffers")
-        res.status(200).json(getCompanyData);
+     await Company.findById(companyId)      
+      .populate({
 
+        path: 'postedOffers',
+        populate: {
+          path: 'addressId sectorId contractId' 
+        }
+      }
+      ).exec(function (err, offerIdPopulated) {
+        if (err) {
+          console.log(err)
+        } else {
+          res.status(200).json({ user: offerIdPopulated })
+        }
+      })
     } catch (error) {
         res.status(400).json({ mssg: 'error' })
     }
