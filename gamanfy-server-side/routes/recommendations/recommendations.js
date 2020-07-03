@@ -56,8 +56,10 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
     const theOffer = await Offers.findById(offerId);
     const minGrossSalary = theOffer.retribution.minGrossSalary;
     const maxGrossSalary = theOffer.retribution.maxGrossSalary;
-    
-    let recommendedPeople = await Recommended.create({ recommendedEmail, recommendedFirstName, recommendedLastName, offerId:theOffer, whyRec })
+    const jobName = theOffer.jobOfferData.jobName
+
+
+    let recommendedPeople = await Recommended.create({ recommendedEmail, recommendedFirstName, recommendedLastName, offerId: theOffer, whyRec })
 
     const updatedUser = await InfluencerUser.findByIdAndUpdate(userId, { $push: { recommendedPeople: recommendedPeople._id } }, { new: true })
     res.status(200).json({ updatedUser })
@@ -77,29 +79,38 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
         user: process.env.HOST_MAIL,
         pass: process.env.HOST_MAIL_PASSWORD
       },
-      
+
     });
     transporter.use('compile', inLineCss());
 
     let mailOptions = {
       from: process.env.HOST_MAIL,
       to: recommendedEmail,
-      subject: 'Gamanfy, recomendación laboral',
+      subject: 'Gamanfy, ¡Te damos la bienvenida!',
       html: `
-      <style> div {font-weight:300; color:#050D4D;}</style>
+     <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
       <div>
-      Hola ${recommendedEmail}, has sido recomendado por <b>${influencerUserName}</b> para una oferta de trabajo en la empresa ${theCompany}.\n
-      <div>
-      Las condiciones que ofrece <b>${theCompany}</b>, son las siguientes:<br/>
-        - Salario: <b>${minGrossSalary}-${maxGrossSalary}</b>
-      </div>
-    Para más información haz click en el siguiente link y <u> <a href='${process.env.PUBLIC_DOMAIN}/auth/user/signup' >Regístrate</a> </u> como Influencer para seguir adelante: <br/>
-  
-    Link a la Oferta: <style> p {color:#050D4D; font-weight:600}> </style> <p>${process.env.PUBLIC_DOMAIN}/offer-details/${theOffer._id}</p>\n
+      <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> ¡Hola ${recommendedFirstName}! <b>${influencerUserName}</b>  te ha recomendado <br/> para una oferta de trabajo en Gamanfy. </p>\n
+      <div style='font-weight:300; color:#535353; font-size:14px'>
 
-    Si no te interesa la oferta haz click aquí <style> p {color:#050D4D; font-weight:600}> </style> <p>${process.env.PUBLIC_DOMAIN}/recommend/reject-rec/${recommendedPeople._id}</p>\n
+        Puesto: ${jobName}<br/>
+        Empresa: ${theCompany}<br/>
+        Salario: ${minGrossSalary}-${maxGrossSalary}<br/>
+      
+        </div>
+        <div style='font-weight:300; color:#535353; font-size:14px; margin-top:1.5em'>
+        Si quieres ver la oferta completa  y enterarte de todo lo que Gamanfy </br>puede ofrecerte, haz click en <b><u><a href='${process.env.PUBLIC_DOMAIN}/auth/user/signup' style='color:#535353; text-decoration:none'>Regístrarte</a> </u></b><br/>
+        <button type='submit' style="border:none; background:rgb(255,188,73); border-radius:5px; width:14em; height:2.5em; margin-top:2em; margin-left:11em"><a href='${process.env.PUBLIC_DOMAIN}/offer-details/${theOffer._id}' style='color:white; text-decoration:none; font-weight:500'>Ver oferta completa</a></button><br/>
+        </div>
+    
+     <p style='color:#535353; font-weight:300; font-size:14px; margin-left:1.5em'>No estas interesado ? Haz click <a href=${process.env.PUBLIC_DOMAIN}/recommend/reject-rec/${recommendedPeople._id} style='color:#535353; font-weight:600'>aquí</a> para indicar que no quieres</br> participar en la oferta</p>\n
     </div>
-    `
+    `,
+      attachments: [{
+        filename: 'logo-gamanfy-email.png',
+        path: 'public/logo-gamanfy-email.png',
+        cid: 'unique@nodemailer.com'
+      }]
     };
 
     transporter.sendMail(mailOptions, function (err) {
