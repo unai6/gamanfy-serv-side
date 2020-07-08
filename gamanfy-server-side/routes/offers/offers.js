@@ -9,7 +9,8 @@ const KillerQ = require('../../models/KillerQ');
 const Company = require('../../models/Company');
 const Sector = require('../../models/Sector');
 const Address = require('../../models/Address');
-
+const Recommended = require('../../models/Recommended');
+const InfluencerUser = require("../../models/InfluencerUser.js");
 
 
 
@@ -29,12 +30,12 @@ router.get('/dashboard', async (req, res, next) => {
 router.get('/offer-details/:offerId', async (req, res) => {
     try {
 
-        let {offerId} = req.params;
+        let { offerId } = req.params;
 
         let offer = await Offers.findById(offerId).populate('addressId sectorId contractId')
-        res.status(200).json({offer})
+        res.status(200).json({ offer })
 
-    } catch(error) {
+    } catch (error) {
         res.status(400).json('An error occurred while showing offer details')
     }
 })
@@ -44,21 +45,21 @@ router.get('/getData/:companyId', async (req, res) => {
     try {
         const { companyId } = req.params;
 
-     await Company.findById(companyId)      
-      .populate({
+        await Company.findById(companyId)
+            .populate({
 
-        path: 'postedOffers',
-        populate: {
-          path: 'addressId sectorId contractId' 
-        }
-      }
-      ).exec(function (err, offerIdPopulated) {
-        if (err) {
-          console.log(err)
-        } else {
-          res.status(200).json({ user: offerIdPopulated })
-        }
-      })
+                path: 'postedOffers',
+                populate: {
+                    path: 'addressId sectorId contractId'
+                }
+            }
+            ).exec(function (err, offerIdPopulated) {
+                if (err) {
+                    console.log(err)
+                } else {
+                    res.status(200).json({ user: offerIdPopulated })
+                }
+            })
     } catch (error) {
         res.status(400).json({ mssg: 'error' })
     }
@@ -95,14 +96,14 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
         //interview Questions
         const { question1, question2, question3, question4, question5 } = req.body;
         //benfits
-        const {benefits} = req.body;
+        const { benefits } = req.body;
 
         let company = await Company.findById(companyId);
 
 
         if (company.description !== '' || null) {
             description = company.description;
-        } else if( company.companyName !== '' || null){
+        } else if (company.companyName !== '' || null) {
             companyName = company.companyName;
         };
 
@@ -116,18 +117,18 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
             contractServices: { hasSourcingWithInfluencer, hasExclusiveHeadHunter },
             additionalServices: { hasPersonalityTest, hasVideoInterview, hasKitOnBoardingGamanfy },
             gamanfyFee: { totalFee },
-            companyData: { processNum, description, website, recruiter, companyName, companyId:company._id },
+            companyData: { processNum, description, website, recruiter, companyName, companyId: company._id },
             jobOfferData: {
                 jobName, onDate, offDate, processState, isRemote, personsOnCharge
             },
-            benefits:[benefits],
+            benefits: [benefits],
             jobDescription: { mainMission, team, jobDescription },
-            showMoney:showMoney,
+            showMoney: showMoney,
             manager: { managerDescription, managerLinkedin },
             addressId, sectorId, categoryId, contractId,
             retribution: { minGrossSalary, maxGrossSalary, variableRetribution, quantityVariableRetribution, showMoney },
-            minRequirements: { minExp, minStudies, minReqDescription, language},
-            keyKnowledge:{keyKnowledge},
+            minRequirements: { minExp, minStudies, minReqDescription, language },
+            keyKnowledge: { keyKnowledge },
             keyCompetences: { keyComp },
             videoInterviewQuestions: { question1, question2, question3, question4, question5 }
         });
@@ -196,12 +197,12 @@ router.put('/:companyId/:offerId/edit-offer', async (req, res) => {
                     jobName, onDate, offDate, processState, isRemote, personsOnCharge
                 },
                 jobDescription: { mainMission, team, jobDescription },
-                showMoney:{showMoney},
+                showMoney: { showMoney },
                 manager: { managerDescription, managerLinkedin },
                 retribution: { minGrossSalary, maxGrossSalary, variableRetribution, quantityVariableRetribution, showMoney },
-                minRequirements: { minExp, minStudies, minReqDescription, language},
+                minRequirements: { minExp, minStudies, minReqDescription, language },
                 keyCompetences: { keyComp },
-                keyKnowledge:{keyKnowledge},
+                keyKnowledge: { keyKnowledge },
                 videoInterviewQuestions: { question1, question2, question3, question4, question5 },
                 scorePerRec, moneyPerRec, addressId, sectorId, categoryId, contractId
             },
@@ -220,9 +221,10 @@ router.put('/:companyId/:offerId/edit-offer', async (req, res) => {
 router.post('/:companyId/:offerId/delete-offer', async (req, res) => {
     try {
         const { companyId, offerId } = req.params;
-        let updatedCompany = await Company.findByIdAndUpdate(companyId, { $pull: { postedOffers: { $in: [offerId] } } }, { multi: true });
-        await Offers.findByIdAndRemove(offerId)
-
+        await Company.findByIdAndUpdate(companyId, { $pull: { postedOffers: { $in: [offerId] } } }, { multi: true });
+        await Offers.findByIdAndRemove(offerId);
+        await Recommended.deleteOne({ offerId: offerId });
+        await InfluencerUser.findOneAndUpdate({}, { $pull:{ recommendedPeople: { $in:[offerId] }  } }, { new: true } );
         res.status(200).json({ message: 'offer deleted succesfully' });
 
     } catch (error) {
