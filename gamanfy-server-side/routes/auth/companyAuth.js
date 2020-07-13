@@ -24,7 +24,7 @@ router.post(`/confirmation/:companyId/:companyToken`, confirmationToken);
 router.post(`/resend`, resendToken);
 router.post('/company/login', companyAuthController.companyLogin);
 router.post('/company/:companyId/complete-profile', companyAuthController.companyCompleteProfile)
-router.put('/company/:companyId/edit-profile', checkToken, editProfileController.editProfile);
+router.post('/company/:companyId/edit-profile', editProfileController.editProfile);
 router.get('/company/:companyId/dashboard', checkToken, getDashboardController.getDashboard);
 
 router.get('/company/getData/:companyId', async (req, res) => {

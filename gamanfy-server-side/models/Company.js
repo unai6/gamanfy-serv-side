@@ -17,6 +17,8 @@ const companySchema = new Schema({
   addressId: { type: Schema.Types.ObjectId, ref: 'Address' },
   postedOffers: [{ type: Schema.Types.ObjectId, ref: 'JobOffer' }],
   countryName: String,
+  taxCountry:String,
+  taxAddress:{ type: Schema.Types.ObjectId, ref: 'Address' },
   city: String,
   phoneNumber: String,
   taxId: String,

@@ -46,13 +46,36 @@ router.get('/getData/:companyId', async (req, res) => {
         const { companyId } = req.params;
 
         await Company.findById(companyId)
-            .populate({
+            .populate([
 
-                path: 'postedOffers',
-                populate: {
-                    path: 'addressId sectorId contractId'
-                }
-            }
+                {
+                    path: 'postedOffers',
+                    populate: {
+                        path: 'addressId sectorId contractId'
+                    }
+
+                },
+                {
+
+                    path: 'addressId',
+                    populate: {
+                        path: 'addressId'
+                    }
+
+                },
+                {
+                    path: 'sectorId',
+                    populate: {
+                        path: 'sectorId'
+                    }
+                },
+                {
+                    path:'taxAddress',
+                    populate:{
+                        path:'taxAddress'
+                    }
+                }]
+
             ).exec(function (err, offerIdPopulated) {
                 if (err) {
                     console.log(err)
@@ -224,7 +247,7 @@ router.post('/:companyId/:offerId/delete-offer', async (req, res) => {
         await Company.findByIdAndUpdate(companyId, { $pull: { postedOffers: { $in: [offerId] } } }, { multi: true });
         await Offers.findByIdAndRemove(offerId);
         await Recommended.deleteOne({ offerId: offerId });
-        await InfluencerUser.findOneAndUpdate({}, { $pull:{ recommendedPeople: { $in:[offerId] }  } }, { new: true } );
+        await InfluencerUser.findOneAndUpdate({}, { $pull: { recommendedPeople: { $in: [offerId] } } }, { new: true });
         res.status(200).json({ message: 'offer deleted succesfully' });
 
     } catch (error) {

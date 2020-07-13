@@ -12,7 +12,7 @@ const addressSchema = new Schema({
     number: String,
     zip: String,
     province: String,
-    municipality: String
+    municipality: String,
 },
 
     {
