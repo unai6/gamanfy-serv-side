@@ -6,7 +6,8 @@ const Offers = require('../../models/JobOffer.js');
 const Recommended = require('../../models/Recommended');
 const nodemailer = require('nodemailer');
 let inLineCss = require('nodemailer-juice');
-const Address = require("../../models/Address");
+
+const sendRecommendation = require('../../appControllers/companyControllers/recommend');
 
 
 router.get('/:userId/dashboard', async (req, res) => {
@@ -48,7 +49,10 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
   try {
 
     const { company, userId, offerId } = req.params;
-    const { recommendedEmail, recommendedFirstName, recommendedLastName, whyRec } = req.body;
+    const { recommendedEmail, recommendedFirstName, recommendedLastName, whyRec, recommendedPhoneNumber,
+      recommendedLinkedin, curriculum, howFoundCandidate, candidateEducation, language, candidateLocation, experiences, similiarExp,
+       ownDescription, motivations, whyFits,
+      availability, moneyExpec, currentSituation, otherAspects } = req.body;
     const influencerUserId = await InfluencerUser.findById(userId).populate('recommendedPeople');
     const companyId = await Company.findById(company);
     const influencerUserName = `${influencerUserId.firstName} ${influencerUserId.lastName}`;
@@ -58,8 +62,26 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
     const maxGrossSalary = theOffer.retribution.maxGrossSalary;
     const jobName = theOffer.jobOfferData.jobName
 
+    let recommendedPeople;
+    
+    if (influencerUserId.isCompany === true) {
+      
+      recommendedPeople = await Recommended.create({
+        recommendedEmail, recommendedFirstName, recommendedLastName, offerId: theOffer, recommendedPhoneNumber, 
+        recommendedLinkedin, howFoundCandidate,
+        candidateInfo: {
+          candidateEducation, language, candidateLocation, experiences, similiarExp, ownDescription, motivations, whyFits,
+          availability, moneyExpec, currentSituation, otherAspects }
+      });
 
-    let recommendedPeople = await Recommended.create({ recommendedEmail, recommendedFirstName, recommendedLastName, offerId: theOffer, whyRec })
+      
+    } else {
+      recommendedPeople = await Recommended.create({
+        recommendedEmail, recommendedFirstName, recommendedLastName, offerId: theOffer,
+        whyRec, recommendedPhoneNumber
+      })
+      
+    }
 
     const updatedUser = await InfluencerUser.findByIdAndUpdate(userId, { $push: { recommendedPeople: recommendedPeople._id } }, { new: true })
     res.status(200).json({ updatedUser })
@@ -136,5 +158,9 @@ router.post('/reject-rec/:recommendationId', async (req, res) => {
     res.status(400).json({ error: 'An error occurred while retrieving recommendations' })
   }
 });
+
+
+router.post('/:companyId', sendRecommendation.recommend);
+
 
 module.exports = router

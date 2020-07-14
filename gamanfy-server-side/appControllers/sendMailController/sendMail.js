@@ -1,7 +1,12 @@
-exports.sendMail =  (req, res, next) => {
-    const { companyName, businessName, phoneNumber, message, email } = req.body;
+const nodemailer = require('nodemailer');
+const Company = require('../../models/Company');
 
+exports.sendMail =  async (req, res, next) => {
+   
     try {
+        const { companyId } = req.params;
+        const checkCompany = await Company.findById(companyId);
+        const {header, description} = req.body
 
         let transporter =  nodemailer.createTransport({
 
@@ -22,18 +27,10 @@ exports.sendMail =  (req, res, next) => {
         });
 
         let mailOptions = {
-            from: process.env.HOST_MAIL,
-            to: email,
-            subject: 'Gamanfy Staff',
-            html: `
-            <div> 
-                <p>Thanks for contacting Gamanfy ${companyName} ${businessName}</p>
-                <p>${message}</p>
-                <p>You will receive a call at ${phoneNumber} for further information</p>
-
-                Gamanfy Staff
-            </div>
-            `
+            from: checkCompany.email,
+            to: process.env.HOST_MAIL,
+            subject: header,
+            text: description
         };
 
         transporter.sendMail(mailOptions, function (error, info) {

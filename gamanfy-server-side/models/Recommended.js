@@ -10,7 +10,13 @@ const recommendedSchema = new Schema({
     whyRec : String,
     recommendedFirstName: String,
     recommendedLastName: String,
-    recommendedEmail: String
+    recommendedEmail: String,
+    recommendedPhoneNumber:String,
+    recommendedLinkedin : String,
+    curriculum: String,
+    howFoundCandidate : String,
+    candidateInfo: {type:Object, required:true}
+
 },
 
     {

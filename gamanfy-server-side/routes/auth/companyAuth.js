@@ -2,21 +2,20 @@ const express = require("express");
 const router = express.Router();
 const Company = require('../../models/Company');
 
-
-const companyAuthController = require('../../appControllers/companyControllers/companyAuthController');
 const {
     confirmationToken,
     resendToken
 } = require('../../appControllers/companyControllers/tokenControllers');
-const editProfileController = require('../../appControllers/companyControllers/editProfile');
-const {
 
-    validationLoggin,
+const {
+    
     checkToken
 } = require("../../helpers/middlewares");
+
+const companyAuthController = require('../../appControllers/companyControllers/companyAuthController');
 const getDashboardController= require('../../appControllers/companyControllers/getDashboard');
 const sendMailController = require('../../appControllers/sendMailController/sendMail');
-
+const editProfileController = require('../../appControllers/companyControllers/editProfile');
 
 
 router.post('/company/signup', companyAuthController.companySignUp);
@@ -41,6 +40,7 @@ router.get('/company/getData/:companyId', async (req, res) => {
     }
 
 });
+
 router.post("/company/logout", async (req, res, next) => {
     try {
         res.clearCookie(process.env.PUBLIC_DOMAIN);
@@ -53,6 +53,7 @@ router.post("/company/logout", async (req, res, next) => {
 });
 
 
-router.post('/send-mail', sendMailController.sendMail);
+router.post('/:companyId/send-mail', sendMailController.sendMail);
+
 
 module.exports = router

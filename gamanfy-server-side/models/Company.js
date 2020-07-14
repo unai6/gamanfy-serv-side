@@ -27,6 +27,7 @@ const companySchema = new Schema({
   website: String,
   numberOfEmployees: String,
   description: String,
+  recommendedProfessionals:[{type:Schema.Types.ObjectId, ref:'Recommended'}] 
 },
 
   {
