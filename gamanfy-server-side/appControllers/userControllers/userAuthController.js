@@ -41,7 +41,8 @@ exports.login = async (req, res) => {
           email: user.email,
           firstName: user.firstName,
           isVerified: user.isVerified,
-          isCompleted: user.isCompleted
+          isCompleted: user.isCompleted,
+          isCompany: user.isCompany
         }
       });
 
@@ -95,7 +96,8 @@ exports.userCompleteProfile = async (req, res) => {
           email: checkUser.email,
           firstName: checkUser.firstName,
           isVerified: checkUser.isVerified,
-          isCompleted: checkUser.isCompleted
+          isCompleted: checkUser.isCompleted,
+          isCompany: checkUser.isCompany
         }
       });
 
@@ -119,7 +121,8 @@ exports.userCompleteProfile = async (req, res) => {
           email: checkUser.email,
           firstName: checkUser.firstName,
           isVerified: checkUser.isVerified,
-          isCompleted: checkUser.isCompleted
+          isCompleted: checkUser.isCompleted,
+          isCompany: checkUser.isCompany
         }
       });
 
