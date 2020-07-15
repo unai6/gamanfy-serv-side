@@ -41,7 +41,7 @@ exports.login = async (req, res) => {
           email: user.email,
           firstName: user.firstName,
           isVerified: user.isVerified,
-          isCompleted:user.isCompleted
+          isCompleted: user.isCompleted
         }
       });
 
@@ -53,16 +53,16 @@ exports.login = async (req, res) => {
 }
 
 exports.userCompleteProfile = async (req, res) => {
-  
+
   try {
     let { userId } = req.params;
 
     const { companyName, documentType, documentNumber, contactPerson, taxId, website, city, phoneNumber, numberOfEmployees,
       urlLinkedin, birthDate, hasExp, countryCode, countryName, provinceINEcode, municipalityINEcode,
-      street, number, zip, invited, webCreated, province, municipality, isCompleted} = req.body;
+      street, number, zip, invited, webCreated, province, municipality, isCompleted } = req.body;
 
     const checkUser = await InfluencerUser.findById(userId);
-   
+
 
     let addressId = await Address.create({
       province, municipality, countryCode, countryName, provinceINEcode, municipalityINEcode, street, number, zip
@@ -73,7 +73,7 @@ exports.userCompleteProfile = async (req, res) => {
     if (checkUser.isCompany) {
       const companyUser = await CompanyUser.create({
         sectorId, addressId, phoneNumber, taxId, companyName, contactPerson,
-        documentType, numberOfEmployees, documentNumber, website, city, countryName, 
+        documentType, numberOfEmployees, documentNumber, website, city, countryName,
       });
 
 
@@ -101,7 +101,7 @@ exports.userCompleteProfile = async (req, res) => {
 
 
     } else if (checkUser.isCompany === false) {
-      
+
       res.cookie(process.env.PUBLIC_DOMAIN || process.env.PUBLIC_DOMAIN, {
         maxAge: 432000000,
         httpOnly: true,
@@ -165,7 +165,7 @@ exports.userSignup = async (req, res, next) => {
         if (err) { return res.status(500).send({ msg: err.message }); }
       });
 
-      
+
       let transporter = nodemailer.createTransport({
 
         host: 'smtp.ionos.es',
@@ -181,31 +181,31 @@ exports.userSignup = async (req, res, next) => {
           user: process.env.HOST_MAIL,
           pass: process.env.HOST_MAIL_PASSWORD
         },
-        
+
       });
 
       transporter.use('compile', inLineCss());
-      
+
       let mailOptions = {
         from: process.env.HOST_MAIL,
         to: newUser.email,
         subject: 'Verificación de la Cuenta',
         html: `
-        <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
-        <div>
-        <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> ¡Hola ${newUser.firstName}! Nos alegramos mucho<br> de poder contar contigo </p>\n
-     
-          <div style='font-weight:300; color:#535353; font-size:14px; margin-top:1.5em'>
-            Tu cuenta ha sido creada y ya tienes todo listo para comenzar. </br>
-            Haz click en este botón para verificar tu cuenta.</br>
-          <button type='submit' style="border:none; background:rgb(255,188,73); border-radius:5px; width:14em; height:2.5em; margin-top:2em; margin-left:11em"><a href='${process.env.PUBLIC_DOMAIN}/auth/confirmation/${newUser._id}/${token.token}/${newUser.isCompany}' style='color:white; text-decoration:none; font-weight:500'>Verificar cuenta</a></button><br/>
-          </div>
-      </div> \n`,
-      attachments: [{
-        filename: 'logo-gamanfy-email.png',
-        path: 'public/logo-gamanfy-email.png',
-        cid: 'unique@nodemailer.com'
-      }]
+          <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
+          <div>
+          <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> ¡Hola ${newUser.firstName}! Nos alegramos mucho<br> de poder contar contigo </p>\n
+      
+            <div style='font-weight:300; color:#535353; font-size:14px; margin-top:1.5em'>
+              Tu cuenta ha sido creada y ya tienes todo listo para comenzar. </br>
+              Haz click en este botón para verificar tu cuenta.</br>
+            </div>
+              <button type='submit' style='border:none; background:rgb(255,188,73); border-radius:5px; width:14em; height:2.5em; margin-top:2em; margin-left:11em'><a href="${process.env.PUBLIC_DOMAIN}/auth/confirmation/${newUser._id}/${token.token}/${newUser.isCompany}" style="color:white; text-decoration:none; font-weight:500">Verificar cuenta</a></button><br/>
+          </div> \n`,
+        attachments: [{
+          filename: 'logo-gamanfy-email.png',
+          path: 'public/logo-gamanfy-email.png',
+          cid: 'unique@nodemailer.com'
+        }]
       };
 
       transporter.sendMail(mailOptions, function (err) {
