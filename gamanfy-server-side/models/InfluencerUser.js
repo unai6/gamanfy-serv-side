@@ -28,7 +28,8 @@ const influencerUserSchema = new Schema({
     actualCompany: String,
     profileDescription: String,
     actualSalary: String,
-    recommendedPeople:[{type:Schema.Types.ObjectId, ref:'Recommended'}] ,
+    recommendedPeople:[{type:Schema.Types.ObjectId, ref:'Recommended'}],
+    historicRecommendations:[{type:Schema.Types.ObjectId, ref:'Recommended'}]
     
 
 },

@@ -8,7 +8,7 @@ const nodemailer = require('nodemailer');
 let inLineCss = require('nodemailer-juice');
 
 const sendRecommendation = require('../../appControllers/companyControllers/recommend');
-
+const deleteRecommendations = require('../../appControllers/userControllers/recommendations');
 
 router.get('/:userId/dashboard', async (req, res) => {
 
@@ -38,7 +38,8 @@ router.get('/:userId/dashboard', async (req, res) => {
         }
       })
 
-
+  
+      
   } catch (error) {
     res.status(404).json({ error: 'No recommendations founded' })
   }
@@ -51,7 +52,7 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
     const { company, userId, offerId } = req.params;
     const { recommendedEmail, recommendedFirstName, recommendedLastName, whyRec, recommendedPhoneNumber,
       recommendedLinkedin, curriculum, howFoundCandidate, candidateEducation, language, candidateLocation, experiences, similiarExp,
-       ownDescription, motivations, whyFits,
+      ownDescription, motivations, whyFits,
       availability, moneyExpec, currentSituation, otherAspects } = req.body;
     const influencerUserId = await InfluencerUser.findById(userId).populate('recommendedPeople');
     const companyId = await Company.findById(company);
@@ -63,27 +64,41 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
     const jobName = theOffer.jobOfferData.jobName
 
     let recommendedPeople;
-    
+    let historicRecommendations;
+    let recommendedTimes;
+
     if (influencerUserId.isCompany === true) {
-      
+
       recommendedPeople = await Recommended.create({
-        recommendedEmail, recommendedFirstName, recommendedLastName, offerId: theOffer, recommendedPhoneNumber, 
+        recommendedEmail, recommendedFirstName, recommendedLastName, offerId: theOffer, recommendedPhoneNumber,
         recommendedLinkedin, howFoundCandidate,
         candidateInfo: {
           candidateEducation, language, candidateLocation, experiences, similiarExp, ownDescription, motivations, whyFits,
-          availability, moneyExpec, currentSituation, otherAspects }
+          availability, moneyExpec, currentSituation, otherAspects
+        }
       });
 
+      recommendedTimes = await Offers.findByIdAndUpdate(theOffer, {
+        $push: { recommendedTimes: recommendedPeople}
+      }, {new:true})
       
+
+      historicRecommendations = recommendedPeople
+
     } else {
       recommendedPeople = await Recommended.create({
         recommendedEmail, recommendedFirstName, recommendedLastName, offerId: theOffer,
         whyRec, recommendedPhoneNumber
-      })
-      
+      });
+      recommendedTimes = await Offers.findByIdAndUpdate(theOffer, {
+        $push: { recommendedTimes: recommendedPeople }
+      }, {new:true})
+
+      historicRecommendations = recommendedPeople
+
     }
 
-    const updatedUser = await InfluencerUser.findByIdAndUpdate(userId, { $push: { recommendedPeople: recommendedPeople._id } }, { new: true })
+    const updatedUser = await InfluencerUser.findByIdAndUpdate(userId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id, recommendedTimes : recommendedTimes._id } }, { new: true })
     res.status(200).json({ updatedUser })
 
     let transporter = nodemailer.createTransport({
@@ -146,6 +161,8 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
   }
 });
 
+
+
 router.post('/reject-rec/:recommendationId', async (req, res) => {
   try {
     const { recommendationId } = req.params;
@@ -160,7 +177,33 @@ router.post('/reject-rec/:recommendationId', async (req, res) => {
 });
 
 
+router.post('/user/delete-recommendation/:userId/:recommendationId', deleteRecommendations.deleteRecommendation);
+
+router.get('/:offerId/inProcess', async (req, res) => {
+
+  try {
+    const { offerId } = req.params;
+
+    let recommendations = await Recommended.find({
+
+      $and: [
+        { "offerId": offerId }, { 'inProcess': true }
+      ]
+    })
+    .populate('offerId')
+
+    res.status(200).json(recommendations)
+
+    console.log(recommendations.length)
+
+  } catch (error) {
+    res.status(400).json({ error: 'An error occurred while retrieving inProcess info' })
+  }
+});
+
 router.post('/:companyId', sendRecommendation.recommend);
+
+
 
 
 module.exports = router

@@ -60,7 +60,7 @@ exports.companyCompleteProfile = async (req, res, next) => {
       provinceINEcode, municipalityINEcode, street, number, zip, province, municipality, website, phoneNumber, numberOfEmployees } = req.body;
     let addressId = await Address.create({ countryCode, countryName, provinceINEcode, municipalityINEcode, province, municipality, street, number, zip });
     let sectorId = await Sector.create(req.body);
-    
+
     res.cookie(process.env.PUBLIC_DOMAIN || process.env.PUBLIC_DOMAIN, {
       maxAge: 432000000,
       httpOnly: true,
@@ -147,7 +147,22 @@ exports.companySignUp = async (req, res, next) => {
         from: process.env.HOST_MAIL,
         to: newCompany.email,
         subject: 'Account Verification Token',
-        text: `Welcome to Gamanfy ${newCompany.firstName}.\n Please verify your account by clicking the link: ${process.env.PUBLIC_DOMAIN}/auth-co/confirmation/${newCompany._id}/${token.token}\n`
+        html: `
+        <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
+        <div>
+            <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> ¡Hola ${newCompany.firstName}! Nos alegramos mucho<br> de poder contar contigo </p>\n
+
+             <div style='font-weight:300; color:#535353; font-size:14px; margin:1.5em 0 1em 1em'>
+                 Tu cuenta ha sido creada y ya tienes todo listo para comenzar. </br>
+                 Haz click en este botón para verificar tu cuenta.</br>
+            </div>
+            <a href="${process.env.PUBLIC_DOMAIN}/auth-co/confirmation/${newCompany._id}/${token.token}" style="color:white; text-decoration:none; border:none !important; background-color:rgb(255,188,73); border-radius:5px; width:14em; padding:.2em .5em .2em .5em; height:2.5em; margin-top:2em; margin-left:11em; font-weight:500">Verificar cuenta</a><br/>
+        </div> \n`,
+        attachments: [{
+          filename: 'logo-gamanfy-email.png',
+          path: 'public/logo-gamanfy-email.png',
+          cid: 'unique@nodemailer.com'
+        }]
       };
 
 

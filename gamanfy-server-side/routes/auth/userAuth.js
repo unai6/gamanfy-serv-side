@@ -65,6 +65,7 @@ router.get('/user/getData/:userId', async (req, res) => {
 
 });
 
+
 router.post('/send-mail', sendMailController.sendMail);
 
 module.exports = router

@@ -15,7 +15,8 @@ const recommendedSchema = new Schema({
     recommendedLinkedin : String,
     curriculum: String,
     howFoundCandidate : String,
-    candidateInfo: {type:Object, required:true}
+    candidateInfo: {type:Object, required:true},
+ 
 
 },
 
