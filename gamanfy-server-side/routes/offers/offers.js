@@ -48,15 +48,14 @@ router.get('/getData/:companyId', async (req, res) => {
         await Company.findById(companyId)
             .populate([
 
-                {
+                {   
                     path: 'postedOffers',
                     populate: {
-                        path: 'addressId sectorId contractId'
+                        path: 'addressId sectorId contractId recommendedTimes'
                     }
 
                 },
                 {
-
                     path: 'addressId',
                     populate: {
                         path: 'addressId'
@@ -74,7 +73,8 @@ router.get('/getData/:companyId', async (req, res) => {
                     populate:{
                         path:'taxAddress'
                     }
-                }]
+                },
+          ]
 
             ).exec(function (err, offerIdPopulated) {
                 if (err) {

@@ -24,9 +24,18 @@ router.get('/:userId/dashboard', async (req, res) => {
         populate: {
           path: 'offerId',
           model: 'JobOffer',
-          populate: {
-            path: 'contractId addressId',
-          }
+          populate: [{
+            path: 'contractId addressId'
+          }, {
+
+            path: 'companyData.companyId',
+            model: 'Company',
+            populate:{
+              path:'postedOffers',
+             
+            }
+          }]
+
         }
       }
 
@@ -38,8 +47,8 @@ router.get('/:userId/dashboard', async (req, res) => {
         }
       })
 
-  
-      
+
+
   } catch (error) {
     res.status(404).json({ error: 'No recommendations founded' })
   }
@@ -79,9 +88,9 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
       });
 
       recommendedTimes = await Offers.findByIdAndUpdate(theOffer, {
-        $push: { recommendedTimes: recommendedPeople}
-      }, {new:true})
-      
+        $push: { recommendedTimes: recommendedPeople }
+      }, { new: true })
+
 
       historicRecommendations = recommendedPeople
 
@@ -92,13 +101,13 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
       });
       recommendedTimes = await Offers.findByIdAndUpdate(theOffer, {
         $push: { recommendedTimes: recommendedPeople }
-      }, {new:true})
+      }, { new: true })
 
       historicRecommendations = recommendedPeople
 
     }
 
-    const updatedUser = await InfluencerUser.findByIdAndUpdate(userId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id, recommendedTimes : recommendedTimes._id } }, { new: true })
+    const updatedUser = await InfluencerUser.findByIdAndUpdate(userId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id, recommendedTimes: recommendedTimes._id } }, { new: true })
     res.status(200).json({ updatedUser })
 
     let transporter = nodemailer.createTransport({
@@ -179,6 +188,7 @@ router.post('/reject-rec/:recommendationId', async (req, res) => {
 
 router.post('/user/delete-recommendation/:userId/:recommendationId', deleteRecommendations.deleteRecommendation);
 
+
 router.get('/:offerId/inProcess', async (req, res) => {
 
   try {
@@ -190,7 +200,7 @@ router.get('/:offerId/inProcess', async (req, res) => {
         { "offerId": offerId }, { 'inProcess': true }
       ]
     })
-    .populate('offerId')
+      .populate('offerId')
 
     res.status(200).json(recommendations)
 
@@ -199,6 +209,21 @@ router.get('/:offerId/inProcess', async (req, res) => {
   } catch (error) {
     res.status(400).json({ error: 'An error occurred while retrieving inProcess info' })
   }
+});
+
+router.post('/updateProcesses/updateRecommendations/:offerId/:recommendationId', async (req,res) => {
+
+  try{
+    const {offerId, recommendationId} = req.params;
+    const {recommendationAccepted, inProcess, hired} = req.body;
+  
+    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, {recommendationAccepted, inProcess, hired}, {new:true})
+    let updatedOffer = await Offers.findByIdAndUpdate(offerId, {recommendationAccepted, inProcess, hired})
+    res.status(200).json({updatedRec, updatedOffer})
+
+  }catch(error){
+    res.status(400).json({error: 'An error occurred while updating'})
+  }  
 });
 
 router.post('/:companyId', sendRecommendation.recommend);

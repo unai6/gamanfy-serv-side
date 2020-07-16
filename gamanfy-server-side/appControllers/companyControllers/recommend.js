@@ -8,7 +8,7 @@ exports.recommend = async (req, res, next) => {
         const { recommendedEmail, recommendedFirstName, recommendedLastName, whyRec } = req.body;
         const { companyId } = req.params;
         await Company.findById(companyId);
-        let recommendedProfessionals = await Recommended.create({ recommendedEmail, recommendedFirstName, recommendedLastName, whyRec })
+        let recommendedProfessionals = await Recommended.create({ recommendedEmail, recommendedFirstName, recommendedLastName, whyRec  })
 
         const updatedUser = await Company.findByIdAndUpdate(companyId, { $push: { recommendedProfessionals: recommendedProfessionals._id } }, { new: true })
         res.status(200).json({ updatedUser })
