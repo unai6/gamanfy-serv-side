@@ -6,6 +6,7 @@ const Offers = require('../../models/JobOffer.js');
 const Recommended = require('../../models/Recommended');
 const nodemailer = require('nodemailer');
 let inLineCss = require('nodemailer-juice');
+const mongoose = require("mongoose");
 
 const sendRecommendation = require('../../appControllers/companyControllers/recommend');
 const deleteRecommendations = require('../../appControllers/userControllers/recommendations');
@@ -216,11 +217,13 @@ router.post('/updateProcesses/updateRecommendations/:offerId/:recommendationId',
   try{
     const {offerId, recommendationId} = req.params;
     const {recommendationAccepted, inProcess, hired} = req.body;
+ 
   
     let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, {recommendationAccepted, inProcess, hired}, {new:true})
-    let updatedOffer = await Offers.findByIdAndUpdate(offerId, {recommendationAccepted, inProcess, hired})
-    res.status(200).json({updatedRec, updatedOffer})
-
+    let recInsideOffer = await Offers.findById(offerId, {_id:0, recommendedTimes: {$elemMatch: {_id: mongoose.Types.ObjectId(recommendationId)}}})
+    let offerIdent = recInsideOffer.recommendedTimes[0]._id  
+    let updatedOffer = await Offers.findOneAndUpdate({'recommendedTimes._id': offerIdent}, { $set : { 'recommendedTimes': updatedRec}})
+    res.status(200).json(updatedOffer)
   }catch(error){
     res.status(400).json({error: 'An error occurred while updating'})
   }  
