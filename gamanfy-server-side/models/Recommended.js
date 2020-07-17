@@ -5,8 +5,8 @@ const Schema = mongoose.Schema;
 const recommendedSchema = new Schema({
     recommendationAccepted : {type: Boolean, default:false},
     inProcess : {type: Boolean, default:false},
-    stillInProcess: {type: Boolean},
     hired: {type: Boolean, default:false},
+    stillInProcess: {type: Boolean, default:true},    
     offerId: {type: Schema.Types.ObjectId, ref:'JobOffer'},
     whyRec : String,
     recommendedFirstName: String,

@@ -217,16 +217,9 @@ router.post('/updateProcesses/updateRecommendations/:offerId/:recommendationId',
   try{
     const {offerId, recommendationId} = req.params;
     const {recommendationAccepted, inProcess, hired} = req.body;
-
-    let opposite = Boolean()
-
-    if(hired === true){
-      opposite === false
-    } else if(hired === false){
-       opposite === true
-    }
-
-    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, {recommendationAccepted, inProcess, hired, stillInProcess:opposite}, {new:true})
+    
+  
+    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, {recommendationAccepted, inProcess, hired, stillInProcess:false}, {new:true})
     let recInsideOffer = await Offers.findById(offerId, {_id:0, recommendedTimes: {$elemMatch: {_id: mongoose.Types.ObjectId(recommendationId)}}})
     let offerIdent = recInsideOffer.recommendedTimes[0]._id  
     let updatedOffer = await Offers.findOneAndUpdate({'recommendedTimes._id': offerIdent}, { $set : { 'recommendedTimes': updatedRec}}, {new:true})
