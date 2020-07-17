@@ -51,7 +51,7 @@ router.get('/getData/:companyId', async (req, res) => {
                 {   
                     path: 'postedOffers',
                     populate: {
-                        path: 'addressId sectorId contractId recommendedTimes'
+                        path: 'addressId sectorId contractId'
                     }
 
                 },
