@@ -122,7 +122,8 @@ exports.userCompleteProfile = async (req, res) => {
           firstName: checkUser.firstName,
           isVerified: checkUser.isVerified,
           isCompleted: checkUser.isCompleted,
-          isCompany: checkUser.isCompany
+          isCompany: checkUser.isCompany,
+          isItaCompany:false
         }
       });
 

@@ -39,7 +39,8 @@ exports.companyLogin = async (req, res) => {
           email: user.email,
           firstName: user.firstName,
           isVerified: user.isVerified,
-          isCompleted: user.isCompleted
+          isCompleted: user.isCompleted,
+          isItaCompany:true
         }
       });
 
