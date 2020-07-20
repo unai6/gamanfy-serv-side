@@ -42,7 +42,9 @@ exports.login = async (req, res) => {
           firstName: user.firstName,
           isVerified: user.isVerified,
           isCompleted: user.isCompleted,
-          isCompany: user.isCompany
+          isCompany: user.isCompany,
+          isItaCompany:false
+
         }
       });
 
@@ -97,7 +99,9 @@ exports.userCompleteProfile = async (req, res) => {
           firstName: checkUser.firstName,
           isVerified: checkUser.isVerified,
           isCompleted: checkUser.isCompleted,
-          isCompany: checkUser.isCompany
+          isCompany: checkUser.isCompany,
+          isItaCompany:false
+
         }
       });
 
@@ -114,6 +118,7 @@ exports.userCompleteProfile = async (req, res) => {
 
       const token = signToken(checkUser)
       const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { addressId, city, phoneNumber, urlLinkedin, birthDate, hasExp, isCompleted }, { new: true });
+     
       res.status(200).json({
         updatedUser, token,
         user: {
