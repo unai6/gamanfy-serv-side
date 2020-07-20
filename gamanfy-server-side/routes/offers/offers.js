@@ -254,7 +254,6 @@ router.post('/:companyId/:offerId/delete-offer', async (req, res) => {
         res.status(400).json({ message: 'An error occurred while trying to delete the offer' });
     }
 
-
 })
 
 

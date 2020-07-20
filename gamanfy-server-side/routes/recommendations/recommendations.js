@@ -191,7 +191,7 @@ router.post('/user/reject-rec/:recommendationId/:offerId', async (req, res) => {
 });
 
 
-router.post('/user/delete-recommendation/:userId/:recommendationId', deleteRecommendations.deleteRecommendation);
+router.post('/user/delete-recommendation/:userId/:recommendationId/:offerId', deleteRecommendations.deleteRecommendation);
 
 
 router.get('/:offerId/inProcess', async (req, res) => {
