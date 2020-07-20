@@ -147,7 +147,7 @@ exports.userCompleteProfile = async (req, res) => {
 
 exports.userSignup = async (req, res, next) => {
 
-  let { email, password, repeatPassword, firstName, lastName, isCompany, isCandidate } = req.body;
+  let { email, password, repeatPassword, firstName, lastName, isCompany, isCandidate, companyUserPunctuation, influencerUserPunctuation} = req.body;
   try {
 
     if (isCompany === 'on') {
@@ -167,7 +167,7 @@ exports.userSignup = async (req, res, next) => {
 
       const salt = bcrypt.genSaltSync(saltRounds);
       const hashPass = bcrypt.hashSync(password, salt);
-      const newUser = await InfluencerUser.create({ email, password: hashPass, firstName, lastName, isCompany });
+      const newUser = await InfluencerUser.create({ email, password: hashPass, firstName, lastName, isCompany, companyUserPunctuation, influencerUserPunctuation });
 
       const token = new UserToken({ _userId: newUser._id, token: crypto.randomBytes(16).toString('hex') });
       await token.save(function (err) {

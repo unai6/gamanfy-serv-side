@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const companyUserSchema = new Schema({
     companyName: String,
+    companyUserPunctuation : {type:String, default:'300'},
     taxId: String,
     countryName: String,
     city: String,
