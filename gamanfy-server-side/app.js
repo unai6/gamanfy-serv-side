@@ -39,7 +39,7 @@ mongoose
     app.use(
       cors({
         credentials: true,
-        origin:["http://localhost:3000", "https://gamanfy-c2371.web.app"]
+        origin:["http://localhost:3000", "https://gamanfy-c2371.web.app", "http://fontawesome.com"]
       })
       );  
 

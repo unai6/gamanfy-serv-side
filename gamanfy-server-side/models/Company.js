@@ -8,6 +8,7 @@ const companySchema = new Schema({
   isVerified: { type: Boolean, default: false },
   isCompleted: { type: Boolean, default: false },
   isHeadHunter: { type: Boolean, default: false },
+  isValidated:  { type: Boolean, default: false },
   companyName: String,
   firstName: String,
   lastName: String,
