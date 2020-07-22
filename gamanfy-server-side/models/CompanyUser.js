@@ -3,12 +3,12 @@ const Schema = mongoose.Schema;
 
 const companyUserSchema = new Schema({
     companyName: String,
-    companyUserPunctuation : {type:String, default:'300'},
+    companyUserPunctuation: {type:Number, default:500},
     taxId: String,
     countryName: String,
     city: String,
     phoneNumber: String,
-    addressId: { type: Schema.Types.ObjectId, ref: 'Address' },
+    addressId: { type: Schema.Types.ObjectId, ref: 'Address'    },
     documentType: String,
     documentNumber: String,
     numberOfEmployees: String,
@@ -17,7 +17,6 @@ const companyUserSchema = new Schema({
     website: String,
     description: String,
     sectorId: { type: Schema.Types.ObjectId, ref: 'Sector' }
-
 },
     {
         timestamps: true

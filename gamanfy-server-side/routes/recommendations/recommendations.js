@@ -10,6 +10,7 @@ const mongoose = require("mongoose");
 
 const sendRecommendation = require('../../appControllers/companyControllers/recommend');
 const deleteRecommendations = require('../../appControllers/userControllers/recommendations');
+const CompanyUser = require("../../models/CompanyUser");
 
 router.get('/:userId/dashboard', async (req, res) => {
 
@@ -64,7 +65,7 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
       recommendedLinkedin, curriculum, howFoundCandidate, candidateEducation, language, candidateLocation, experiences, similiarExp,
       ownDescription, motivations, whyFits,
       availability, moneyExpec, currentSituation, otherAspects } = req.body;
-    const influencerUserId = await InfluencerUser.findById(userId).populate('recommendedPeople');
+    const influencerUserId = await InfluencerUser.findById(userId).populate('recommendedPeople companyUser');
     const companyId = await Company.findById(company);
     const influencerUserName = `${influencerUserId.firstName} ${influencerUserId.lastName}`;
     const theCompany = companyId.companyName;
@@ -76,6 +77,7 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
     let recommendedPeople;
     let historicRecommendations;
     let recommendedTimes;
+    let punctuation = 5
 
     if (influencerUserId.isCompany === true) {
 
@@ -108,8 +110,15 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
 
     }
 
-    const updatedUser = await InfluencerUser.findByIdAndUpdate(userId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id, recommendedTimes: recommendedTimes._id } }, { new: true })
-    res.status(200).json({ updatedUser })
+    if(influencerUserId.isCompany === true) {
+      const updatedUser = await InfluencerUser.findByIdAndUpdate(userId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id, recommendedTimes: recommendedTimes._id} }, { new: true })
+      await CompanyUser.findByIdAndUpdate(influencerUserId.companyUser, {$sum:{InfluencerUser: punctuation}}) 
+      res.status(200).json({ updatedUser })
+    } else {
+      const updatedUser = await InfluencerUser.findByIdAndUpdate(userId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id, recommendedTimes: recommendedTimes._id } }, { new: true })
+      res.status(200).json({ updatedUser })
+
+    }
 
     let transporter = nodemailer.createTransport({
 

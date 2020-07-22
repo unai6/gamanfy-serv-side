@@ -14,6 +14,7 @@ exports.editProfile = async (req, res, next) => {
         const { userId } = req.params;
 
         const isCompanyUser = await InfluencerUser.findById(userId).populate('companyUser');
+        
         let { companyName, documentType, documentNumber, contactPerson, taxId, website, city, phoneNumber, numberOfEmployees,
             urlLinkedin, birthDate, hasExp, countryCode, countryName, provinceINEcode, municipalityINEcode,
             street, number, zip, invited, webCreated, province, municipality, sector, email, firstName, lastName, isCompany, isCandidate,

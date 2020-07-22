@@ -5,7 +5,7 @@ let uniqueValidator = require('mongoose-unique-validator');
 const influencerUserSchema = new Schema({
 
     isVerified: { type: Boolean, default: false },
-    influencerUserPunctuation : {type:String, default:'100'},
+    influencerUserPunctuation : {type:Number, default:100},
     isCompleted: { type: Boolean, default: false },
     firstName: String,
     lastName: String,
