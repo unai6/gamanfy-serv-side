@@ -79,8 +79,8 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
     let recommendedTimes;
     let punctuation = 5
 
-    if (influencerUserId.isCompany === true) {
-
+    if (influencerUserId.isCompany ) {
+ 
       recommendedPeople = await Recommended.create({
         recommendedEmail, recommendedFirstName, recommendedLastName, offerId: theOffer, recommendedPhoneNumber,
         recommendedLinkedin, howFoundCandidate,
@@ -89,36 +89,37 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
           availability, moneyExpec, currentSituation, otherAspects
         }
       });
-
+      
+      
       recommendedTimes = await Offers.findByIdAndUpdate(theOffer, {
         $push: { recommendedTimes: recommendedPeople }
       }, { new: true })
-
-
+        
       historicRecommendations = recommendedPeople
+      
+     let companyUser =  await CompanyUser.findByIdAndUpdate(influencerUserId.companyUser, {$inc: {'companyUserPunctuation': 5 }},  {new:true}) 
+     const updatedUser = await InfluencerUser.findByIdAndUpdate(influencerUserId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id, recommendedTimes: recommendedTimes._id}, companyUser }, { new: true })
+     res.status(200).json({ updatedUser})
 
-    } else {
+    } else if(influencerUserId.isCompany === false) {
+
       recommendedPeople = await Recommended.create({
         recommendedEmail, recommendedFirstName, recommendedLastName, offerId: theOffer,
         whyRec, recommendedPhoneNumber
       });
+
       recommendedTimes = await Offers.findByIdAndUpdate(theOffer, {
         $push: { recommendedTimes: recommendedPeople }
       }, { new: true })
 
       historicRecommendations = recommendedPeople
 
-    }
-
-    if(influencerUserId.isCompany === true) {
-      const updatedUser = await InfluencerUser.findByIdAndUpdate(userId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id, recommendedTimes: recommendedTimes._id} }, { new: true })
-      await CompanyUser.findByIdAndUpdate(influencerUserId.companyUser, {$sum:{InfluencerUser: punctuation}}) 
-      res.status(200).json({ updatedUser })
-    } else {
-      const updatedUser = await InfluencerUser.findByIdAndUpdate(userId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id, recommendedTimes: recommendedTimes._id } }, { new: true })
-      res.status(200).json({ updatedUser })
+      const updatedUser = await InfluencerUser.findByIdAndUpdate(influencerUserId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id, recommendedTimes: recommendedTimes._id} , $inc: {'influencerUserPunctuation': 5 } }, { new: true })
+      res.status(200).json({ updatedUser})
 
     }
+
+  
 
     let transporter = nodemailer.createTransport({
 
@@ -150,7 +151,7 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
       <div style='font-weight:300; color:#535353; font-size:14px'>
 
         Puesto: ${jobName}<br/>
-        Empresa: ${theCompany}<br/>
+        Empresa: ${theCompany}<br/> 
         Salario: ${minGrossSalary}-${maxGrossSalary}<br/>
       
         </div>
