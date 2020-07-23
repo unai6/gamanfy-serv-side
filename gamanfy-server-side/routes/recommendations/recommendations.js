@@ -20,9 +20,9 @@ router.get('/:userId/dashboard', async (req, res) => {
 
     await InfluencerUser.findById(userId)
 
-      .populate({
+      .populate([{
 
-        path: 'recommendedPeople',
+        path: 'recommendedPeople companyUser',
         populate: {
           path: 'offerId',
           model: 'JobOffer',
@@ -37,9 +37,10 @@ router.get('/:userId/dashboard', async (req, res) => {
 
             }
           }]
-
-        }
-      }
+        },
+      
+        
+        }]
 
       ).exec(function (err, offerIdPopulated) {
         if (err) {
