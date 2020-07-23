@@ -37,10 +37,8 @@ router.get('/:userId/dashboard', async (req, res) => {
 
             }
           }]
-        },
-      
-        
-        }]
+        }
+      }]
 
       ).exec(function (err, offerIdPopulated) {
         if (err) {
@@ -80,8 +78,8 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
     let recommendedTimes;
     let punctuation = 5
 
-    if (influencerUserId.isCompany ) {
- 
+    if (influencerUserId.isCompany) {
+
       recommendedPeople = await Recommended.create({
         recommendedEmail, recommendedFirstName, recommendedLastName, offerId: theOffer, recommendedPhoneNumber,
         recommendedLinkedin, howFoundCandidate,
@@ -90,19 +88,19 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
           availability, moneyExpec, currentSituation, otherAspects
         }
       });
-      
-      
+
+
       recommendedTimes = await Offers.findByIdAndUpdate(theOffer, {
         $push: { recommendedTimes: recommendedPeople }
       }, { new: true })
-        
-      historicRecommendations = recommendedPeople
-      
-     let companyUser =  await CompanyUser.findByIdAndUpdate(influencerUserId.companyUser, {$inc: {'companyUserPunctuation': 5 }},  {new:true}) 
-     const updatedUser = await InfluencerUser.findByIdAndUpdate(influencerUserId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id, recommendedTimes: recommendedTimes._id}, companyUser }, { new: true })
-     res.status(200).json({ updatedUser})
 
-    } else if(influencerUserId.isCompany === false) {
+      historicRecommendations = recommendedPeople
+
+      let companyUser = await CompanyUser.findByIdAndUpdate(influencerUserId.companyUser, { $inc: { 'companyUserPunctuation': 5 } }, { new: true })
+      const updatedUser = await InfluencerUser.findByIdAndUpdate(influencerUserId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id, recommendedTimes: recommendedTimes._id }, companyUser }, { new: true })
+      res.status(200).json({ updatedUser })
+
+    } else if (influencerUserId.isCompany === false) {
 
       recommendedPeople = await Recommended.create({
         recommendedEmail, recommendedFirstName, recommendedLastName, offerId: theOffer,
@@ -115,12 +113,12 @@ router.post('/:company/:offerId/:userId', async (req, res) => {
 
       historicRecommendations = recommendedPeople
 
-      const updatedUser = await InfluencerUser.findByIdAndUpdate(influencerUserId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id, recommendedTimes: recommendedTimes._id} , $inc: {'influencerUserPunctuation': 5 } }, { new: true })
-      res.status(200).json({ updatedUser})
+      const updatedUser = await InfluencerUser.findByIdAndUpdate(influencerUserId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id, recommendedTimes: recommendedTimes._id }, $inc: { 'influencerUserPunctuation': 5 } }, { new: true })
+      res.status(200).json({ updatedUser })
 
     }
 
-  
+
 
     let transporter = nodemailer.createTransport({
 
@@ -188,7 +186,7 @@ router.post('/user/reject-rec/:recommendationId/:offerId', async (req, res) => {
 
   try {
     const { offerId, recommendationId } = req.params;
-    const { recommendationAccepted, recommendationRejected} = req.body;
+    const { recommendationAccepted, recommendationRejected } = req.body;
 
 
     let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { recommendationAccepted, recommendationRejected }, { new: true })
