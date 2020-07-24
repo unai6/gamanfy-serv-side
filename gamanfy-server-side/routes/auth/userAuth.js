@@ -55,7 +55,7 @@ router.get('/user/getData/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
 
-        let getUserData = await InfluencerUser.findById(userId).populate('companyUser addressId');
+        let getUserData = await InfluencerUser.findById(userId).populate('companyUser addressId recommendedPeople');
 
         res.status(200).json(getUserData);
 

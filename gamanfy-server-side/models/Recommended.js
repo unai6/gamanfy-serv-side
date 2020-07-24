@@ -18,6 +18,7 @@ const recommendedSchema = new Schema({
     curriculum: String,
     howFoundCandidate : String,
     candidateInfo: {type:Object},
+    moneyForRec:{type:Number}
  
 },
 
