@@ -12,8 +12,11 @@ const companyUserSendRecommendation = require('../../appControllers/userControll
 const influencerUserSendRecommendation = require('../../appControllers/userControllers/recommendations');
 
 router.get('/:userId/dashboard', getUserRecommendationsDashboard.getUserRecommendationsDashboard)
-router.post('/userInfluencer/:idCompany/:idUser/:idOffer', influencerUserSendRecommendation.influencerUserRecommendation)
+router.post('/influencerUser/:idCompany/:idUser/:idOffer', influencerUserSendRecommendation.influencerUserRecommendation)
 router.post('/companyUser/:userId/:offerId/:company', companyUserSendRecommendation.companyUserRecommendation);
+router.post('/user/delete-recommendation/:userId/:recommendationId/:offerId', deleteRecommendations.deleteRecommendation);
+router.post('/:companyId', companySendRecommendation.recommend);
+
 
 router.post('/user/reject-rec/:recommendationId/:offerId', async (req, res) => {
 
@@ -33,7 +36,6 @@ router.post('/user/reject-rec/:recommendationId/:offerId', async (req, res) => {
 });
 
 
-router.post('/user/delete-recommendation/:userId/:recommendationId/:offerId', deleteRecommendations.deleteRecommendation);
 
 
 router.get('/:offerId/inProcess', async (req, res) => {
@@ -73,7 +75,6 @@ router.post('/updateProcesses/updateRecommendations/:offerId/:recommendationId',
   }
 });
 
-router.post('/:companyId', companySendRecommendation.recommend);
 
 
 

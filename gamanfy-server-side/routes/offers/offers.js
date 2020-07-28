@@ -20,7 +20,7 @@ router.get('/dashboard', async (req, res, next) => {
         let allOffers = await Offers.find({ "contractServices.hasSourcingWithInfluencer": true }).populate('addressId contractId sectorId').limit(10);
         allOffers.length !== 0
             ? res.json({ allOffers })
-            : res.status(404).json({ message: "No products found!" });
+            :res.json({ message: "No products found!" });
 
     } catch (error) {
         res.status(404).json({ error: 'An error occurred while bringing offers' });
