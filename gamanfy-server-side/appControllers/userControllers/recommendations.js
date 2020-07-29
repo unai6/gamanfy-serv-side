@@ -69,14 +69,14 @@ exports.influencerUserRecommendation = async (req, res) => {
   
   try{
     const { idCompany, idUser, idOffer } = req.params;
-    const { recommendedEmail, recommendedFirstName, recommendedLastName, whyRec, recommendedPhoneNumber,
+    const { recommendedEmail, recommendedFirstName, recommendedLastName, whyRec, recommendedLinkedin, recommendedPhoneNumber,
   } = req.body;
 
     const theOffer = await Offers.findById(idOffer);
     const influencerUserId = await InfluencerUser.findById(idUser).populate('recommendedPeople');
     const influencerUserMoneyperRec = influencerUserId.influencerUserPunctuation;
     const influencerUserName = `${influencerUserId.firstName} ${influencerUserId.lastName}`;
-    const companyId = Company.findById(idCompany)
+    const companyId = await Company.findById(idCompany)
     const theCompany = companyId.companyName;
     const minGrossSalary = theOffer.retribution.minGrossSalary;
     const maxGrossSalary = theOffer.retribution.maxGrossSalary;
@@ -86,7 +86,7 @@ exports.influencerUserRecommendation = async (req, res) => {
     let historicRecommendations;
     let recommendedTimes;
     recommendedPeople = await Recommended.create({
-      recommendedEmail, recommendedFirstName, recommendedLastName, offerId: theOffer,
+      recommendedEmail, recommendedFirstName, recommendedLastName, recommendedLinkedin, offerId: theOffer,
       whyRec, recommendedPhoneNumber, moneyForRec:influencerUserMoneyperRec
     });
 
@@ -172,7 +172,7 @@ exports.companyUserRecommendation = async (req, res) => {
     const influencerUserId = await InfluencerUser.findById(userId).populate('recommendedPeople companyUser');
     const companyUserMoneyPerRec = influencerUserId.companyUser.companyUserPunctuation;
     const influencerUserName = `${influencerUserId.firstName} ${influencerUserId.lastName}`;
-    const companyId = Company.findById(company)
+    const companyId = await Company.findById(company)
     const theCompany = companyId.companyName;
     const minGrossSalary = theOffer.retribution.minGrossSalary;
     const maxGrossSalary = theOffer.retribution.maxGrossSalary;
@@ -181,8 +181,6 @@ exports.companyUserRecommendation = async (req, res) => {
     let recommendedPeople;
     let historicRecommendations;
     let recommendedTimes;
-
-  
 
       recommendedPeople = await Recommended.create({
         recommendedEmail, recommendedFirstName, recommendedLastName, offerId: theOffer, recommendedPhoneNumber,
