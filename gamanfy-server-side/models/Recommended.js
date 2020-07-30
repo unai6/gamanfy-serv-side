@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const recommendedSchema = new Schema({
     moneyForRec:Number,
-    recommendationAccepted : {type: Boolean, default:false},
+    recommendationAccepted : {type: Boolean, default:true},
     recommendationRejected: {type: Boolean, default:false},
     inProcess : {type: Boolean, default:false},
     hired: {type: Boolean, default:false},

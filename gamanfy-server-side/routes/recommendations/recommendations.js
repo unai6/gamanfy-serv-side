@@ -22,10 +22,8 @@ router.post('/user/reject-rec/:recommendationId/:offerId', async (req, res) => {
 
   try {
     const { offerId, recommendationId } = req.params;
-    const { recommendationAccepted, recommendationRejected } = req.body;
-
-
-    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { recommendationAccepted, recommendationRejected }, { new: true })
+    
+    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { recommendationAccepted:false, recommendationRejected:true }, { new: true })
     let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
     let offerIdent = recInsideOffer.recommendedTimes[0]._id
     let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': offerIdent }, { $set: { 'recommendedTimes': updatedRec } }, { new: true })
@@ -58,14 +56,28 @@ router.get('/:offerId/inProcess', async (req, res) => {
   }
 });
 
+router.post('/updateCandidateProcess/:offerId/:recommendationId', async (req, res) => {
+
+  try {
+    const { offerId, recommendationId } = req.params;
+
+    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, {  inProcess:true}, { new: true })
+    let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
+    let offerIdent = recInsideOffer.recommendedTimes[0]._id
+    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': offerIdent }, { $set: { 'recommendedTimes': updatedRec } }, { new: true })
+    res.status(200).json(updatedOffer)
+  } catch (error) {
+    res.status(400).json({ error: 'An error occurred while updating' })
+  }
+});
+
+
 router.post('/updateProcesses/updateRecommendations/:offerId/:recommendationId', async (req, res) => {
 
   try {
     const { offerId, recommendationId } = req.params;
-    const { recommendationAccepted, inProcess, hired } = req.body;
-
-
-    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { recommendationAccepted, inProcess, hired, stillInProcess: false }, { new: true })
+    
+    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { hired:true, stillInProcess: false  }, { new: true })
     let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
     let offerIdent = recInsideOffer.recommendedTimes[0]._id
     let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': offerIdent }, { $set: { 'recommendedTimes': updatedRec } }, { new: true })
