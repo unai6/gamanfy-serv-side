@@ -17,10 +17,9 @@ exports.getUserRecommendationsDashboard =  async (req, res) => {
 
       .populate([{
 
-        path: 'recommendedPeople companyUser',
+        path: ' companyUser recommendedPeople',
         populate: {
           path: 'offerId',
-          model: 'JobOffer',
           populate: [{
             path: 'contractId addressId'
           }, {
