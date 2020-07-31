@@ -64,8 +64,8 @@ router.get('/candidates/:offerId/:companyId', async (req, res) => {
             }
         })
 
-         await Company.findById(companyId)
-      
+        await Company.findById(companyId)
+
     } catch (error) {
         res.status(400).json({ error: 'Error' })
     }
@@ -301,7 +301,7 @@ router.post('/company/infoRequest/:offerId/:companyId/:recommendationId', async 
                     path: 'offerId',
                     model: 'JobOffer'
                 }
-            }   
+            }
         });
 
 
@@ -380,8 +380,6 @@ router.post('/:recommendationId/candidate-info', async (req, res) => {
     } catch (error) {
         res.status(400).json({ error: 'Error' })
     }
-
-
-})
+});
 
 module.exports = router

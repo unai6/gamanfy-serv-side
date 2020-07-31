@@ -68,7 +68,7 @@ exports.influencerUserRecommendation = async (req, res) => {
   
   try{
     const { idCompany, idUser, idOffer } = req.params;
-    const { recommendedEmail, recommendedFirstName, recommendedLastName, whyRec, recommendedLinkedin, recommendedPhoneNumber,
+    const { recommendedEmail, recommendedFirstName, recommendedLastName, whyRec, recommendedAge, recommendedLinkedin, recommendedPhoneNumber,
   } = req.body;
 
     const theOffer = await Offers.findById(idOffer);
@@ -86,7 +86,7 @@ exports.influencerUserRecommendation = async (req, res) => {
     let recommendedTimes;
     recommendedPeople = await Recommended.create({
       recommendedEmail, recommendedFirstName, recommendedLastName, recommendedLinkedin, offerId: theOffer,
-      whyRec, recommendedPhoneNumber, moneyForRec:influencerUserMoneyperRec
+      whyRec, recommendedPhoneNumber, recommendedAge,  moneyForRec:influencerUserMoneyperRec
     });
 
     recommendedTimes = await Offers.findByIdAndUpdate(theOffer, {
@@ -163,7 +163,7 @@ exports.companyUserRecommendation = async (req, res) => {
 
     const { company, userId, offerId } = req.params;
     const { recommendedEmail, recommendedFirstName, recommendedLastName, recommendedPhoneNumber,
-      recommendedLinkedin, curriculum, howFoundCandidate, candidateEducation, language, candidateLocation, experiences, similiarExp,
+      recommendedLinkedin, curriculum, howFoundCandidate, candidateEducation, lastJob, age, language, candidateLocation, experiences, similarExp,
       ownDescription, motivations, whyFits,
       availability, moneyExpec, currentSituation, otherAspects } = req.body;
 
@@ -185,7 +185,7 @@ exports.companyUserRecommendation = async (req, res) => {
         recommendedEmail, recommendedFirstName, recommendedLastName, offerId: theOffer, recommendedPhoneNumber,
         recommendedLinkedin, howFoundCandidate,
         candidateInfo: {
-          candidateEducation, language, candidateLocation, experiences, similiarExp, ownDescription, motivations, whyFits,
+          candidateEducation, language, candidateLocation, experiences, similarExp, lastJob, age, ownDescription, motivations, whyFits,
           availability, moneyExpec, currentSituation, otherAspects
         },
         moneyForRec: companyUserMoneyPerRec

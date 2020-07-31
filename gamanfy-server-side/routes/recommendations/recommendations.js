@@ -56,7 +56,7 @@ router.get('/:offerId/inProcess', async (req, res) => {
   }
 });
 
-router.post('/updateCandidateProcess/:offerId/:recommendationId', async (req, res) => {
+router.post('/candidate-interview/updateCandidateProcess/:offerId/:recommendationId', async (req, res) => {
 
   try {
     const { offerId, recommendationId } = req.params;
@@ -64,7 +64,7 @@ router.post('/updateCandidateProcess/:offerId/:recommendationId', async (req, re
     let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, {  inProcess:true}, { new: true })
     let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
     let offerIdent = recInsideOffer.recommendedTimes[0]._id
-    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': offerIdent }, { $set: { 'recommendedTimes': updatedRec } }, { new: true })
+    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': offerIdent }, { $set: {'additionalServices.hasVideoInterview':true , 'additionalServices.hasPersonalityTest':true,  'recommendedTimes': updatedRec} }, { new: true })
     res.status(200).json(updatedOffer)
   } catch (error) {
     res.status(400).json({ error: 'An error occurred while updating' })
