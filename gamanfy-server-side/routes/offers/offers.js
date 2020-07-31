@@ -71,6 +71,34 @@ router.get('/candidates/:offerId/:companyId', async (req, res) => {
     }
 })
 
+router.post('/candidates/reject-candidate/:offerId/:companyId', async (req, res) => {
+    try {
+
+        let { offerId, companyId } = req.params;
+        let offer = await Offers.findById(offerId).populate({
+
+            path: 'jobOffers.recommendedTimes',
+            model: 'JobOffer'
+
+        }).exec(async function (err, recommendedTimes) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("success");
+                await Offers.findByIdAndRemove(recommendedTimes._id)
+                
+                await Company.findById(companyId)
+                res.status(200).json(recommendedTimes.recommendedTimes);
+            }
+        })
+        
+
+    
+    } catch (error) {
+        res.status(400).json({ error: 'Error' })
+    }
+})
+
 
 router.get('/getData/:companyId', async (req, res) => {
 

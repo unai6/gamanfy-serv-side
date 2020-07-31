@@ -9,7 +9,6 @@ const nodemailer = require('nodemailer');
 let inLineCss = require('nodemailer-juice');
 
 
-
 exports.getUserRecommendationsDashboard =  async (req, res) => {
 
   try {
@@ -47,7 +46,6 @@ exports.getUserRecommendationsDashboard =  async (req, res) => {
     res.status(404).json({ error: 'No recommendations founded' })
   }
 }
-
 exports.deleteRecommendation =  async (req, res) => {
   const { userId, recommendationId, offerId} = req.params;
   try {
