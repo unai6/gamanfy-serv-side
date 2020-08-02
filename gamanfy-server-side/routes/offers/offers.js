@@ -85,7 +85,7 @@ router.post('/candidates/reject-candidate/:offerId/:companyId', async (req, res)
                 console.log(err);
             } else {
                 console.log("success");
-                await Offers.findByIdAndRemove(recommendedTimes._id)
+                await Offers.findByIdAndUpdate(recommendedTimes._id, {$pull:{recommendedTimes:recommendedTimes._id}}, {new:true})
                 
                 await Company.findById(companyId)
                 res.status(200).json(recommendedTimes.recommendedTimes);
