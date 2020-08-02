@@ -14,10 +14,10 @@ exports.getUserRecommendationsDashboard =  async (req, res) => {
   try {
     const { userId } = req.params;
     await InfluencerUser.findById(userId)
-
+      
       .populate([{
 
-        path: ' companyUser recommendedPeople',
+        path: 'recommendedPeople companyUser',
         populate: {
           path: 'offerId',
           populate: [{
