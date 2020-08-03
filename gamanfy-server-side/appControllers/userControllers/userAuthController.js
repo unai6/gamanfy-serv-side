@@ -62,7 +62,7 @@ exports.userCompleteProfile = async (req, res) => {
 
     const { companyName, documentType, documentNumber, contactPerson, taxId, website, city, phoneNumber, numberOfEmployees,
       urlLinkedin, birthDate, hasExp, countryCode, countryName, provinceINEcode, municipalityINEcode,
-      street, number, zip, invited, webCreated, province, municipality, isCompleted } = req.body;
+      street, number, zip, invited, webCreated, province, municipality } = req.body;
 
     const checkUser = await InfluencerUser.findById(userId);
 
@@ -90,7 +90,7 @@ exports.userCompleteProfile = async (req, res) => {
 
       const token = signToken(checkUser)
 
-      const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { companyUser, addressId, isCompleted }, { new: true });
+      const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { companyUser, addressId, isCompleted:true }, { new: true });
       res.status(200).json({
         updatedUser, token,
         user: {
@@ -117,7 +117,7 @@ exports.userCompleteProfile = async (req, res) => {
         .status(200)
 
       const token = signToken(checkUser)
-      const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { addressId, city, phoneNumber, urlLinkedin, birthDate, hasExp, isCompleted }, { new: true });
+      const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { addressId, city, phoneNumber, urlLinkedin, birthDate, hasExp, isCompleted:true }, { new: true });
      
       res.status(200).json({
         updatedUser, token,
@@ -147,7 +147,7 @@ exports.userCompleteProfile = async (req, res) => {
 
 exports.userSignup = async (req, res, next) => {
 
-  let { email, password, repeatPassword, firstName, lastName, isCompany, isCandidate} = req.body;
+  let { email, password, repeatPassword, firstName, lastName, isCompany, isCandidate, termsAccepted} = req.body;
   try {
 
     if (isCompany === 'on') {
@@ -155,19 +155,19 @@ exports.userSignup = async (req, res, next) => {
     } else if (isCandidate === 'on') {
       isCandidate = true
     } else if (password !== repeatPassword) {
-      return res.json('Passwords must match');
+      return console.log('Passwords must match');
     }
     const emailExists = await InfluencerUser.findOne({ email });
 
     if (emailExists) {
       console.log('email already exists in db');
-      return res.status(400).json('email already exists in DB');
+      return res.status(400).send('email already exists in DB');
 
     } else {
 
       const salt = bcrypt.genSaltSync(saltRounds);
       const hashPass = bcrypt.hashSync(password, salt);
-      const newUser = await InfluencerUser.create({ email, password: hashPass, firstName, lastName, isCompany });
+      const newUser = await InfluencerUser.create({ email, password: hashPass, firstName, lastName, isCompany, termsAccepted });
 
       const token = new UserToken({ _userId: newUser._id, token: crypto.randomBytes(16).toString('hex') });
       await token.save(function (err) {

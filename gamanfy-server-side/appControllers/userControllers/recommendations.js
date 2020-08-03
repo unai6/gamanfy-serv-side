@@ -50,7 +50,6 @@ exports.deleteRecommendation = async (req, res) => {
   try {
     let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
     let offerIdent;
-    console.log(offerIdent)
     
     if (offerIdent !== undefined) {   
       offerIdent  = recInsideOffer.recommendedTimes[0]._id;
