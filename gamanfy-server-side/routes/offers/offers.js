@@ -82,10 +82,7 @@ router.post('/candidates/reject-candidate/:offerId/:companyId/:recommendationId'
             res.json(updatedOffer)
 
             await Company.findById(companyId)
-       
-        
-
-    
+          
     } catch (error) {
         res.status(400).json({ error: 'Error' })
     }

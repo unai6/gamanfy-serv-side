@@ -9,12 +9,12 @@ const nodemailer = require('nodemailer');
 let inLineCss = require('nodemailer-juice');
 
 
-exports.getUserRecommendationsDashboard =  async (req, res) => {
+exports.getUserRecommendationsDashboard = async (req, res) => {
 
   try {
     const { userId } = req.params;
     await InfluencerUser.findById(userId)
-      
+
       .populate([{
 
         path: 'recommendedPeople companyUser',
@@ -45,16 +45,23 @@ exports.getUserRecommendationsDashboard =  async (req, res) => {
     res.status(404).json({ error: 'No recommendations founded' })
   }
 }
-exports.deleteRecommendation =  async (req, res) => {
-  const { userId, recommendationId, offerId} = req.params;
+exports.deleteRecommendation = async (req, res) => {
+  const { userId, recommendationId, offerId } = req.params;
   try {
     let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
-    let offerIdent = recInsideOffer.recommendedTimes[0]._id
-    await Recommended.findByIdAndRemove(recommendationId);
-    await Offers.findOneAndUpdate({ 'recommendedTimes._id': offerIdent }, { $pull: { recommendedTimes: { $in: [recommendationId] }} }, { multi:true})
-    await InfluencerUser.findByIdAndUpdate(userId, { $pull: { recommendedPeople: {$in : [recommendationId]}  } }, { multi:true });
+    let offerIdent;
+    console.log(offerIdent)
     
-    res.status(200).json({message:'offer deleted successfully'})
+    if (offerIdent !== undefined) {   
+      offerIdent  = recInsideOffer.recommendedTimes[0]._id;
+      await Offers.findOneAndUpdate({ 'recommendedTimes._id': offerIdent }, { $pull: { recommendedTimes: { $in: [recommendationId] } } }, { multi: true })
+    } else {
+      
+      await Recommended.findByIdAndRemove(recommendationId);
+      await InfluencerUser.findByIdAndUpdate(userId, { $pull: { recommendedPeople: { $in: [recommendationId] } } }, { multi: true });
+    }
+
+    res.status(200).json({ message: 'offer deleted successfully' })
 
   } catch (error) {
     res.status(400).json({ error: 'An error occurred while deleting recommendation' })
@@ -62,11 +69,11 @@ exports.deleteRecommendation =  async (req, res) => {
 };
 
 exports.influencerUserRecommendation = async (req, res) => {
-  
-  try{
+
+  try {
     const { idCompany, idUser, idOffer } = req.params;
     const { recommendedEmail, recommendedFirstName, recommendedLastName, whyRec, recommendedAge, recommendedLinkedin, recommendedPhoneNumber,
-  } = req.body;
+    } = req.body;
 
     const theOffer = await Offers.findById(idOffer);
     const influencerUserId = await InfluencerUser.findById(idUser).populate('recommendedPeople');
@@ -83,7 +90,7 @@ exports.influencerUserRecommendation = async (req, res) => {
     let recommendedTimes;
     recommendedPeople = await Recommended.create({
       recommendedEmail, recommendedFirstName, recommendedLastName, recommendedLinkedin, offerId: theOffer,
-      whyRec, recommendedPhoneNumber, recommendedAge,  moneyForRec:influencerUserMoneyperRec
+      whyRec, recommendedPhoneNumber, recommendedAge, moneyForRec: influencerUserMoneyperRec
     });
 
     recommendedTimes = await Offers.findByIdAndUpdate(theOffer, {
@@ -92,9 +99,9 @@ exports.influencerUserRecommendation = async (req, res) => {
 
     historicRecommendations = recommendedPeople
 
-    const updatedUser = await InfluencerUser.findByIdAndUpdate(influencerUserId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id, recommendedTimes: recommendedTimes._id} , $inc: {'influencerUserPunctuation': 5 } }, { new: true })
-    res.status(200).json({ updatedUser})
-    
+    const updatedUser = await InfluencerUser.findByIdAndUpdate(influencerUserId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id, recommendedTimes: recommendedTimes._id }, $inc: { 'influencerUserPunctuation': 5 } }, { new: true })
+    res.status(200).json({ updatedUser })
+
     let transporter = nodemailer.createTransport({
 
       host: 'smtp.ionos.es',
@@ -149,7 +156,7 @@ exports.influencerUserRecommendation = async (req, res) => {
         res.status(200).send('A verification recommendedEmail has been sent to ' + recommendedEmail + '.');
       }
     });
-  }catch(error){
+  } catch (error) {
     console.log(error)
   }
 }
@@ -178,28 +185,28 @@ exports.companyUserRecommendation = async (req, res) => {
     let historicRecommendations;
     let recommendedTimes;
 
-      recommendedPeople = await Recommended.create({
-        recommendedEmail, recommendedFirstName, recommendedLastName, offerId: theOffer, recommendedPhoneNumber,
-        recommendedLinkedin, howFoundCandidate,
-        candidateInfo: {
-          candidateEducation, language, candidateLocation, experiences, similarExp, lastJob, age, ownDescription, motivations, whyFits,
-          availability, moneyExpec, currentSituation, otherAspects
-        },
-        moneyForRec: companyUserMoneyPerRec
-      });
+    recommendedPeople = await Recommended.create({
+      recommendedEmail, recommendedFirstName, recommendedLastName, offerId: theOffer, recommendedPhoneNumber,
+      recommendedLinkedin, howFoundCandidate,
+      candidateInfo: {
+        candidateEducation, language, candidateLocation, experiences, similarExp, lastJob, age, ownDescription, motivations, whyFits,
+        availability, moneyExpec, currentSituation, otherAspects
+      },
+      moneyForRec: companyUserMoneyPerRec
+    });
 
-      recommendedTimes = await Offers.findByIdAndUpdate(theOffer, {
-        $push: { recommendedTimes: recommendedPeople }
-      }, { new: true })
+    recommendedTimes = await Offers.findByIdAndUpdate(theOffer, {
+      $push: { recommendedTimes: recommendedPeople }
+    }, { new: true })
 
-      historicRecommendations = recommendedPeople
+    historicRecommendations = recommendedPeople
 
-      let companyUser = await CompanyUser.findByIdAndUpdate(influencerUserId.companyUser, { $inc: { 'companyUserPunctuation': 5 } }, { new: true })
-      const updatedUser = await InfluencerUser.findByIdAndUpdate(influencerUserId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id}, companyUser }, { new: true })
-      
-      let transporter = nodemailer.createTransport({
+    let companyUser = await CompanyUser.findByIdAndUpdate(influencerUserId.companyUser, { $inc: { 'companyUserPunctuation': 5 } }, { new: true })
+    const updatedUser = await InfluencerUser.findByIdAndUpdate(influencerUserId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id }, companyUser }, { new: true })
 
-        host: 'smtp.ionos.es',
+    let transporter = nodemailer.createTransport({
+
+      host: 'smtp.ionos.es',
       port: 587,
       logger: true,
       debug: true,
@@ -212,10 +219,10 @@ exports.companyUserRecommendation = async (req, res) => {
         user: process.env.HOST_MAIL,
         pass: process.env.HOST_MAIL_PASSWORD
       },
-      
+
     });
     transporter.use('compile', inLineCss());
-    
+
     let mailOptions = {
       from: process.env.HOST_MAIL,
       to: recommendedEmail,
@@ -239,20 +246,20 @@ exports.companyUserRecommendation = async (req, res) => {
      <p style='color:#535353; font-weight:300; font-size:14px; margin-left:1.5em'>No estas interesado ? Haz click <a href=${process.env.PUBLIC_DOMAIN}/recommend/reject-rec/${recommendedPeople._id} style='color:#535353; font-weight:600'>aquí</a> para indicar que no quieres</br> participar en la oferta</p>\n
      </div>
      `,
-     attachments: [{
-       filename: 'logo-gamanfy-email.png',
+      attachments: [{
+        filename: 'logo-gamanfy-email.png',
         path: 'public/logo-gamanfy-email.png',
         cid: 'unique@nodemailer.com'
       }]
     };
-    
+
     transporter.sendMail(mailOptions, function (err) {
       if (err) { return res.status(500).send({ msg: err.message }); } else {
         res.status(200).send('A verification recommendedEmail has been sent to ' + recommendedEmail + '.');
       }
     });
     res.status(200).json({ updatedUser })
-    
+
   } catch (error) {
     res.status(400).json({ error: 'An error occurred while sending recommendation' })
   }
