@@ -78,6 +78,7 @@ router.post('/candidates/reject-candidate/:offerId/:companyId/:recommendationId'
         const { offerId, companyId, recommendationId } = req.params;
       
             let updatedOffer = await Offers.findByIdAndUpdate(offerId, { $pull: { "recommendedTimes": { _id: mongoose.Types.ObjectId(recommendationId) } } }, {new:true})       
+            await Recommended.findByIdAndUpdate(recommendationId, {recommendationRejected :true, recommendationAccepted:false, inProcess:false, stillInProcess:false})
             res.json(updatedOffer)
 
             await Company.findById(companyId)

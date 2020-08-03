@@ -50,7 +50,7 @@ exports.deleteRecommendation =  async (req, res) => {
   try {
     let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
     let offerIdent = recInsideOffer.recommendedTimes[0]._id
-    await Recommended.deleteOne({_id:recommendationId});
+    await Recommended.findByIdAndRemove(recommendationId);
     await Offers.findOneAndUpdate({ 'recommendedTimes._id': offerIdent }, { $pull: { recommendedTimes: { $in: [recommendationId] }} }, { multi:true})
     await InfluencerUser.findByIdAndUpdate(userId, { $pull: { recommendedPeople: {$in : [recommendationId]}  } }, { multi:true });
     
