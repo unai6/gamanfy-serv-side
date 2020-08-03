@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const router = express.Router();
 const crypto = require('crypto');
 const Offers = require('../../models/JobOffer.js');
@@ -71,26 +72,16 @@ router.get('/candidates/:offerId/:companyId', async (req, res) => {
     }
 })
 
-router.post('/candidates/reject-candidate/:offerId/:companyId', async (req, res) => {
+router.post('/candidates/reject-candidate/:offerId/:companyId/:recommendationId', async (req, res) => {
     try {
 
-        let { offerId, companyId } = req.params;
-        let offer = await Offers.findById(offerId).populate({
+        const { offerId, companyId, recommendationId } = req.params;
+      
+            let updatedOffer = await Offers.findByIdAndUpdate(offerId, { $pull: { "recommendedTimes": { _id: mongoose.Types.ObjectId(recommendationId) } } }, {new:true})       
+            res.json(updatedOffer)
 
-            path: 'jobOffers.recommendedTimes',
-            model: 'JobOffer'
-
-        }).exec(async function (err, recommendedTimes) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log("success");
-                await Offers.findByIdAndUpdate(recommendedTimes._id, {$pull:{recommendedTimes:recommendedTimes._id}}, {new:true})
-                
-                await Company.findById(companyId)
-                res.status(200).json(recommendedTimes.recommendedTimes);
-            }
-        })
+            await Company.findById(companyId)
+       
         
 
     
