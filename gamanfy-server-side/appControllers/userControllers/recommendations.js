@@ -253,7 +253,7 @@ exports.companyUserRecommendation = async (req, res) => {
      `,
       attachments: [{
         filename: 'Anotación 2020-07-30 172748.png',
-        path: 'public\Anotación 2020-07-30 172748.png',
+        path: 'public/Anotación 2020-07-30 172748.png',
         cid: 'unique@nodemailer.com'
       }]
     };
