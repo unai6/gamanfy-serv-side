@@ -83,7 +83,8 @@ exports.influencerUserRecommendation = async (req, res) => {
     const minGrossSalary = theOffer.retribution.minGrossSalary;
     const maxGrossSalary = theOffer.retribution.maxGrossSalary;
     const jobName = theOffer.jobOfferData.jobName
-
+    const mainMission = theOffer.jobDescription.mainMission
+    
     let recommendedPeople;
     let historicRecommendations;
     let recommendedTimes;
@@ -128,11 +129,13 @@ exports.influencerUserRecommendation = async (req, res) => {
      <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
       <div>
       <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> ¡Hola ${recommendedFirstName}! <b>${influencerUserName}</b>  te ha recomendado <br/> para una oferta de trabajo en Gamanfy. </p>\n
-      <div style='font-weight:300; color:#535353; font-size:14px'>
+      <div style='font-weight:300; color:#535353; font-size:14px ; width:33em'>
 
         Puesto: ${jobName}<br/>
         Empresa: ${theCompany}<br/> 
         Salario: ${minGrossSalary}-${maxGrossSalary}<br/>
+
+        Misión principal del puesto de trabajo : ${mainMission}
       
         </div>
         <div style='font-weight:300; color:#535353; font-size:14px; margin-top:1.5em'>
@@ -144,8 +147,8 @@ exports.influencerUserRecommendation = async (req, res) => {
     </div>
     `,
       attachments: [{
-        filename: 'logo-gamanfy-email.png',
-        path: 'public/logo-gamanfy-email.png',
+        filename: 'Anotación 2020-07-30 172748.png',
+        path: 'public/Anotación 2020-07-30 172748.png',
         cid: 'unique@nodemailer.com'
       }]
     };
@@ -179,6 +182,7 @@ exports.companyUserRecommendation = async (req, res) => {
     const minGrossSalary = theOffer.retribution.minGrossSalary;
     const maxGrossSalary = theOffer.retribution.maxGrossSalary;
     const jobName = theOffer.jobOfferData.jobName
+    const mainMission = theOffer.jobDescription.mainMission
 
     let recommendedPeople;
     let historicRecommendations;
@@ -235,7 +239,9 @@ exports.companyUserRecommendation = async (req, res) => {
         Puesto: ${jobName}<br/>
         Empresa: ${theCompany}<br/> 
         Salario: ${minGrossSalary}-${maxGrossSalary}<br/>
-      
+
+        Misión principal del puesto de trabajo : ${mainMission}
+
         </div>
         <div style='font-weight:300; color:#535353; font-size:14px; margin-top:1.5em'>
         Si quieres ver la oferta completa  y enterarte de todo lo que Gamanfy </br>puede ofrecerte, haz click en <b><u><a href='${process.env.PUBLIC_DOMAIN}/auth/user/signup' style='color:#535353; text-decoration:none'>Regístrarte</a> </u></b><br/>
@@ -246,8 +252,8 @@ exports.companyUserRecommendation = async (req, res) => {
      </div>
      `,
       attachments: [{
-        filename: 'logo-gamanfy-email.png',
-        path: 'public/logo-gamanfy-email.png',
+        filename: 'Anotación 2020-07-30 172748.png',
+        path: 'public\Anotación 2020-07-30 172748.png',
         cid: 'unique@nodemailer.com'
       }]
     };

@@ -57,7 +57,7 @@ exports.companyCompleteProfile = async (req, res, next) => {
 
     const { companyId } = req.params;
     const checkCompany = await Company.findById(companyId);
-    const { isCompleted, contactPerson, description, city, companyName, taxId, countryCode, countryName,
+    const { contactPerson, description, city, companyName, taxId, countryCode, countryName,
       provinceINEcode, municipalityINEcode, street, number, zip, province, municipality, website, phoneNumber, numberOfEmployees } = req.body;
     let addressId = await Address.create({ countryCode, countryName, provinceINEcode, municipalityINEcode, province, municipality, street, number, zip });
     let sectorId = await Sector.create(req.body);
@@ -74,7 +74,7 @@ exports.companyCompleteProfile = async (req, res, next) => {
 
     const updatedCompany = await Company.findByIdAndUpdate(checkCompany, {
       city, countryName, contactPerson, description,
-      companyName, sectorId, taxId, addressId, website, phoneNumber, numberOfEmployees, isCompleted
+      companyName, sectorId, taxId, addressId, website, phoneNumber, numberOfEmployees, isCompleted:true
     }, { new: true });
     res.status(200).json({
       updatedCompany, token,
@@ -95,7 +95,7 @@ exports.companyCompleteProfile = async (req, res, next) => {
 
 exports.companySignUp = async (req, res, next) => {
 
-  let { firstName, lastName, email, password, companyName, isHeadHunter } = req.body;
+  let { firstName, lastName, email, password, companyName, isHeadHunter,  termsAccepted } = req.body;
 
 
   try {
@@ -111,7 +111,7 @@ exports.companySignUp = async (req, res, next) => {
 
       const salt = bcrypt.genSaltSync(saltRounds);
       const hashPass = bcrypt.hashSync(password, salt);
-      const newCompany = await Company.create({ firstName, lastName, email, password: hashPass, companyName, isHeadHunter });
+      const newCompany = await Company.create({ firstName, lastName, email, password: hashPass, companyName, isHeadHunter, termsAccepted });
       const token = new CompanyToken({ _companyId: newCompany._id, token: crypto.randomBytes(16).toString('hex') });
       token.save(function (err) {
         if (err) { return res.status(500).send({ msg: err.message }); }
