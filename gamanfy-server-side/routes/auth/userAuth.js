@@ -29,7 +29,7 @@ router.put('/user/:userId/edit-profile', userEditProfileController.editProfile);
 router.get('/user/:userId/dashboard', checkToken, getDashboardController.getUserDashboard);
 
 
-router.post("/upload", uploader.single("imageUrl"), (req, res, next) => {
+/* router.post("/upload", uploader.single("imageUrl"), (req, res, next) => {
   if (!req.file) {
     next(new Error("No file uploaded!"));
     return;
@@ -37,7 +37,7 @@ router.post("/upload", uploader.single("imageUrl"), (req, res, next) => {
 
   res.json({ secure_url: req.file.secure_url });
 });
- 
+  */
 
 router.post("/user/logout", async (req, res, next) => {
     try {

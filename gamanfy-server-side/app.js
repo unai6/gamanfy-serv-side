@@ -8,7 +8,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const hbs = require('hbs')
-
+const fileUpload = require('express-fileupload');
 const indexRouter = require('./routes/index');
 const userAuthRouter = require('./routes/auth/userAuth.js');
 const companyAuthRouter = require('./routes/auth/companyAuth.js');
@@ -20,7 +20,7 @@ const app = express();
 
 
 app.set('port', process.env.PORT || 3000);
-
+app.use(fileUpload())
 
 // MONGOOSE CONNECTION
 mongoose

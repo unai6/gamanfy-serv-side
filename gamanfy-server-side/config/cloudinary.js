@@ -1,4 +1,4 @@
-const cloudinary = require('cloudinary').v2;
+/* const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer');
 
@@ -20,4 +20,4 @@ let storage =  new CloudinaryStorage({
 });
 
 const uploader = multer({ storage });
-module.exports = uploader;
+module.exports = uploader; */

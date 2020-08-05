@@ -7,9 +7,36 @@ const Offers = require('../../models/JobOffer.js');
 const Recommended = require('../../models/Recommended');
 const nodemailer = require('nodemailer');
 let inLineCss = require('nodemailer-juice');
+const multer = require('multer');
 
 
-exports.getUserRecommendationsDashboard = async (req, res) => {
+
+exports.uploadPDF = (req, res) => {
+  
+  var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+    cb(null, 'curriculums')
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname )
+  }
+  })
+  
+  var upload = multer({ storage: storage }).single('file')
+  
+  upload(req, res, function (err) {
+         if (err instanceof multer.MulterError) {
+             return res.status(500).json(err)
+         } else if (err) {
+             return res.status(500).json(err)
+         }
+    return res.status(200).send(req.file)
+
+  })
+
+};
+
+exports.getUserRecommendationsDashboard =  async (req, res) => {
 
   try {
     const { userId } = req.params;
@@ -166,12 +193,13 @@ exports.influencerUserRecommendation = async (req, res) => {
 exports.companyUserRecommendation = async (req, res) => {
 
   try {
-
     const { company, userId, offerId } = req.params;
     const { recommendedEmail, recommendedFirstName, recommendedLastName, recommendedPhoneNumber,
-      recommendedLinkedin, curriculum, howFoundCandidate, candidateEducation, lastJob, age, language, candidateLocation, experiences, similarExp,
+      recommendedLinkedin, howFoundCandidate, candidateEducation, lastJob, age, language, candidateLocation, experiences, similarExp,
       ownDescription, motivations, whyFits,
       availability, moneyExpec, currentSituation, otherAspects } = req.body;
+     
+
 
     const theOffer = await Offers.findById(offerId);
     const influencerUserId = await InfluencerUser.findById(userId).populate('recommendedPeople companyUser');

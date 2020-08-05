@@ -10,13 +10,14 @@ const companySendRecommendation = require('../../appControllers/companyControlle
 const deleteRecommendations = require('../../appControllers/userControllers/recommendations');
 const companyUserSendRecommendation = require('../../appControllers/userControllers/recommendations');
 const influencerUserSendRecommendation = require('../../appControllers/userControllers/recommendations');
+const uploadPDF = require('../../appControllers/userControllers/recommendations');
 
 router.get('/:userId/dashboard', getUserRecommendationsDashboard.getUserRecommendationsDashboard)
 router.post('/influencerUser/:idCompany/:idUser/:idOffer', influencerUserSendRecommendation.influencerUserRecommendation)
 router.post('/companyUser/:userId/:offerId/:company', companyUserSendRecommendation.companyUserRecommendation);
 router.post('/user/delete-recommendation/:userId/:recommendationId/:offerId', deleteRecommendations.deleteRecommendation);
 router.post('/:companyId', companySendRecommendation.recommend);
-
+router.post('/uploadPDF/:userId', uploadPDF.uploadPDF);
 
 router.post('/user/reject-rec/:recommendationId/:offerId', async (req, res) => {
 
@@ -95,7 +96,7 @@ router.post('/updateCandidateProcess/candidate-hired/:offerId/:recommendationId'
   try {
     const { offerId, recommendationId } = req.params;
     
-    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { hired:true, stillInProcess: false  }, { new: true })
+    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { hired:true, stillInProcess: false, inProcess:true, recommendationAccepted:true  }, { new: true })
     let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
     let offerIdent = recInsideOffer.recommendedTimes[0]._id
     let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': offerIdent }, { $set: { 'recommendedTimes': updatedRec } }, { new: true })
