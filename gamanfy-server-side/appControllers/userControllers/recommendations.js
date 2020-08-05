@@ -7,34 +7,10 @@ const Offers = require('../../models/JobOffer.js');
 const Recommended = require('../../models/Recommended');
 const nodemailer = require('nodemailer');
 let inLineCss = require('nodemailer-juice');
-const multer = require('multer');
 
 
-
-exports.uploadPDF = (req, res) => {
   
-  var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-    cb(null, 'curriculums')
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname )
-  }
-  })
-  
-  var upload = multer({ storage: storage }).single('file')
-  
-  upload(req, res, function (err) {
-         if (err instanceof multer.MulterError) {
-             return res.status(500).json(err)
-         } else if (err) {
-             return res.status(500).json(err)
-         }
-    return res.status(200).send(req.file)
 
-  })
-
-};
 
 exports.getUserRecommendationsDashboard =  async (req, res) => {
 

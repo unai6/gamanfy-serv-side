@@ -3,6 +3,8 @@ const express = require("express");
 const router = express.Router();
 const Offers = require('../../models/JobOffer.js');
 const Recommended = require('../../models/Recommended');
+const multer = require('multer');
+const InfluencerUser = require('../../models/InfluencerUser');
 
 
 const getUserRecommendationsDashboard = require('../../appControllers/userControllers/recommendations');
@@ -10,21 +12,25 @@ const companySendRecommendation = require('../../appControllers/companyControlle
 const deleteRecommendations = require('../../appControllers/userControllers/recommendations');
 const companyUserSendRecommendation = require('../../appControllers/userControllers/recommendations');
 const influencerUserSendRecommendation = require('../../appControllers/userControllers/recommendations');
-const uploadPDF = require('../../appControllers/userControllers/recommendations');
+const uploader = require('../../config/cloudinary');
+
+
+
 
 router.get('/:userId/dashboard', getUserRecommendationsDashboard.getUserRecommendationsDashboard)
 router.post('/influencerUser/:idCompany/:idUser/:idOffer', influencerUserSendRecommendation.influencerUserRecommendation)
 router.post('/companyUser/:userId/:offerId/:company', companyUserSendRecommendation.companyUserRecommendation);
 router.post('/user/delete-recommendation/:userId/:recommendationId/:offerId', deleteRecommendations.deleteRecommendation);
 router.post('/:companyId', companySendRecommendation.recommend);
-router.post('/uploadPDF/:userId', uploadPDF.uploadPDF);
+
+
 
 router.post('/user/reject-rec/:recommendationId/:offerId', async (req, res) => {
 
   try {
     const { offerId, recommendationId } = req.params;
-    
-    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { recommendationAccepted:false, recommendationRejected:true }, { new: true })
+
+    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { recommendationAccepted: false, recommendationRejected: true }, { new: true })
     let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
     let offerIdent = recInsideOffer.recommendedTimes[0]._id
     let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': offerIdent }, { $set: { 'recommendedTimes': updatedRec } }, { new: true })
@@ -63,10 +69,10 @@ router.post('/candidate-accept-recommendation/updateCandidateProcess/:offerId/:r
   try {
     const { offerId, recommendationId } = req.params;
 
-    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, {  recommendationAccepted:true}, { new: true })
+    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { recommendationAccepted: true }, { new: true })
     let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
     let offerIdent = recInsideOffer.recommendedTimes[0]._id
-    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': offerIdent }, { $set: {'additionalServices.hasVideoInterview':true , 'additionalServices.hasPersonalityTest':true,  'recommendedTimes': updatedRec} }, { new: true })
+    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': offerIdent }, { $set: { 'additionalServices.hasVideoInterview': true, 'additionalServices.hasPersonalityTest': true, 'recommendedTimes': updatedRec } }, { new: true })
     res.status(200).json(updatedOffer)
   } catch (error) {
     res.status(400).json({ error: 'An error occurred while updating' })
@@ -80,10 +86,10 @@ router.post('/candidate-interview/updateCandidateProcess/:offerId/:recommendatio
   try {
     const { offerId, recommendationId } = req.params;
 
-    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, {  inProcess:true}, { new: true })
+    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { inProcess: true }, { new: true })
     let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
     let offerIdent = recInsideOffer.recommendedTimes[0]._id
-    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': offerIdent }, { $set: {'additionalServices.hasVideoInterview':true , 'additionalServices.hasPersonalityTest':true,  'recommendedTimes': updatedRec} }, { new: true })
+    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': offerIdent }, { $set: { 'additionalServices.hasVideoInterview': true, 'additionalServices.hasPersonalityTest': true, 'recommendedTimes': updatedRec } }, { new: true })
     res.status(200).json(updatedOffer)
   } catch (error) {
     res.status(400).json({ error: 'An error occurred while updating' })
@@ -95,8 +101,8 @@ router.post('/updateCandidateProcess/candidate-hired/:offerId/:recommendationId'
 
   try {
     const { offerId, recommendationId } = req.params;
-    
-    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { hired:true, stillInProcess: false, inProcess:true, recommendationAccepted:true  }, { new: true })
+
+    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { hired: true, stillInProcess: false, inProcess: true, recommendationAccepted: true }, { new: true })
     let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
     let offerIdent = recInsideOffer.recommendedTimes[0]._id
     let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': offerIdent }, { $set: { 'recommendedTimes': updatedRec } }, { new: true })
