@@ -14,6 +14,7 @@ const userAuthRouter = require('./routes/auth/userAuth.js');
 const companyAuthRouter = require('./routes/auth/companyAuth.js');
 const offersRouter = require('./routes/offers/offers.js');
 const recommendationsRouter = require('./routes/recommendations/recommendations.js')
+const bodyParser = require("body-parser");
 
 
 const app = express();
@@ -49,6 +50,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
 app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

@@ -19,10 +19,27 @@ const uploader = require('../../config/cloudinary');
 
 router.get('/:userId/dashboard', getUserRecommendationsDashboard.getUserRecommendationsDashboard)
 router.post('/influencerUser/:idCompany/:idUser/:idOffer', influencerUserSendRecommendation.influencerUserRecommendation)
-router.post('/companyUser/:userId/:offerId/:company', companyUserSendRecommendation.companyUserRecommendation);
+router.post('/companyUser/:userId/:offerId/:company', uploader.single("curriculum"), companyUserSendRecommendation.companyUserRecommendation);
 router.post('/user/delete-recommendation/:userId/:recommendationId/:offerId', deleteRecommendations.deleteRecommendation);
 router.post('/:companyId', companySendRecommendation.recommend);
 
+
+router.post("/uploadPDF/:userId",(req, res) => {
+  if (req.file === null) {
+    res.status(400).json({error:'No hay archivo'})
+    return;
+  }
+
+  const file = req.files.curriculum 
+
+  file.mv(`public/uploads/${file.name}`, error => {  
+    if(error){
+  console.log(error);
+    }
+  })
+
+  res.json({ fileName: file.name, filePath: `/uploads/${file.name}`});
+});
 
 
 router.post('/user/reject-rec/:recommendationId/:offerId', async (req, res) => {
