@@ -24,21 +24,30 @@ router.post('/user/delete-recommendation/:userId/:recommendationId/:offerId', de
 router.post('/:companyId', companySendRecommendation.recommend);
 
 
-router.post("/uploadPDF/:userId",(req, res) => {
-  if (req.file === null) {
-    res.status(400).json({error:'No hay archivo'})
-    return;
+router.post("/uploadPDF/:userId", async (req, res) => {
+
+  try {
+    const { userId } = req.params;
+
+
+    if (req.file === null) {
+      res.status(400).json({ error: 'No hay archivo' })
+      return;
+    }
+
+    const file = req.files.curriculum
+
+    file.mv(`public/uploads/${file.name}`, error => {
+      if (error) {
+        console.log(error);
+      }
+    })
+
+    res.json({ fileName: file.name, filePath: `/uploads/${file.name}` });
+  } catch (error) {
+    res.status(400).send(error)
   }
 
-  const file = req.files.curriculum 
-
-  file.mv(`public/uploads/${file.name}`, error => {  
-    if(error){
-  console.log(error);
-    }
-  })
-
-  res.json({ fileName: file.name, filePath: `/uploads/${file.name}`});
 });
 
 
@@ -77,6 +86,21 @@ router.get('/:offerId/inProcess', async (req, res) => {
 
   } catch (error) {
     res.status(400).json({ error: 'An error occurred while retrieving inProcess info' })
+  }
+});
+
+router.post('/admin-validate-candidate/updateCandidateProcess/:offerId/:recommendationId', async (req, res) => {
+
+  try {
+    const { offerId, recommendationId } = req.params;
+
+    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { recommendationValidated  : true }, { new: true })
+    let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
+    let offerIdent = recInsideOffer.recommendedTimes[0]._id
+    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': offerIdent }, { $set: { 'additionalServices.hasVideoInterview': true, 'additionalServices.hasPersonalityTest': true, 'recommendedTimes': updatedRec } }, { new: true })
+    res.status(200).json(updatedOffer)
+  } catch (error) {
+    res.status(400).json({ error: 'An error occurred while updating' })
   }
 });
 

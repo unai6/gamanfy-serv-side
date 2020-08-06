@@ -6,6 +6,7 @@ const recommendedSchema = new Schema({
     moneyForRec:Number,
     recommendationAccepted : {type: Boolean, default:false},
     recommendationRejected: {type: Boolean, default:false},
+    recommendationValidated:{type: Boolean, default:false},
     inProcess : {type: Boolean, default:false},
     hired: {type: Boolean, default:false},
     stillInProcess: {type: Boolean, default:true},    
