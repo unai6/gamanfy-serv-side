@@ -365,8 +365,8 @@ router.post('/company/infoRequest/:offerId/:companyId/:recommendationId', async 
           </div>
           `,
             attachments: [{
-                filename: 'logo-gamanfy-email.png',
-                path: 'public/logo-gamanfy-email.png',
+                filename: 'Anotación 2020-07-30 172748.png',
+                path: 'public/Anotación 2020-07-30 172748.png',
                 cid: 'unique@nodemailer.com'
             }]
         };

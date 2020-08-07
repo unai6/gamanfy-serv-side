@@ -27,9 +27,7 @@ router.post('/:companyId', companySendRecommendation.recommend);
 router.post("/uploadPDF/:userId", async (req, res) => {
 
   try {
-    const { userId } = req.params;
-
-
+    
     if (req.file === null) {
       req.file =''
       return;
@@ -43,7 +41,7 @@ router.post("/uploadPDF/:userId", async (req, res) => {
       }
     })
 
-    res.json({ fileName: file.name, filePath: `/uploads/${file.name}` });
+    res.json({ fileName: file.name, filePath: `${__dirname}/uploads/${file.name}` });
   } catch (error) {
     res.status(400).send(error)
   }
