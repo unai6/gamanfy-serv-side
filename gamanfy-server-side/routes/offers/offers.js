@@ -359,7 +359,7 @@ router.post('/company/infoRequest/:offerId/:companyId/:recommendationId', async 
     
             </div>
               <div style='font-weight:300; color:#535353; font-size:14px; margin-top:1.5em'>
-              <button type='submit' style="border:none; background:rgb(255,188,73); border-radius:5px; width:14em; height:2.5em; margin-top:2em; margin-left:11em"><a href=${process.env.PUBLIC_DOMAIN}/${recommendationId}/candidate-info style='color:white; text-decoration:none; font-weight:500'>Ver informe del candidato</a></button><br/>
+              <button type='submit' style="border:none; background-color:rgb(255,188,73); border-radius:5px; width:14em; height:2.5em; margin-top:2em; margin-left:11em"><a href=${process.env.PUBLIC_DOMAIN}/${recommendationId}/candidate-info style='color:white; text-decoration:none; font-weight:500'>Ver informe del candidato</a></button><br/>
               </div>
           
           </div>
