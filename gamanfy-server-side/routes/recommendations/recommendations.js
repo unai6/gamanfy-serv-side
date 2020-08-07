@@ -41,7 +41,7 @@ router.post("/uploadPDF/:userId", async (req, res) => {
       }
     })
 
-    res.json({ fileName: file.name, filePath: `${__dirname}/uploads/${file.name}` });
+    res.json({ fileName: file.name, filePath: `${__dirname}/uploads/${file.name}/pdf` });
   } catch (error) {
     res.status(400).send(error)
   }
