@@ -31,7 +31,7 @@ router.post("/uploadPDF/:userId", async (req, res) => {
 
 
     if (req.file === null) {
-      res.status(400).json({ error: 'No hay archivo' })
+      req.file =''
       return;
     }
 
