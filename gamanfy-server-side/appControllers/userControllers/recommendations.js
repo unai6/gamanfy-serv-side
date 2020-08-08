@@ -103,8 +103,7 @@ exports.influencerUserRecommendation = async (req, res) => {
     historicRecommendations = recommendedPeople
 
     const updatedUser = await InfluencerUser.findByIdAndUpdate(influencerUserId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id, recommendedTimes: recommendedTimes._id }, $inc: { 'influencerUserPunctuation': 5 } }, { new: true })
-    res.status(200).json({ updatedUser })
-
+    
     let transporter = nodemailer.createTransport({
 
       host: 'smtp.ionos.es',
@@ -120,7 +119,7 @@ exports.influencerUserRecommendation = async (req, res) => {
         user: process.env.HOST_MAIL,
         pass: process.env.HOST_MAIL_PASSWORD
       },
-
+      
     });
     transporter.use('compile', inLineCss());
 
@@ -132,31 +131,31 @@ exports.influencerUserRecommendation = async (req, res) => {
       <img style='height:6em'  src="cid:unique@nodemailer.com"/>
       
       <div style='width:25em; height:49.5em;'>
-        <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em; height:2em'> ¡Hola ${recommendedFirstName}! <b>${influencerUserName}</b>  te ha recomendado <br/> para una oferta de trabajo en Gamanfy. </p>\n
-        <img  src="cid:naranjaabstract@naranja.com" style='height:6em; display:inline-block'/>
-        <div style='font-weight:300; color:#535353; font-size:14px ; width:33em; height:28em'>
-          Puesto: ${jobName}<br/>
-          Empresa: ${theCompany}<br/> 
-          Salario base: ${minGrossSalary}-${maxGrossSalary}<br/>
+      <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em; height:2em'> ¡Hola ${recommendedFirstName}! <b>${influencerUserName}</b>  te ha recomendado <br/> para una oferta de trabajo en Gamanfy. </p>\n
+      <img  src="cid:naranjaabstract@naranja.com" style='height:6em; display:inline-block'/>
+      <div style='font-weight:300; color:#535353; font-size:14px ; width:33em; height:28em'>
+      Puesto: ${jobName}<br/>
+      Empresa: ${theCompany}<br/> 
+      Salario base: ${minGrossSalary}-${maxGrossSalary}<br/>
       
-          Misión principal del puesto de trabajo : ${mainMission}
+      Misión principal del puesto de trabajo : ${mainMission}
       
-        <div style='font-weight:300; color:#535353; font-size:14px; margin-top:1.5em'>
-          Si quieres ver la oferta completa  y enterarte de todo lo que Gamanfy </br>puede ofrecerte, haz click en <b><u><a href='${process.env.PUBLIC_DOMAIN}/auth/user/signup' style='color:#535353; text-decoration:none'>Regístrarte</a> </u></b><br/>
+      <div style='font-weight:300; color:#535353; font-size:14px; margin-top:1.5em'>
+      Si quieres ver la oferta completa  y enterarte de todo lo que Gamanfy </br>puede ofrecerte, haz click en <b><u><a href='${process.env.PUBLIC_DOMAIN}/auth/user/signup' style='color:#535353; text-decoration:none'>Regístrarte</a> </u></b><br/>
           <button type='submit' style="border:none; background-color:rgb(255,188,73); border-radius:5px; width:14em; height:2.5em; margin-top:2em; margin-left:10em"><a href='${process.env.PUBLIC_DOMAIN}/offer-details/${theOffer._id}' style='color:white; text-decoration:none; font-weight:500'>Ver oferta completa</a></button><br/>
           <p style='color:#535353; font-weight:300; font-size:14px; margin-left:1.5em; margin-top:4em'>No estas interesado ? Haz click <a href=${process.env.PUBLIC_DOMAIN}/recommend/reject-rec/${recommendedPeople._id} style='color:#535353; font-weight:600'>aquí</a> para indicar que no quieres</br> participar en la oferta</p>\n
-      
+          
         </div>
-      
-      </div>
-    </div>
-      <img  src="cid:abstract@abstract.com" style='height:10em; display:inline-block '/>
+        
+        </div>
+        </div>
+        <img  src="cid:abstract@abstract.com" style='height:10em; display:inline-block '/>
      
-    `,
-      attachments: [
-        {
-          filename: 'abstract background_25-01.png',
-          path: 'public/abstract background_25-01.png',
+        `,
+        attachments: [
+          {
+            filename: 'abstract-background_25-01.png',
+          path: 'public/abstract-background_25-01.png',
           cid: 'abstract@abstract.com'
         },
         {
@@ -165,25 +164,27 @@ exports.influencerUserRecommendation = async (req, res) => {
           cid: 'unique@nodemailer.com'
         },
         {
-          filename: 'nranja.abstract background_6-01.png',
-          path: 'public/nranja.abstract background_6-01.png',
+          filename: 'nranja.abstract-background_6-01.png',
+          path: 'public/nranja.abstract-background_6-01.png',
           cid: 'naranjaabstract@naranja.com'
         }
       ]
     };
-
+    
     transporter.sendMail(mailOptions, function (err) {
       if (err) { return res.status(500).send({ msg: err.message }); } else {
         res.status(200).send('A verification recommendedEmail has been sent to ' + recommendedEmail + '.');
       }
     });
+    
+    res.status(200).json({ updatedUser })
   } catch (error) {
     console.log(error)
   }
 }
 
 exports.companyUserRecommendation = async (req, res) => {
-
+  
   try {
     const { company, userId, offerId } = req.params;
     const { recommendedEmail, recommendedFirstName, recommendedLastName, recommendedPhoneNumber,
@@ -227,7 +228,7 @@ exports.companyUserRecommendation = async (req, res) => {
     let companyUser = await CompanyUser.findByIdAndUpdate(influencerUserId.companyUser, { $inc: { 'companyUserPunctuation': 5 } }, { new: true })
     const updatedUser = await InfluencerUser.findByIdAndUpdate(influencerUserId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id }, companyUser }, { new: true })
 
-    let transporter = nodemailer.createTransport({
+    let transporter =  nodemailer.createTransport({
 
       host: 'smtp.ionos.es',
       port: 587,
@@ -275,8 +276,8 @@ exports.companyUserRecommendation = async (req, res) => {
      `,
       attachments: [
         {
-          filename: 'abstract background_25-01.png',
-          path: 'public/abstract background_25-01.png',
+          filename: 'abstract-background_25-01.png',
+          path: 'public/abstract-background_25-01.png',
           cid: 'abstract@abstract.com'
         },
         {
@@ -285,19 +286,19 @@ exports.companyUserRecommendation = async (req, res) => {
           cid: 'unique@nodemailer.com'
         },
         {
-          filename: 'nranja.abstract background_6-01.png',
-          path: 'public/nranja.abstract background_6-01.png',
+          filename: 'nranja.abstract-background_6-01.png',
+          path: 'public/nranja.abstract-background_6-01.png',
           cid: 'naranjaabstract@naranja.com'
         }
       ]
     };
 
-    transporter.sendMail(mailOptions, function (err) {
+     transporter.sendMail(mailOptions, function (err) {
       if (err) { return res.status(500).send({ msg: err.message }); } else {
         res.status(200).send('A verification recommendedEmail has been sent to ' + recommendedEmail + '.');
       }
     });
-    res.status(200).json({ updatedUser })
+    res.status(200).send({ updatedUser })
 
   } catch (error) {
     res.status(400).json({ error: 'An error occurred while sending recommendation' })
