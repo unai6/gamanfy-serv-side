@@ -12,16 +12,16 @@ const companySendRecommendation = require('../../appControllers/companyControlle
 const deleteRecommendations = require('../../appControllers/userControllers/recommendations');
 const companyUserSendRecommendation = require('../../appControllers/userControllers/recommendations');
 const influencerUserSendRecommendation = require('../../appControllers/userControllers/recommendations');
-const uploader = require('../../config/cloudinary');
-
+const rejectRecommendation = require('../../appControllers/userControllers/recommendations');
 
 
 
 router.get('/:userId/dashboard', getUserRecommendationsDashboard.getUserRecommendationsDashboard)
 router.post('/influencerUser/:idCompany/:idUser/:idOffer', influencerUserSendRecommendation.influencerUserRecommendation)
-router.post('/companyUser/:userId/:offerId/:company', uploader.single("curriculum"), companyUserSendRecommendation.companyUserRecommendation);
+router.post('/companyUser/:userId/:offerId/:company', companyUserSendRecommendation.companyUserRecommendation);
 router.post('/user/delete-recommendation/:userId/:recommendationId/:offerId', deleteRecommendations.deleteRecommendation);
 router.post('/:companyId', companySendRecommendation.recommend);
+router.post('/user/reject-rec/:recommendationId/:offerId', rejectRecommendation.rejectRecommendation);
 
 
 router.post("/uploadPDF/:userId", async (req, res) => {
@@ -47,24 +47,6 @@ router.post("/uploadPDF/:userId", async (req, res) => {
   }
 
 });
-
-
-router.post('/user/reject-rec/:recommendationId/:offerId', async (req, res) => {
-
-  try {
-    const { offerId, recommendationId } = req.params;
-
-    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { recommendationAccepted: false, recommendationRejected: true }, { new: true })
-    let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
-    let offerIdent = recInsideOffer.recommendedTimes[0]._id
-    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': offerIdent }, { $set: { 'recommendedTimes': updatedRec } }, { new: true })
-    res.status(200).json(updatedOffer)
-  } catch (error) {
-    res.status(400).json({ error: 'An error occurred while updating' })
-  }
-});
-
-
 
 
 router.get('/:offerId/inProcess', async (req, res) => {
@@ -113,7 +95,7 @@ router.post('/candidate-accept-recommendation/updateCandidateProcess/:offerId/:r
     let offerIdent = recInsideOffer.recommendedTimes[0]._id
     let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent) }, { $set: {'recommendedTimes.$.recommendationAccepted': true } }, { new: true })
     res.status(200).json(updatedOffer)
-  } catch (error) {o
+  } catch (error) {
     res.status(400).json({ error: 'An error occurred while updating' })
   }
 });

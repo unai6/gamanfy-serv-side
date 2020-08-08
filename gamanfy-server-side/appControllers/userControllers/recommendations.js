@@ -70,6 +70,25 @@ exports.deleteRecommendation = async (req, res) => {
   }
 };
 
+
+
+  exports.rejectRecommendation = async (req, res) => {
+  
+    try {
+      const { offerId, recommendationId } = req.params;
+  
+      let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { recommendationAccepted: false, recommendationRejected: true }, { new: true })
+      let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
+      let offerIdent = recInsideOffer.recommendedTimes[0]._id
+      let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': offerIdent }, { $set: { 'recommendedTimes.$.recommendationRejected': true } }, { new: true })
+      res.status(200).json(updatedOffer)
+    } catch (error) {
+      res.status(400).json({ error: 'An error occurred while updating' })
+    }
+  };
+
+
+
 exports.influencerUserRecommendation = async (req, res) => {
 
   try {
@@ -142,8 +161,8 @@ exports.influencerUserRecommendation = async (req, res) => {
       
       <div style='font-weight:300; color:#535353; font-size:14px; margin-top:1.5em'>
       Si quieres ver la oferta completa  y enterarte de todo lo que Gamanfy </br>puede ofrecerte, haz click en <b><u><a href='${process.env.PUBLIC_DOMAIN}/auth/user/signup' style='color:#535353; text-decoration:none'>Regístrarte</a> </u></b><br/>
-          <button type='submit' style="border:none; background-color:rgb(255,188,73); border-radius:5px; width:14em; height:2.5em; margin-top:2em; margin-left:10em"><a href='${process.env.PUBLIC_DOMAIN}/offer-details/${theOffer._id}' style='color:white; text-decoration:none; font-weight:500'>Ver oferta completa</a></button><br/>
-          <p style='color:#535353; font-weight:300; font-size:14px; margin-left:1.5em; margin-top:4em'>No estas interesado ? Haz click <a href=${process.env.PUBLIC_DOMAIN}/recommend/reject-rec/${recommendedPeople._id} style='color:#535353; font-weight:600'>aquí</a> para indicar que no quieres</br> participar en la oferta</p>\n
+          <button type='submit' style="border:none; background-color:rgb(255,188,73); border-radius:5px; width:14em; height:2.5em; margin-top:2em; margin-left:10em"><a href='${process.env.PUBLIC_DOMAIN}/offer-details-accept-rec/${theOffer._id}/${recommendedPeople._id}' style='color:white; text-decoration:none; font-weight:500'>Ver detalles de la oferta</a></button><br/>
+          <p style='color:#535353; font-weight:300; font-size:14px; margin-left:1.5em; margin-top:4em'>No estas interesado ? Haz click <a href='${process.env.PUBLIC_DOMAIN}/recommend/user/reject-rec/${recommendedPeople._id}/${theOffer._id}' style='color:#535353; font-weight:600'>aquí</a> para indicar que no quieres</br> participar en la oferta</p>\n
           
         </div>
         
@@ -182,6 +201,8 @@ exports.influencerUserRecommendation = async (req, res) => {
     console.log(error)
   }
 }
+
+
 
 exports.companyUserRecommendation = async (req, res) => {
   
@@ -265,8 +286,8 @@ exports.companyUserRecommendation = async (req, res) => {
       
       <div style='font-weight:300; color:#535353; font-size:14px; margin-top:1.5em'>
       Si quieres ver la oferta completa  y enterarte de todo lo que Gamanfy </br>puede ofrecerte, haz click en <b><u><a href='${process.env.PUBLIC_DOMAIN}/auth/user/signup' style='color:#535353; text-decoration:none'>Regístrarte</a> </u></b><br/>
-      <button type='submit' style="border:none; background-color:rgb(255,188,73); border-radius:5px; width:14em; height:2.5em; margin-top:2em; margin-left:10em"><a href='${process.env.PUBLIC_DOMAIN}/offer-details/${theOffer._id}' style='color:white; text-decoration:none; font-weight:500'>Ver oferta completa</a></button><br/>
-      <p style='color:#535353; font-weight:300; font-size:14px; margin-left:1.5em; margin-top:4em'>No estas interesado ? Haz click <a href=${process.env.PUBLIC_DOMAIN}/recommend/reject-rec/${recommendedPeople._id} style='color:#535353; font-weight:600'>aquí</a> para indicar que no quieres</br> participar en la oferta</p>\n
+      <button type='submit' style="border:none; background-color:rgb(255,188,73); border-radius:5px; width:14em; height:2.5em; margin-top:2em; margin-left:10em"><a href='${process.env.PUBLIC_DOMAIN}/offer-details-accept-rec/${theOffer._id}/${recommendedPeople._id}' style='color:white; text-decoration:none; font-weight:500'>Ver oferta completa</a></button><br/>
+      <p style='color:#535353; font-weight:300; font-size:14px; margin-left:1.5em; margin-top:4em'>No estas interesado ? Haz click <a href=${process.env.PUBLIC_DOMAIN}/recommend/user/reject-rec/${recommendedPeople._id}/${theOffer._id} style='color:#535353; font-weight:600'>aquí</a> para indicar que no quieres</br> participar en la oferta</p>\n
       
       </div>
       
