@@ -161,7 +161,7 @@ exports.influencerUserRecommendation = async (req, res) => {
       
       <div style='font-weight:300; color:#535353; font-size:14px; margin-top:1.5em'>
       Si quieres ver la oferta completa  y enterarte de todo lo que Gamanfy </br>puede ofrecerte, haz click en <b><u><a href='${process.env.PUBLIC_DOMAIN}/auth/user/signup' style='color:#535353; text-decoration:none'>Regístrarte</a> </u></b><br/>
-          <button type='submit' style="border:none; background-color:rgb(255,188,73); border-radius:5px; width:14em; height:2.5em; margin-top:2em; margin-left:10em"><a href='${process.env.PUBLIC_DOMAIN}/offer-details-accept-rec/${theOffer._id}/${recommendedPeople._id}' style='color:white; text-decoration:none; font-weight:500'>Ver detalles de la oferta</a></button><br/>
+          <button type='submit' style="border:none; background-color:rgb(255,188,73); border-radius:5px; width:15.5em; height:2.5em; margin-top:2em; margin-left:10em"><a href='${process.env.PUBLIC_DOMAIN}/offer-details-accept-rec/${theOffer._id}/${recommendedPeople._id}' style='color:white; text-decoration:none; font-weight:500'>Ver detalles de la oferta</a></button><br/>
           <p style='color:#535353; font-weight:300; font-size:14px; margin-left:1.5em; margin-top:4em'>No estas interesado ? Haz click <a href='${process.env.PUBLIC_DOMAIN}/recommend/user/reject-rec/${recommendedPeople._id}/${theOffer._id}' style='color:#535353; font-weight:600'>aquí</a> para indicar que no quieres</br> participar en la oferta</p>\n
           
         </div>
@@ -286,7 +286,7 @@ exports.companyUserRecommendation = async (req, res) => {
       
       <div style='font-weight:300; color:#535353; font-size:14px; margin-top:1.5em'>
       Si quieres ver la oferta completa  y enterarte de todo lo que Gamanfy </br>puede ofrecerte, haz click en <b><u><a href='${process.env.PUBLIC_DOMAIN}/auth/user/signup' style='color:#535353; text-decoration:none'>Regístrarte</a> </u></b><br/>
-      <button type='submit' style="border:none; background-color:rgb(255,188,73); border-radius:5px; width:14em; height:2.5em; margin-top:2em; margin-left:10em"><a href='${process.env.PUBLIC_DOMAIN}/offer-details-accept-rec/${theOffer._id}/${recommendedPeople._id}' style='color:white; text-decoration:none; font-weight:500'>Ver oferta completa</a></button><br/>
+      <button type='submit' style="border:none; background-color:rgb(255,188,73); border-radius:5px; width:15.5em; height:2.5em; margin-top:2em; margin-left:10em"><a href='${process.env.PUBLIC_DOMAIN}/offer-details-accept-rec/${theOffer._id}/${recommendedPeople._id}' style='color:white; text-decoration:none; font-weight:500'>Ver oferta completa</a></button><br/>
       <p style='color:#535353; font-weight:300; font-size:14px; margin-left:1.5em; margin-top:4em'>No estas interesado ? Haz click <a href=${process.env.PUBLIC_DOMAIN}/recommend/user/reject-rec/${recommendedPeople._id}/${theOffer._id} style='color:#535353; font-weight:600'>aquí</a> para indicar que no quieres</br> participar en la oferta</p>\n
       
       </div>
