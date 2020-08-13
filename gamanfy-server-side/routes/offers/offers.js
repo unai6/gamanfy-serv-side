@@ -323,7 +323,7 @@ router.post('/company/infoRequest/:offerId/:companyId/:recommendationId', async 
         
         
         let recommendation = await Recommended.findById(recommendationId)
-        
+    
         let company = await Company.findById(companyId)
         
         
@@ -331,7 +331,7 @@ router.post('/company/infoRequest/:offerId/:companyId/:recommendationId', async 
             host: 'smtp.ionos.es',
             port: 587,
             logger: true,
-            debug: true,
+            // debug: true,
             tls: {
                 secure: false,
                 ignoreTLS: true,
@@ -354,7 +354,11 @@ router.post('/company/infoRequest/:offerId/:companyId/:recommendationId', async 
             html: `
             <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
             <div>
-            <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> La empresa ${company.companyName} ha requerido un informe del candidato con indentificación de recomendación : ${recommendationId}</p>\n
+            <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
+            La empresa ${company.companyName} ha requerido un informe del candidato con indentificación de recomendación : ${recommendationId}
+            Email del candidato : ${recommendation.recommendedEmail}
+            </p>\n
+            
             </div>
             `,
             attachments: [{
