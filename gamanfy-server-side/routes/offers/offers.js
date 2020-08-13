@@ -320,14 +320,14 @@ router.post('/company/infoRequest/:offerId/:companyId/:recommendationId', async 
                 }
             }
         });
-
-
+        
+        
         let recommendation = await Recommended.findById(recommendationId)
-
+        
         let company = await Company.findById(companyId)
-
+        
+        
         let transporter = nodemailer.createTransport({
-
             host: 'smtp.ionos.es',
             port: 587,
             logger: true,
@@ -341,10 +341,30 @@ router.post('/company/infoRequest/:offerId/:companyId/:recommendationId', async 
                 user: process.env.HOST_MAIL,
                 pass: process.env.HOST_MAIL_PASSWORD
             },
-
         });
+        
         transporter.use('compile', inLineCss());
-
+        
+    
+        
+        let mailOptionsToGamanfy = {
+            from: process.env.HOST_MAIL,
+            to: 'gamanfy@gmail.com',
+            subject: 'Gamanfy, Informe de candidato',
+            html: `
+            <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
+            <div>
+            <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> La empresa ${company.companyName} ha requerido un informe del candidato con indentificación de recomendación : ${recommendationId}</p>\n
+            </div>
+            `,
+            attachments: [{
+                filename: 'Anotación 2020-07-30 172748.png',
+                path: 'public/Anotación 2020-07-30 172748.png',
+                cid: 'unique@nodemailer.com'
+            }]
+        }
+        
+        
         let mailOptions = {
             from: process.env.HOST_MAIL,
             to: company.email,
@@ -376,6 +396,13 @@ router.post('/company/infoRequest/:offerId/:companyId/:recommendationId', async 
                 res.status(200)
             }
         });
+
+        transporter.sendMail(mailOptionsToGamanfy, function (err) {
+            if (err) { return res.status(500).send({ msg: err.message }); } else {
+                res.status(200)
+            }
+        });
+
 
         res.status(200).json({ 'recommendation': recommendation, 'company': company, 'populatedRec': recommendToPopulate })
 
