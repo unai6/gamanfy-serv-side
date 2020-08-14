@@ -21,7 +21,7 @@ const app = express();
 
 
 app.set('port', process.env.PORT || 5000);
-app.use(fileUpload())
+app.use(fileUpload({useTempFiles : true}))
 
 // MONGOOSE CONNECTION
 mongoose

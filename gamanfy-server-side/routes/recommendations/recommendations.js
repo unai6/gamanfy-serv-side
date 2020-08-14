@@ -28,20 +28,20 @@ router.post("/uploadPDF/:userId", async (req, res) => {
 
   try {
     
-    if (req.file === null) {
-      req.file =''
+    if (req.files === null) {
+      req.files =''
       return;
+    } else{
+      const curriculum = req.files.curriculum
+      
+      curriculum.mv(`public/uploads/${curriculum.name}`, error => {
+        if (error) {
+          console.log(error);
+        }
+      })
+      
+      res.json({ fileName: curriculum.name, filePath: `${__dirname}/uploads/${curriculum.name}/pdf` });
     }
-
-    const file = req.files.curriculum
-
-    file.mv(`public/uploads/${file.name}`, error => {
-      if (error) {
-        console.log(error);
-      }
-    })
-
-    res.json({ fileName: file.name, filePath: `${__dirname}/uploads/${file.name}/pdf` });
   } catch (error) {
     res.status(400).send(error)
   }

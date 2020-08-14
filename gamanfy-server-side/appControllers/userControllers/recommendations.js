@@ -213,9 +213,8 @@ exports.companyUserRecommendation = async (req, res) => {
       ownDescription, motivations, whyFits,
       availability, moneyExpec, currentSituation, otherAspects } = req.body;
 
-
-
-    const theOffer = await Offers.findById(offerId);
+      
+      const theOffer = await Offers.findById(offerId);
     const influencerUserId = await InfluencerUser.findById(userId).populate('recommendedPeople companyUser');
     const companyUserMoneyPerRec = influencerUserId.companyUser.companyUserPunctuation;
     const influencerUserName = `${influencerUserId.firstName} ${influencerUserId.lastName}`;
@@ -225,27 +224,39 @@ exports.companyUserRecommendation = async (req, res) => {
     const maxGrossSalary = theOffer.retribution.maxGrossSalary;
     const jobName = theOffer.jobOfferData.jobName
     const mainMission = theOffer.jobDescription.mainMission
+    const curriculum = req.files.curriculum
 
     let recommendedPeople;
     let historicRecommendations;
     let recommendedTimes;
-
-    recommendedPeople = await Recommended.create({
-      recommendedEmail, recommendedFirstName, recommendedLastName, offerId: theOffer, recommendedPhoneNumber,
-      recommendedLinkedin, howFoundCandidate,
+    
+    if (req.files === null) {
+      req.files =''
+    } else{
+      
+      console.log(curriculum)
+      recommendedPeople = await Recommended.create({
+        recommendedEmail, recommendedFirstName, recommendedLastName, offerId: theOffer, recommendedPhoneNumber,
+      recommendedLinkedin, howFoundCandidate, curriculum:curriculum.tempFilePath,
       candidateInfo: {
         candidateEducation, language, candidateLocation, experiences, similarExp, lastJob, age, ownDescription, motivations, whyFits,
         availability, moneyExpec, currentSituation, otherAspects
       },
       moneyForRec: companyUserMoneyPerRec
     });
+    
+    await curriculum.mv(`public/uploads/${curriculum.name}`, error => {
+      if (error) {
+        console.log(error);
+      }
+    })
 
     recommendedTimes = await Offers.findByIdAndUpdate(theOffer, {
       $push: { recommendedTimes: recommendedPeople }
     }, { new: true })
-
+    
     historicRecommendations = recommendedPeople
-
+    
     let companyUser = await CompanyUser.findByIdAndUpdate(influencerUserId.companyUser, { $inc: { 'companyUserPunctuation': 5 } }, { new: true })
     const updatedUser = await InfluencerUser.findByIdAndUpdate(influencerUserId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id }, companyUser }, { new: true })
 
@@ -254,7 +265,7 @@ exports.companyUserRecommendation = async (req, res) => {
       host: 'smtp.ionos.es',
       port: 587,
       logger: true,
-      debug: true,
+      // debug: true,
       tls: {
         secure: false,
         ignoreTLS: true,
@@ -264,10 +275,10 @@ exports.companyUserRecommendation = async (req, res) => {
         user: process.env.HOST_MAIL,
         pass: process.env.HOST_MAIL_PASSWORD
       },
-
+      
     });
     transporter.use('compile', inLineCss());
-
+    
     let mailOptions = {
       from: process.env.HOST_MAIL,
       to: recommendedEmail,
@@ -294,7 +305,7 @@ exports.companyUserRecommendation = async (req, res) => {
       </div>
       </div>
       <img  src="cid:abstract@abstract.com" style='height:9em; display:inline-block '/>
-     `,
+      `,
       attachments: [
         {
           filename: 'abstract-background_25-01.png',
@@ -314,13 +325,14 @@ exports.companyUserRecommendation = async (req, res) => {
       ]
     };
 
-     transporter.sendMail(mailOptions, function (err) {
+    transporter.sendMail(mailOptions, function (err) {
       if (err) { return res.status(500).send({ msg: err.message }); } else {
         res.status(200).send('A verification recommendedEmail has been sent to ' + recommendedEmail + '.');
       }
     });
     res.status(200).send({ updatedUser })
-
+  }
+    
   } catch (error) {
     res.status(400).json({ error: 'An error occurred while sending recommendation' })
   }
