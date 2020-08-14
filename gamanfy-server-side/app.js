@@ -8,7 +8,6 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const hbs = require('hbs')
-const fileUpload = require('express-fileupload');
 const indexRouter = require('./routes/index');
 const userAuthRouter = require('./routes/auth/userAuth.js');
 const companyAuthRouter = require('./routes/auth/companyAuth.js');
@@ -21,7 +20,7 @@ const app = express();
 
 
 app.set('port', process.env.PORT || 5000);
-app.use(fileUpload({useTempFiles : true}))
+// app.use(fileUpload())
 
 // MONGOOSE CONNECTION
 mongoose
@@ -55,7 +54,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/auth', userAuthRouter);

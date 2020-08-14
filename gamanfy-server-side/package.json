@@ -40,6 +40,8 @@
     "react-paginate": "^6.3.2",
     "react-select-search": "^2.0.3",
     "store": "^2.0.12",
+    "uuid": "^8.3.0",
+    "uuidv4": "^6.2.2",
     "xoauth2": "^1.2.0"
   },
   "devDependencies": {

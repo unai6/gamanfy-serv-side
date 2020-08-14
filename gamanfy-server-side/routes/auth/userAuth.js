@@ -2,8 +2,6 @@ const express = require("express");
 const router = express.Router();
 const InfluencerUser = require("../../models/InfluencerUser");
 
-const uploader = require("../../config/cloudinary");
-
 const userAuthController = require('../../appControllers/userControllers/userAuthController');
 const userEditProfileController = require('../../appControllers/userControllers/editProfile');
 
@@ -27,17 +25,6 @@ router.post('/user/login',  userAuthController.login);
 router.post('/user/:userId/:isaCompany/complete-profile', userAuthController.userCompleteProfile);
 router.put('/user/:userId/edit-profile', userEditProfileController.editProfile);
 router.get('/user/:userId/dashboard', checkToken, getDashboardController.getUserDashboard);
-
-
-/* router.post("/upload", uploader.single("imageUrl"), (req, res, next) => {
-  if (!req.file) {
-    next(new Error("No file uploaded!"));
-    return;
-  }
-
-  res.json({ secure_url: req.file.secure_url });
-});
-  */
 
 router.post("/user/logout", async (req, res, next) => {
     try {

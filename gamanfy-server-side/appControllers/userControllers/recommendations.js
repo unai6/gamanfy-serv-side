@@ -204,9 +204,10 @@ exports.influencerUserRecommendation = async (req, res) => {
 
 
 
-exports.companyUserRecommendation = async (req, res) => {
+exports.companyUserRecommendation =  async (req, res) => {
   
   try {
+    const url = req.protocol + '://' + req.get('host')
     const { company, userId, offerId } = req.params;
     const { recommendedEmail, recommendedFirstName, recommendedLastName, recommendedPhoneNumber,
       recommendedLinkedin, howFoundCandidate, candidateEducation, lastJob, age, language, candidateLocation, experiences, similarExp,
@@ -224,20 +225,16 @@ exports.companyUserRecommendation = async (req, res) => {
     const maxGrossSalary = theOffer.retribution.maxGrossSalary;
     const jobName = theOffer.jobOfferData.jobName
     const mainMission = theOffer.jobDescription.mainMission
-    const curriculum = req.files.curriculum
+    const curriculum = req.file.filename
 
     let recommendedPeople;
     let historicRecommendations;
     let recommendedTimes;
     
-    if (req.files === null) {
-      req.files =''
-    } else{
-      
-      console.log(curriculum)
+   
       recommendedPeople = await Recommended.create({
         recommendedEmail, recommendedFirstName, recommendedLastName, offerId: theOffer, recommendedPhoneNumber,
-      recommendedLinkedin, howFoundCandidate, curriculum:curriculum.tempFilePath,
+      recommendedLinkedin, howFoundCandidate, curriculum:url + '/public/uploads/' + curriculum,
       candidateInfo: {
         candidateEducation, language, candidateLocation, experiences, similarExp, lastJob, age, ownDescription, motivations, whyFits,
         availability, moneyExpec, currentSituation, otherAspects
@@ -245,12 +242,6 @@ exports.companyUserRecommendation = async (req, res) => {
       moneyForRec: companyUserMoneyPerRec
     });
     
-    await curriculum.mv(`public/uploads/${curriculum.name}`, error => {
-      if (error) {
-        console.log(error);
-      }
-    })
-
     recommendedTimes = await Offers.findByIdAndUpdate(theOffer, {
       $push: { recommendedTimes: recommendedPeople }
     }, { new: true })
@@ -331,7 +322,7 @@ exports.companyUserRecommendation = async (req, res) => {
       }
     });
     res.status(200).send({ updatedUser })
-  }
+  
     
   } catch (error) {
     res.status(400).json({ error: 'An error occurred while sending recommendation' })

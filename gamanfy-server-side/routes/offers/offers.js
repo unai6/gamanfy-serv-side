@@ -13,7 +13,7 @@ const Recommended = require('../../models/Recommended');
 const InfluencerUser = require("../../models/InfluencerUser.js");
 const nodemailer = require('nodemailer');
 let inLineCss = require('nodemailer-juice');
-
+const companyPicUploader = require('../../config/companyPicsUploader');
 
 
 router.get('/dashboard', async (req, res, next) => {
@@ -138,9 +138,11 @@ router.get('/getData/:companyId', async (req, res) => {
 
 })
 
-router.post('/:companyId/post-job-offer', async (req, res, next) => {
+router.post('/:companyId/post-job-offer', companyPicUploader.single('offerPicture'), async (req, res, next) => {
 
     try {
+
+        const url = req.protocol + '://' + req.get('host');
         const { companyId } = req.params;
         //scorepunc
         const { scorePerRec, moneyPerRec } = req.body;
@@ -169,6 +171,7 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
         const { question1, question2, question3, question4, question5 } = req.body;
         //benfits
         const { benefits } = req.body;
+        const offerPicture = req.file.filename
 
         let company = await Company.findById(companyId);
 
@@ -186,6 +189,7 @@ router.post('/:companyId/post-job-offer', async (req, res, next) => {
         let postedOffers = await Offers.create({
             scorePerRec,
             moneyPerRec,
+            imgPath:url + '/public/companyPictures/' + offerPicture,    
             contractServices: { hasSourcingWithInfluencer, hasExclusiveHeadHunter },
             additionalServices: { hasPersonalityTest, hasVideoInterview, hasKitOnBoardingGamanfy },
             gamanfyFee: { totalFee },

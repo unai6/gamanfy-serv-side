@@ -3,9 +3,8 @@ const express = require("express");
 const router = express.Router();
 const Offers = require('../../models/JobOffer.js');
 const Recommended = require('../../models/Recommended');
-const multer = require('multer');
 const InfluencerUser = require('../../models/InfluencerUser');
-
+const uploader = require('../../config/uploadsForPDF');
 
 const getUserRecommendationsDashboard = require('../../appControllers/userControllers/recommendations');
 const companySendRecommendation = require('../../appControllers/companyControllers/recommend');
@@ -18,36 +17,10 @@ const rejectRecommendation = require('../../appControllers/userControllers/recom
 
 router.get('/:userId/dashboard', getUserRecommendationsDashboard.getUserRecommendationsDashboard)
 router.post('/influencerUser/:idCompany/:idUser/:idOffer', influencerUserSendRecommendation.influencerUserRecommendation)
-router.post('/companyUser/:userId/:offerId/:company', companyUserSendRecommendation.companyUserRecommendation);
+router.post('/companyUser/:userId/:offerId/:company', uploader.single('curriculum'), companyUserSendRecommendation.companyUserRecommendation);
 router.post('/user/delete-recommendation/:userId/:recommendationId/:offerId', deleteRecommendations.deleteRecommendation);
 router.post('/:companyId', companySendRecommendation.recommend);
 router.post('/user/reject-rec/:recommendationId/:offerId', rejectRecommendation.rejectRecommendation);
-
-
-router.post("/uploadPDF/:userId", async (req, res) => {
-
-  try {
-    
-    if (req.files === null) {
-      req.files =''
-      return;
-    } else{
-      const curriculum = req.files.curriculum
-      
-      curriculum.mv(`public/uploads/${curriculum.name}`, error => {
-        if (error) {
-          console.log(error);
-        }
-      })
-      
-      res.json({ fileName: curriculum.name, filePath: `${__dirname}/uploads/${curriculum.name}/pdf` });
-    }
-  } catch (error) {
-    res.status(400).send(error)
-  }
-
-});
-
 
 router.get('/:offerId/inProcess', async (req, res) => {
 
