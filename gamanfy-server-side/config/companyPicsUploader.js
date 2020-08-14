@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
   }
 });
 
-var companyPicUploader = multer({
+let companyPicUploader = multer({
   storage: storage,
   fileFilter: (req, file, cb) => {
       if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
