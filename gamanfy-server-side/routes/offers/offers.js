@@ -76,13 +76,13 @@ router.post('/candidates/reject-candidate/:offerId/:companyId/:recommendationId'
     try {
 
         const { offerId, companyId, recommendationId } = req.params;
-      
-            let updatedOffer = await Offers.findByIdAndUpdate(offerId, { $pull: { "recommendedTimes": { _id: mongoose.Types.ObjectId(recommendationId) } } }, {new:true})       
-            await Recommended.findByIdAndUpdate(recommendationId, {recommendationRejected :true, recommendationAccepted:false, inProcess:false, stillInProcess:false})
-            res.json(updatedOffer)
 
-            await Company.findById(companyId)
-          
+        let updatedOffer = await Offers.findByIdAndUpdate(offerId, { $pull: { "recommendedTimes": { _id: mongoose.Types.ObjectId(recommendationId) } } }, { new: true })
+        await Recommended.findByIdAndUpdate(recommendationId, { recommendationRejected: true, recommendationAccepted: false, inProcess: false, stillInProcess: false })
+        res.json(updatedOffer)
+
+        await Company.findById(companyId)
+
     } catch (error) {
         res.status(400).json({ error: 'Error' })
     }
@@ -189,20 +189,20 @@ router.post('/:companyId/post-job-offer', companyPicUploader.single('offerPictur
         let postedOffers = await Offers.create({
             scorePerRec,
             moneyPerRec,
-            imgPath:url + '/public/companyPictures/' + offerPicture,    
-            contractServices: { hasSourcingWithInfluencer, hasExclusiveHeadHunter },
-            additionalServices: { hasPersonalityTest, hasVideoInterview, hasKitOnBoardingGamanfy },
+            imgPath: url + '/public/companyPictures/' + offerPicture,
+            contractServices: { hasSourcingWithInfluencer:  Boolean(hasSourcingWithInfluencer), hasExclusiveHeadHunter:  Boolean(hasExclusiveHeadHunter) },
+            additionalServices: { hasPersonalityTest:  Boolean(hasPersonalityTest), hasVideoInterview:  Boolean(hasVideoInterview), hasKitOnBoardingGamanfy:  Boolean(hasKitOnBoardingGamanfy) },
             gamanfyFee: { totalFee },
             companyData: { processNum, description, website, recruiter, companyName: company.companyName, companyId: company._id },
             jobOfferData: {
-                jobName, onDate, offDate, processState, isRemote, personsOnCharge
+                jobName, onDate, offDate, processState:  Boolean(processState), isRemote:  Boolean(isRemote), personsOnCharge
             },
             benefits: [benefits],
             jobDescription: { mainMission, team, jobDescription },
-            showMoney: showMoney,
+            showMoney:  Boolean(showMoney),
             manager: { managerDescription, managerLinkedin },
             addressId, sectorId, categoryId, contractId,
-            retribution: { minGrossSalary, maxGrossSalary, variableRetribution, quantityVariableRetribution, showMoney },
+            retribution: { minGrossSalary, maxGrossSalary, variableRetribution :  Boolean(variableRetribution), quantityVariableRetribution },
             minRequirements: { minExp, minStudies, minReqDescription, language },
             keyKnowledge: { keyKnowledge },
             keyCompetences: { keyComp },
@@ -324,13 +324,13 @@ router.post('/company/infoRequest/:offerId/:companyId/:recommendationId', async 
                 }
             }
         });
-        
-        
+
+
         let recommendation = await Recommended.findById(recommendationId)
-    
+
         let company = await Company.findById(companyId)
-        
-        
+
+
         let transporter = nodemailer.createTransport({
             host: 'smtp.ionos.es',
             port: 587,
@@ -346,11 +346,11 @@ router.post('/company/infoRequest/:offerId/:companyId/:recommendationId', async 
                 pass: process.env.HOST_MAIL_PASSWORD
             },
         });
-        
+
         transporter.use('compile', inLineCss());
-        
-    
-        
+
+
+
         let mailOptionsToGamanfy = {
             from: process.env.HOST_MAIL,
             to: 'gamanfy@gmail.com',
@@ -371,8 +371,8 @@ router.post('/company/infoRequest/:offerId/:companyId/:recommendationId', async 
                 cid: 'unique@nodemailer.com'
             }]
         }
-        
-        
+
+
         let mailOptions = {
             from: process.env.HOST_MAIL,
             to: company.email,
