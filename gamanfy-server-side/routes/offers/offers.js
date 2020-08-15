@@ -189,7 +189,7 @@ router.post('/:companyId/post-job-offer', companyPicUploader.single('offerPictur
         let postedOffers = await Offers.create({
             scorePerRec,
             moneyPerRec,
-            imgPath: url + '/public/companyPictures/' + offerPicture,
+            imgPath: '/public/companyPictures/' + offerPicture,
             contractServices: { hasSourcingWithInfluencer: Boolean(hasSourcingWithInfluencer), hasExclusiveHeadHunter: Boolean(hasExclusiveHeadHunter) },
             additionalServices: { hasPersonalityTest: Boolean(hasPersonalityTest), hasVideoInterview: Boolean(hasVideoInterview), hasKitOnBoardingGamanfy: Boolean(hasKitOnBoardingGamanfy) },
             gamanfyFee: { totalFee },
