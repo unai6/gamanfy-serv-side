@@ -139,7 +139,7 @@ router.get('/getData/:companyId', async (req, res) => {
 })
 
 
-router.post('/:companyId/post-job-offer',  async (req, res, next) => {
+router.post('/:companyId/post-job-offer', companyPicUploader.single('offerPicture'), async (req, res, next) => {
 
     try {
 
@@ -174,7 +174,7 @@ router.post('/:companyId/post-job-offer',  async (req, res, next) => {
         const { benefits } = req.body;
         // const offerPicture = req.file.filename
         
-        // const offerPicture = req.file.path
+        const offerPicture = req.file.path
         
         let company = await Company.findById(companyId);
 
@@ -193,7 +193,7 @@ router.post('/:companyId/post-job-offer',  async (req, res, next) => {
             scorePerRec,
             moneyPerRec,
             // imgPath: '/public/companyPictures/' + offerPicture,
-            // offerPicture: offerPicture,
+            offerPicture: offerPicture,
             contractServices: { hasSourcingWithInfluencer: Boolean(hasSourcingWithInfluencer), hasExclusiveHeadHunter: Boolean(hasExclusiveHeadHunter) },
             additionalServices: { hasPersonalityTest: Boolean(hasPersonalityTest), hasVideoInterview: Boolean(hasVideoInterview), hasKitOnBoardingGamanfy: Boolean(hasKitOnBoardingGamanfy) },
             gamanfyFee: { totalFee },
