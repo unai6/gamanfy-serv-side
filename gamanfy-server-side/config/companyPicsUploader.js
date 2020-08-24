@@ -11,7 +11,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: 'gamanfy', // The name of the folder in cloudinary
+    folder: 'company-logos', // The name of the folder in cloudinary
     allowedFormats: ['jpg', 'png', 'jpeg'],
   },
   filename: (req, file, cb) => {
