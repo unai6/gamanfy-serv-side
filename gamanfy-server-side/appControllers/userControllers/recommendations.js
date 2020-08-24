@@ -207,7 +207,7 @@ exports.influencerUserRecommendation = async (req, res) => {
 exports.companyUserRecommendation =  async (req, res) => {
   
   try {
-    const url = req.protocol + '://' + req.get('host')
+    // const url = req.protocol + '://' + req.get('host')
     const { company, userId, offerId } = req.params;
     const { recommendedEmail, recommendedFirstName, recommendedLastName, recommendedPhoneNumber,
       recommendedLinkedin, howFoundCandidate, candidateEducation, lastJob, age, language, candidateLocation, experiences, similarExp,
@@ -225,7 +225,7 @@ exports.companyUserRecommendation =  async (req, res) => {
     const maxGrossSalary = theOffer.retribution.maxGrossSalary;
     const jobName = theOffer.jobOfferData.jobName
     const mainMission = theOffer.jobDescription.mainMission
-    const curriculum = req.file.filename
+    const curriculum = req.file.path
 
     let recommendedPeople;
     let historicRecommendations;
@@ -234,7 +234,9 @@ exports.companyUserRecommendation =  async (req, res) => {
    
       recommendedPeople = await Recommended.create({
         recommendedEmail, recommendedFirstName, recommendedLastName, offerId: theOffer, recommendedPhoneNumber,
-      recommendedLinkedin, howFoundCandidate, curriculum:url + '/public/uploads/' + curriculum,
+      recommendedLinkedin, howFoundCandidate, 
+      // curriculum:url + '/public/uploads/' + curriculum,
+      curriculum:curriculum,
       candidateInfo: {
         candidateEducation, language, candidateLocation, experiences, similarExp, lastJob, age, ownDescription, motivations, whyFits,
         availability, moneyExpec, currentSituation, otherAspects

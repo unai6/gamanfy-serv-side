@@ -1,5 +1,4 @@
 const multer = require('multer');
-
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
@@ -9,18 +8,19 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET
 });
 
-const storage =  new CloudinaryStorage({
-  cloudinary:cloudinary,
-  params:{
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
     folder: 'gamanfy', // The name of the folder in cloudinary
     allowedFormats: ['jpg', 'png', 'jpeg'],
   },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },  
+  filename: (req, file, cb) => {
+    cb(null, file.originalname + "-" + Date.now())
+  }
 });
 
-const companyPicUploader = multer({ storage:storage });
+
+const companyPicUploader = multer({ storage });
 
 module.exports = companyPicUploader
 

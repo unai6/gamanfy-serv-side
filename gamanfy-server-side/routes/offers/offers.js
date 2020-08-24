@@ -173,8 +173,8 @@ router.post('/:companyId/post-job-offer', companyPicUploader.single('offerPictur
         //benfits
         const { benefits } = req.body;
         // const offerPicture = req.file.filename
-        
         const offerPicture = req.file.path
+        console.log(req.file)
         
         let company = await Company.findById(companyId);
 
@@ -223,7 +223,6 @@ router.post('/:companyId/post-job-offer', companyPicUploader.single('offerPictur
 
 
 router.put('/:companyId/:offerId/edit-offer', async (req, res) => {
-
 
     try {
 
