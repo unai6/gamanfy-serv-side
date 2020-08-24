@@ -193,7 +193,7 @@ router.post('/:companyId/post-job-offer', companyPicUploader.single('offerPictur
             scorePerRec,
             moneyPerRec,
             // imgPath: '/public/companyPictures/' + offerPicture,
-            offerPicture: offerPicture,
+            // offerPicture: offerPicture,
             contractServices: { hasSourcingWithInfluencer: Boolean(hasSourcingWithInfluencer), hasExclusiveHeadHunter: Boolean(hasExclusiveHeadHunter) },
             additionalServices: { hasPersonalityTest: Boolean(hasPersonalityTest), hasVideoInterview: Boolean(hasVideoInterview), hasKitOnBoardingGamanfy: Boolean(hasKitOnBoardingGamanfy) },
             gamanfyFee: { totalFee },
