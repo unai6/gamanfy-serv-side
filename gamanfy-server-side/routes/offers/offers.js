@@ -139,7 +139,7 @@ router.get('/getData/:companyId', async (req, res) => {
 })
 
 
-router.post('/:companyId/post-job-offer', companyPicUploader.single('offerPicture'), async (req, res, next) => {
+router.post('/:companyId/post-job-offer',  async (req, res, next) => {
 
     try {
 
@@ -174,7 +174,7 @@ router.post('/:companyId/post-job-offer', companyPicUploader.single('offerPictur
         const { benefits } = req.body;
         // const offerPicture = req.file.filename
         
-        const offerPicture = req.file.path
+        // const offerPicture = req.file.path
         
         let company = await Company.findById(companyId);
 
