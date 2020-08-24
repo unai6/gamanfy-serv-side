@@ -138,6 +138,15 @@ router.get('/getData/:companyId', async (req, res) => {
 
 })
 
+router.post('/upload', companyPicUploader.single('offerPicture'), (req, res) => {
+    if (!req.file) {
+        next(new Error("No file uploaded!"));
+        return;
+    }
+    console.log(req.file)
+    res.json({ secure_url: req.file.path });
+})
+
 router.post('/:companyId/post-job-offer', companyPicUploader.single('offerPicture'), async (req, res, next) => {
 
     try {
@@ -168,14 +177,16 @@ router.post('/:companyId/post-job-offer', companyPicUploader.single('offerPictur
         // min requirements
         const { minExp, minStudies, keyKnowledge, keyComp, minReqDescription, language, } = req.body;
         //interview Questions
-        const { question1, question2, question3, question4, question5 } = req.body;
+        const { question1, question2, question3, question4, question5} = req.body;
         //benfits
         const { benefits } = req.body;
-        const offerPicture = req.file.filename
-
+        // const offerPicture = req.file.filename
+        
+        const offerPicture = req.file.path
+        
         let company = await Company.findById(companyId);
 
-
+     
         if (company.description !== '' || null) {
             description = company.description;
         } else if (company.companyName !== '' || null) {
@@ -189,7 +200,8 @@ router.post('/:companyId/post-job-offer', companyPicUploader.single('offerPictur
         let postedOffers = await Offers.create({
             scorePerRec,
             moneyPerRec,
-            imgPath: '/public/companyPictures/' + offerPicture,
+            // imgPath: '/public/companyPictures/' + offerPicture,
+            offerPicture: offerPicture,
             contractServices: { hasSourcingWithInfluencer: Boolean(hasSourcingWithInfluencer), hasExclusiveHeadHunter: Boolean(hasExclusiveHeadHunter) },
             additionalServices: { hasPersonalityTest: Boolean(hasPersonalityTest), hasVideoInterview: Boolean(hasVideoInterview), hasKitOnBoardingGamanfy: Boolean(hasKitOnBoardingGamanfy) },
             gamanfyFee: { totalFee },
