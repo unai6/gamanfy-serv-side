@@ -138,20 +138,12 @@ router.get('/getData/:companyId', async (req, res) => {
 
 })
 
-router.post('/upload', companyPicUploader.single('offerPicture'), (req, res) => {
-    if (!req.file) {
-        next(new Error("No file uploaded!"));
-        return;
-    }
-    console.log(req.file)
-    res.json({ secure_url: req.file.path });
-})
 
 router.post('/:companyId/post-job-offer', companyPicUploader.single('offerPicture'), async (req, res, next) => {
 
     try {
 
-        const url = req.protocol + '://' + req.get('host');
+        // const url = req.protocol + '://' + req.get('host');
         const { companyId } = req.params;
         //scorepunc
         const { scorePerRec, moneyPerRec } = req.body;
