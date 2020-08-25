@@ -51,9 +51,9 @@ router.post('/admin-validate-candidate/updateCandidateProcess/:offerId/:recommen
     let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
     let offerIdent = recInsideOffer.recommendedTimes[0]._id
     let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent)}, { $set: { 'recommendedTimes.$.recommendationValidated': true } }, { new: true })
-    res.status(200).json(updatedOffer)
+    res.status(200).json(updatedOffer);
   } catch (error) {
-    res.status(400).json({ error: 'An error occurred while updating' })
+    res.status(400).json({ error: 'An error occurred while updating' });
   }
 });
 
