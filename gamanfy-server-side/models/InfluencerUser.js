@@ -10,7 +10,7 @@ const influencerUserSchema = new Schema({
     isCompleted: { type: Boolean, default: false },
     firstName: String,
     lastName: String,
-    imageUrl: { type: String, required: true, default:'https://www.kindpng.com/picc/m/130-1300217_user-icon-member-icon-png-transparent-png.png'},
+    imageUrl: { type: String, required: false},
     birthDate: { type: Date },
     email: { type: String, required: [true, "Email is mandatory and unique"], unique: true },
     password: { type: String, require: [true, "password is mandatory"] },
