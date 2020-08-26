@@ -13,7 +13,7 @@ const Recommended = require('../../models/Recommended');
 const InfluencerUser = require("../../models/InfluencerUser.js");
 const nodemailer = require('nodemailer');
 let inLineCss = require('nodemailer-juice');
-const companyPicUploader = require('../../config/companyPicsUploader');
+const picUploader = require('../../config/picsUploader');
 
 
 router.get('/dashboard', async (req, res, next) => {
@@ -139,7 +139,7 @@ router.get('/getData/:companyId', async (req, res) => {
 })
 
 
-router.post('/:companyId/post-job-offer', companyPicUploader.single('offerPicture'), async (req, res, next) => {
+router.post('/:companyId/post-job-offer', picUploader.single('offerPicture'), async (req, res, next) => {
 
     try {
 

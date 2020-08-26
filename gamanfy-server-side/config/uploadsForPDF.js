@@ -12,7 +12,7 @@ cloudinary.config({
 const storage =  new CloudinaryStorage({
   cloudinary:cloudinary,
   params:{
-    folder: 'gamanfy-curriculums', // The name of the folder in cloudinary
+    folder: 'gamanfy-curriculums', 
     allowedFormats: ['pdf'],
   },
   filename: function (req, file, cb) {

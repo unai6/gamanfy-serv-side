@@ -11,7 +11,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: 'company-logos', // The name of the folder in cloudinary
+    folder: 'company-logos',
     allowedFormats: ['jpg', 'png', 'jpeg'],
   },
   filename: (req, file, cb) => {
@@ -20,9 +20,9 @@ const storage = new CloudinaryStorage({
 });
 
 
-const companyPicUploader = multer({ storage });
+const picUploader = multer({ storage });
 
-module.exports = companyPicUploader
+module.exports = picUploader
 
 
 
@@ -45,7 +45,7 @@ const storage = multer.diskStorage({
   }
 });
 
-let companyPicUploader = multer({
+let picUploader = multer({
   storage: storage,
   fileFilter: (req, file, cb) => {
       if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {

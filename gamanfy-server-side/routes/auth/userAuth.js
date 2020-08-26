@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 const InfluencerUser = require("../../models/InfluencerUser");
 
+const picUploader = require('../../config/picsUploader');
 const userAuthController = require('../../appControllers/userControllers/userAuthController');
 const userEditProfileController = require('../../appControllers/userControllers/editProfile');
+const userChangeProfilePic = require('../../appControllers/userControllers/editProfile');
 
 const {
     confirmationToken,
@@ -24,6 +26,7 @@ router.post('/resend', resendToken);
 router.post('/user/login',  userAuthController.login);
 router.post('/user/:userId/:isaCompany/complete-profile', userAuthController.userCompleteProfile);
 router.put('/user/:userId/edit-profile', userEditProfileController.editProfile);
+router.post('/user/:userId/change-profile-picture', picUploader.single("imageUrl"), userChangeProfilePic.userChangeProfilePic)
 router.get('/user/:userId/dashboard', checkToken, getDashboardController.getUserDashboard);
 
 router.post("/user/logout", async (req, res, next) => {

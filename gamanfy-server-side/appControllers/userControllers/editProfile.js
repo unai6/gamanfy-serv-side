@@ -7,6 +7,24 @@ const saltRounds = 10;
 
 
 
+exports.userChangeProfilePic = async ( req, res) => {
+    try{
+        const { userId } = req.params;
+
+        const imageUrl = req.file.path;
+
+            await InfluencerUser.findByIdAndUpdate(userId, {
+                imageUrl:imageUrl
+            });
+
+            res.status(200).json({ message: 'influencer user updated correctly' });
+        
+
+    }catch(error){
+        res.status(400).json({error:'Error'})
+    }
+}
+
 exports.editProfile = async (req, res, next) => {
 
     try {
