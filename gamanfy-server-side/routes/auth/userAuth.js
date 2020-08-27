@@ -24,10 +24,10 @@ router.post('/user/signup', userAuthController.userSignup);
 router.post(`/confirmation/:userId/:userToken/:isCompany`, confirmationToken);
 router.post('/resend', resendToken);
 router.post('/user/login',  userAuthController.login);
+router.get('/user/:userId/dashboard', checkToken, getDashboardController.getUserDashboard);
 router.post('/user/:userId/:isaCompany/complete-profile', userAuthController.userCompleteProfile);
 router.put('/user/:userId/edit-profile', userEditProfileController.editProfile);
 router.post('/user/:userId/change-profile-picture', picUploader.single("imageUrl"), userChangeProfilePic.userChangeProfilePic)
-router.get('/user/:userId/dashboard', checkToken, getDashboardController.getUserDashboard);
 
 router.post("/user/logout", async (req, res, next) => {
     try {
