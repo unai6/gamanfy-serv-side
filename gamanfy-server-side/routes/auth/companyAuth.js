@@ -21,10 +21,10 @@ const editProfileController = require('../../appControllers/companyControllers/e
 router.post('/company/signup', companyAuthController.companySignUp);
 router.post(`/confirmation/:companyId/:companyToken`, confirmationToken);
 router.post(`/resend`, resendToken);
-router.post('/company/login', companyAuthController.companyLogin);
 router.post('/company/:companyId/complete-profile', companyAuthController.companyCompleteProfile)
-router.post('/company/:companyId/edit-profile', editProfileController.editProfile);
+router.post('/company/login', companyAuthController.companyLogin);
 router.get('/company/:companyId/dashboard', checkToken, getDashboardController.getDashboard);
+router.post('/company/:companyId/edit-profile', editProfileController.editProfile);
 
 router.get('/company/getData/:companyId', async (req, res) => {
 
