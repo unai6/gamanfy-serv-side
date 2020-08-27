@@ -46,32 +46,53 @@ Web app aimed to provide companies and users a service for finding quality candi
 
 | Method | Route Front | Route Back | Description| Completed routes 
 |--------|-------|-------|------------|--------|
-| POST | auth/user/signup | /auth/user/signup | Signup route. Sends signup info to server, email to user and creates user in DB.
-| POST |/auth/confirmation/:userId/:userToken/:isCompany |/auth/confirmation/:userId/:userToken/:isCompany | Confirmation account route. It verifies the account and checks a JSON token.
-| POST | /auth/resend | /auth/resend | Resend token route.
-| POST | /auth//user/:userId/:isaCompany/complete-profile | /auth//user/:userId/:isaCompany/complete-profile | Complete profile Route.
-| POST | auth/user/login | /auth/user/login | Login route. Sends login form info to the server.
-| GET | /auth//user/:userId/dashboard | /auth//user/:userId/dashboard | User Dashboard Route. Checks for a token and displays user info.
-| POST | /auth/user/:userId/edit-profile | /auth/user/:userId/edit-profile| Edit Profile Route. Admin route to edit user profile.
-| POST | /auth//user/:userId/change-profile-picture | /auth/user/:userId/change-profile-picture | Profile picture change route.
-| POST | /auth/user/logout | /auth/user/logout | Logout route.
-| GET | /auth//user/getData/:userId | /auth//user/getData/:userId | Get user Data Route. Route that brings all user info from db.
-| GET | /recommend/:userId/dashboard | /recommend//:userId/dashboard | User recommendations dashboard.
-| POST | /recommend/influencerUser/:idCompany/:idUser/:idOffer | /recommend/influencerUser/:idCompany/:idUser/:idOffer | Influencer user recommendation route.
-| POST | /recommend/companyUser/:userId/:offerId/:company | /recommend/companyUser/:userId/:offerId/:company | Company user recommendation route.
-| POST | /recommend/user/delete-recommendation/:userId/:recommendationId/:offerId | /recommend/user/delete-recommendation/:userId/:recommendationId/:offerId | Route that allows user to delete recommendations. Not implemented.
-| POST | /recommend/user/reject-rec/:recommendationId/:offerId | /recommend/user/reject-rec/:recommendationId/:offerId | User rejecting recommendation route. Allows user to reject recommendations being made by other influencers.
-| GET | /offers/dashboard | /offers/dashboard | Offers Dashboard for influencers.
+| POST | auth/user/signup | /auth/user/signup | Signup route. Sends signup info to server, email to user and creates user in DB. | yes |
+| POST |/auth/confirmation/:userId/:userToken/:isCompany |/auth/confirmation/:userId/:userToken/:isCompany | Confirmation account route. It verifies the account and checks a JSON token. | yes |
+| POST | /auth/resend | /auth/resend | Resend token route. | yes |
+| POST | /auth/user/:userId/:isaCompany/complete-profile | /auth/user/:userId/:isaCompany/complete-profile | Complete profile Route. | yes |
+| POST | auth/user/login | /auth/user/login | Login route. Sends login form info to the server. | yes |
+| GET | /auth/user/:userId/dashboard | /auth/user/:userId/dashboard | User Dashboard Route. Checks for a token and displays user info. | yes |
+| PUT | /auth/user/:userId/edit-profile | /auth/user/:userId/edit-profile| Edit Profile Route. Admin route to edit user profile. | yes |
+| POST | /auth/user/:userId/change-profile-picture | /auth/user/:userId/change-profile-picture | Profile picture change route. | yes |
+| POST | /auth/user/logout | /auth/user/logout | Logout route. | yes |
+| GET | /auth/user/getData/:userId | /auth/user/getData/:userId | Get user Data Route. Route that brings all user info from db.| yes |
+| GET | /recommend/:userId/dashboard | /recommend/:userId/dashboard | User recommendations dashboard. | yes |
+| POST | /recommend/influencerUser/:idCompany/:idUser/:idOffer | /recommend/influencerUser/:idCompany/:idUser/:idOffer | Influencer user recommendation route. | yes |
+| POST | /recommend/companyUser/:userId/:offerId/:company | /recommend/companyUser/:userId/:offerId/:company | Company user recommendation route. | yes |
+| POST | /recommend/user/delete-recommendation/:userId/:recommendationId/:offerId | /recommend/user/delete-recommendation/:userId/:recommendationId/:offerId | Route that allows user to delete recommendations. Not implemented. | yes |
+| POST | /recommend/user/reject-rec/:recommendationId/:offerId | /recommend/user/reject-rec/:recommendationId/:offerId | User rejecting recommendation route. Allows user to reject recommendations being made by other influencers. | yes |
+| POST | /recommend/candidate-accept-recommendation/updateCandidateProcess/:offerId/:recommendationId | /recommend/candidate-accept-recommendation/updateCandidateProcess/:offerId/:recommendationId | Candidate route to check offer details and accept offer. | yes | 
+| GET | /offers/dashboard | /offers/dashboard | Offers Dashboard for influencers. | yes |
 
 
 ## Routes for companies
 
 | Method | Route Front | Route Back | Description| Completed routes 
 |--------|-------|-------|------------|--------|
-| POST | /auth-co/company/signup | /auth-co/company/signup | ignup route. Sends signup info to server, email to user and creates user in DB.
+| POST | /auth-co/company/signup | /auth-co/company/signup | signup route. Sends signup info to server, email to user and creates user in DB. | yes |
+| POST | /auth-co/confirmation/:companyId/:companyToken | /auth-co/confirmation/:companyId/:companyToken | Confirmation account route. It verifies the account and checks a JSON token. | yes |
+| POST | /auth-co/resend | /auth-co/resend | Resend token route. | yes |
+| POST | /auth-co/company/login | /auth-co/company/login | Login route. Sends login form info to the server. | yes |
+| POST | /auth-co/company/:companyId/dashboard | /auth-co/company/:companyId/dashboard | User Dashboard Route. Checks for a token and displays user info. | yes |
+| POST | /auth-co/company/:companyId/edit-profile | /auth-co/company/:companyId/edit-profile | Edit Profile Route. Allows company to change its tax details. | yes |
+| POST | /auth-co/company/getData/:companyId | /auth-co/company/getData/:companyId | Brings specific company data from server. | yes |
+| POST | /auth-co/company/logout | /auth-co/company/logout | Logout Route. | yes |
+| GET | /offers/candidates/:offerId/:companyId | /offers/candidates/:offerId/:companyId | Candidates in offer Route. | yes |
+| POST | /offers/candidates/reject-candidate/:offerId/:companyId/:recommendationId | /offers/candidates/reject-candidate/:offerId/:companyId/:recommendationId | Company rejection candidate route. | yes |
+| POST | /offers/:companyId/post-job-offer | /offers/:companyId/post-job-offer | Company posting job offer route. | yes |
+| PUT | /offers/:companyId/:offerId/edit-offer | /offers/:companyId/:offerId/edit-offer | Company edit job offer route. Not implemented. | yes |
+| POST | offers/:companyId/:offerId/delete-offer | /offers/:companyId/:offerId/delete-offer | Company deleting job offer Route. | yes |
+| POST | /offers/company/infoRequest/:offerId/:companyId/:recommendationId | /offers/company/infoRequest/:offerId/:companyId/:recommendationId | Company request for candidate info by email Route. | yes |
+| POST | /offers/:recommendationId/candidate-info | /offers/:recommendationId/candidate-info | Route to display candidate report and donwload its pdf CV. | yes |
+| POST | /recommend/:companyId | /recommend/:companyId | Route to send company recommendation to server. | yes |
+| GET | /recommend/:offerId/inProcess | /recommend/:offerId/inProcess | Route to display only recommendations with inProcess status. | yes |
+| POST | /recommend/admin-validate-candidate/updateCandidateProcess/:offerId/:recommendationId | /recommend/admin-validate-candidate/updateCandidateProcess/:offerId/:recommendationId | Admin route to validate candidate recommendation. | yes |
+| POST | /recommend/candidate-interview/updateCandidateProcess/:offerId/:recommendationId | /recommend/candidate-interview/updateCandidateProcess/:offerId/:recommendationId | Admin Route to update candidate status to inProcess.
+| POST | /recommend/updateCandidateProcess/candidate-hired/:offerId/:recommendationId |/updateCandidateProcess/candidate-hired/:offerId/:recommendationId | Admin Route to update candidate status to hired.
+
 
 ## Routes for all users
 
 | Method | Route Front | Route Back | Description| Completed routes 
 |--------|-------|-------|------------|--------|
-| GET | /offers/offer-details/:offerId | /offers/offer-details/:offerId | Offer details.
+| GET | /offers/offer-details/:offerId | /offers/offer-details/:offerId | Offer details. | yes |
