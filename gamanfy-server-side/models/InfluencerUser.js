@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 let uniqueValidator = require('mongoose-unique-validator');
 
 const influencerUserSchema = new Schema({
-
+    
     isVerified: { type: Boolean, default: false },
     termsAccepted: {type:Boolean, default:false},
     influencerUserPunctuation : {type:Number, default:100},

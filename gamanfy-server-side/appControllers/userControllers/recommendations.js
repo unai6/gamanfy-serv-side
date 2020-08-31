@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const express = require("express");
 const InfluencerUser = require('../../models/InfluencerUser');
 const CompanyUser = require("../../models/CompanyUser");
 const Company = require('../../models/Company');
@@ -7,9 +6,6 @@ const Offers = require('../../models/JobOffer.js');
 const Recommended = require('../../models/Recommended');
 const nodemailer = require('nodemailer');
 let inLineCss = require('nodemailer-juice');
-
-
-
 
 
 exports.getUserRecommendationsDashboard = async (req, res) => {
@@ -47,7 +43,8 @@ exports.getUserRecommendationsDashboard = async (req, res) => {
   } catch (error) {
     res.status(404).json({ error: 'No recommendations founded' })
   }
-}
+};
+
 exports.deleteRecommendation = async (req, res) => {
   const { userId, recommendationId, offerId } = req.params;
   try {
@@ -70,9 +67,7 @@ exports.deleteRecommendation = async (req, res) => {
   }
 };
 
-
-
-  exports.rejectRecommendation = async (req, res) => {
+exports.rejectRecommendation = async (req, res) => {
   
     try {
       const { offerId, recommendationId } = req.params;
@@ -86,8 +81,6 @@ exports.deleteRecommendation = async (req, res) => {
       res.status(400).json({ error: 'An error occurred while updating' })
     }
   };
-
-
 
 exports.influencerUserRecommendation = async (req, res) => {
 
@@ -201,8 +194,6 @@ exports.influencerUserRecommendation = async (req, res) => {
     console.log(error)
   }
 }
-
-
 
 exports.companyUserRecommendation =  async (req, res) => {
   
@@ -329,4 +320,87 @@ exports.companyUserRecommendation =  async (req, res) => {
   } catch (error) {
     res.status(400).json({ error: 'An error occurred while sending recommendation' })
   }
-}
+};
+
+
+exports.candidatesInProcess = async (req, res) => {
+
+  try {
+    const { offerId } = req.params;
+
+    let recommendations = await Recommended.find({
+
+      $and: [
+        { "offerId": offerId }, { 'inProcess': true }
+      ]
+    })
+      .populate('offerId')
+
+    res.status(200).json(recommendations)
+
+  } catch (error) {
+    res.status(400).json({ error: 'An error occurred while retrieving inProcess info' })
+  }
+};
+
+exports.validateCandidate = async (req, res) => {
+
+  try {
+    const { offerId, recommendationId } = req.params;
+
+    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { recommendationValidated: true }, { new: true })
+    let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
+    let offerIdent = recInsideOffer.recommendedTimes[0]._id
+    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent)}, { $set: { 'recommendedTimes.$.recommendationValidated': true } }, { new: true })
+    res.status(200).json(updatedOffer);
+  } catch (error) {
+    res.status(400).json({ error: 'An error occurred while updating' });
+  }
+};
+
+
+exports.candidateAcceptRec = async (req, res) => {
+
+  try {
+    const { offerId, recommendationId } = req.params;
+
+    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { recommendationAccepted: true }, { new: true })
+    let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
+    let offerIdent = recInsideOffer.recommendedTimes[0]._id
+    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent) }, { $set: {'recommendedTimes.$.recommendationAccepted': true } }, { new: true })
+    res.status(200).json(updatedOffer)
+  } catch (error) {
+    res.status(400).json({ error: 'An error occurred while updating' })
+  }
+};
+
+exports.setCandidateInProcess =  async (req, res) => {
+
+  try {
+    const { offerId, recommendationId } = req.params;
+
+    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { inProcess: true }, { new: true })
+    let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
+    let offerIdent = recInsideOffer.recommendedTimes[0]._id
+    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent) }, { $set: { 'additionalServices.hasVideoInterview': true, 'additionalServices.hasPersonalityTest': true, 'recommendedTimes.$.inProcess': true } }, { new: true })
+    res.status(200).json(updatedOffer)
+  } catch (error) {
+    res.status(400).json({ error: 'An error occurred while updating' })
+  }
+};
+
+exports.setCandidateHired = async (req, res) => {
+
+  try {
+    const { offerId, recommendationId } = req.params;
+
+    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { hired: true, stillInProcess: false, inProcess: true, recommendationAccepted: true }, { new: true })
+    let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
+    let offerIdent = recInsideOffer.recommendedTimes[0]._id
+    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent)}, { $set: { 'recommendedTimes.$.hired': true } }, { new: true })
+    res.status(200).json(updatedOffer)
+  } catch (error) {
+    res.status(400).json({ error: 'An error occurred while updating' })
+  }
+};
+

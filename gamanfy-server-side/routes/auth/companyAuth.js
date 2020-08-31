@@ -1,22 +1,21 @@
 const express = require("express");
 const router = express.Router();
-const Company = require('../../models/Company');
 
 const {
     confirmationToken,
     resendToken
 } = require('../../appControllers/companyControllers/tokenControllers');
 
-const {
-    
-    checkToken
-} = require("../../helpers/middlewares");
+const {checkToken} = require("../../helpers/middlewares");
 
 const companyAuthController = require('../../appControllers/companyControllers/companyAuthController');
 const getDashboardController= require('../../appControllers/companyControllers/getDashboard');
 const sendMailController = require('../../appControllers/sendMailController/sendMail');
 const editProfileController = require('../../appControllers/companyControllers/editProfile');
-
+const resetPasswordRoute = require('../../appControllers/companyControllers/companyAuthController');
+const passwordReset = require('../../appControllers/companyControllers/companyAuthController');
+const getCompanyData = require('../../appControllers/companyControllers/companyAuthController');
+const logout = require('../../appControllers/companyControllers/companyAuthController');
 
 router.post('/company/signup', companyAuthController.companySignUp);
 router.post(`/confirmation/:companyId/:companyToken`, confirmationToken);
@@ -25,34 +24,10 @@ router.post('/company/:companyId/complete-profile', companyAuthController.compan
 router.post('/company/login', companyAuthController.companyLogin);
 router.get('/company/:companyId/dashboard', checkToken, getDashboardController.getDashboard);
 router.post('/company/:companyId/edit-profile', editProfileController.editProfile);
-
-router.get('/company/getData/:companyId', async (req, res) => {
-
-    try {
-        const { companyId } = req.params;
-
-        let getCompanyData = await Company.findById(companyId);
-
-        res.status(200).json(getCompanyData);
-
-    } catch (error) {
-        res.status(400).json({ mssg: 'error' })
-    }
-
-});
-
-router.post("/company/logout", async (req, res, next) => {
-    try {
-        res.clearCookie(process.env.PUBLIC_DOMAIN);
-        res.status(200).json({ msg: "Log out sucesfully" });
-      } catch (e) {
-        console.error(e);
-        res.status(500).json({ msg: "Server error" });
-      }
-    return;
-});
-
-
+router.post('/company/reset-password-email/:companyId', resetPasswordRoute.resetPasswordRoute);
+router.post('/company/password-reset/:companyId', passwordReset.passwordReset);
+router.get('/company/getData/:companyId', getCompanyData.getCompanyData);
+router.post("/company/logout", logout.companyLogout);
 router.post('/:companyId/send-mail', sendMailController.sendMail);
 
 
