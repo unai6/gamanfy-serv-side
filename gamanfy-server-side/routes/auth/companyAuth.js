@@ -24,7 +24,7 @@ router.post('/company/:companyId/complete-profile', companyAuthController.compan
 router.post('/company/login', companyAuthController.companyLogin);
 router.get('/company/:companyId/dashboard', checkToken, getDashboardController.getDashboard);
 router.post('/company/:companyId/edit-profile', editProfileController.editProfile);
-router.post('/company/reset-password-email/:companyId', resetPasswordRoute.resetPasswordRoute);
+router.post('/company/reset-password-email', resetPasswordRoute.resetPasswordRoute);
 router.post('/company/password-reset/:companyId', passwordReset.passwordReset);
 router.get('/company/getData/:companyId', getCompanyData.getCompanyData);
 router.post("/company/logout", logout.companyLogout);

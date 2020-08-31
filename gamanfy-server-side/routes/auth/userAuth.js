@@ -11,7 +11,10 @@ const {confirmationToken, resendToken } = require('../../appControllers/userCont
 const getDashboardController= require('../../appControllers/userControllers/getDahsboard');
 const sendMailController = require('../../appControllers/sendMailController/sendMail');
 const {  validationLoggin, checkToken} = require("../../helpers/middlewares");
+const resetPasswordRoute = require('../../appControllers/userControllers/userAuthController');
+const passwordReset = require('../../appControllers/userControllers/userAuthController');
 const logout = require('../../appControllers/userControllers/userAuthController');
+
 
 router.post('/user/signup', userAuthController.userSignup);
 router.post(`/confirmation/:userId/:userToken/:isCompany`, confirmationToken);
@@ -23,6 +26,8 @@ router.put('/user/:userId/edit-profile', userEditProfileController.editProfile);
 router.post('/user/:userId/change-profile-picture', picUploader.single("imageUrl"), userChangeProfilePic.userChangeProfilePic)
 router.post("/user/logout", logout.userLogout);
 router.get('/user/getData/:userId', getUserData.getUserData);
+router.post('/user/reset-password-email', resetPasswordRoute.resetPasswordRoute);
+router.post('/user/password-reset/:userId', passwordReset.passwordReset);
 router.post('/send-mail', sendMailController.sendMail);
 
 module.exports = router
