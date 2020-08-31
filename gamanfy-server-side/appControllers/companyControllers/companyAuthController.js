@@ -185,14 +185,14 @@ exports.resetPasswordRoute = async (req, res) => {
   try {
     const {email} = req.body;
   
-    const company = await Company.findOne({ email }, 'email')
+    const company = await Company.findOne(email)
+    console.log(company)
 
-    let transporter = nodemailer.createTransport({
+    let transporter = nodemailer.createTransport({  
 
       host: 'smtp.ionos.es',
       port: 587,
       logger: true,
-      debug: true,
       tls: {
         secure: false,
         ignoreTLS: true,
