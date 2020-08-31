@@ -185,7 +185,7 @@ exports.resetPasswordRoute = async (req, res) => {
   try {
     const {email} = req.body;
   
-    const company = await Company.findOne(email)
+    const company = await Company.findOne({email})
     console.log(company)
 
     let transporter = nodemailer.createTransport({  

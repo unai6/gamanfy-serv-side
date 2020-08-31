@@ -260,18 +260,17 @@ exports.userLogout =  async (req, res, next) => {
 
 exports.resetPasswordRoute =  async (req, res) => {
   
+  const {email} = req.body;
   try{
-    const {email} = req.body;
-  
-    const user = await InfluencerUser.findOne(email)
 
+    const user = await InfluencerUser.findOne({email})
+    
     
     let transporter = nodemailer.createTransport({
 
       host: 'smtp.ionos.es',
       port: 587,
       logger: true,
-      debug: true,
       tls: {
         secure: false,
         ignoreTLS: true,
