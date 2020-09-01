@@ -87,7 +87,8 @@ exports.influencerUserRecommendation = async (req, res) => {
   try {
     const { idCompany, idUser, idOffer } = req.params;
     const { recommendedEmail, recommendedFirstName, recommendedLastName, whyRec, recommendedAge, recommendedLinkedin, recommendedPhoneNumber,
-    } = req.body;
+      candidateEducation, language, candidateLocation, experiences, similarExp, lastJob, age, ownDescription, motivations, whyFits,
+      availability, moneyExpec, currentSituation, otherAspects} = req.body;
 
     const theOffer = await Offers.findById(idOffer);
     const influencerUserId = await InfluencerUser.findById(idUser).populate('recommendedPeople');
@@ -105,7 +106,11 @@ exports.influencerUserRecommendation = async (req, res) => {
     let recommendedTimes;
     recommendedPeople = await Recommended.create({
       recommendedEmail, recommendedFirstName, recommendedLastName, recommendedLinkedin, offerId: theOffer,
-      whyRec, recommendedPhoneNumber, recommendedAge, moneyForRec: influencerUserMoneyperRec
+      whyRec, recommendedPhoneNumber, recommendedAge, moneyForRec: influencerUserMoneyperRec,
+      candidateInfo: {
+        candidateEducation:'', language:'', candidateLocation:'', experiences:'', similarEx:'', lastJob:'', age:'', ownDescription:'', motivations:'', whyFits:'',
+        availability:'', moneyExpec:'', currentSituation:'', otherAspects:''
+      }
     });
 
     recommendedTimes = await Offers.findByIdAndUpdate(theOffer, {
@@ -206,7 +211,7 @@ exports.companyUserRecommendation =  async (req, res) => {
       availability, moneyExpec, currentSituation, otherAspects } = req.body;
 
       
-      const theOffer = await Offers.findById(offerId);
+    const theOffer = await Offers.findById(offerId);
     const influencerUserId = await InfluencerUser.findById(userId).populate('recommendedPeople companyUser');
     const companyUserMoneyPerRec = influencerUserId.companyUser.companyUserPunctuation;
     const influencerUserName = `${influencerUserId.firstName} ${influencerUserId.lastName}`;

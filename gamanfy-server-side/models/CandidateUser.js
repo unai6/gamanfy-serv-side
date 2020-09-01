@@ -5,7 +5,7 @@ const candidateUserSchema = new Schema({
 
         invited: { type: Boolean, default: false },
         webCreated: { type: Boolean, default: false },
-
+        
 })
 
 

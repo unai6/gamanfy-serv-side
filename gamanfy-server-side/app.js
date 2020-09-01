@@ -8,12 +8,12 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const hbs = require('hbs')
+const bodyParser = require("body-parser");
 const indexRouter = require('./routes/index');
 const userAuthRouter = require('./routes/auth/userAuth.js');
 const companyAuthRouter = require('./routes/auth/companyAuth.js');
 const offersRouter = require('./routes/offers/offers.js');
 const recommendationsRouter = require('./routes/recommendations/recommendations.js')
-const bodyParser = require("body-parser");
 
 
 const app = express();
