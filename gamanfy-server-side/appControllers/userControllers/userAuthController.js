@@ -325,12 +325,13 @@ exports.passwordReset = async (req, res, next) => {
   
   try{
     const {userId} = req.params.userId;
-
-  const user = await InfluencerUser.findById(userId);
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hashPass = bcrypt.hashSync(password, salt);
+    const user = await InfluencerUser.findById(userId);
   
-  const {password}= req.body;
+    const {password}= req.body;
 
-  const updatedUser = await InfluencerUser.findByIdAndUpdate(user, {password});
+    const updatedUser = await InfluencerUser.findByIdAndUpdate(user, {password:hashPass});
 
   res.status(200).json({updatedUser})
 
