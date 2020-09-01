@@ -324,17 +324,17 @@ exports.passwordReset = async (req, res, next) => {
   
   
   try{
-    const {userId} = req.params.userId;
+    const {userId} = req.params;
+    const {password, repeatPassword}= req.body;
     const salt = bcrypt.genSaltSync(saltRounds);
     const hashPass = bcrypt.hashSync(password, salt);
     const user = await InfluencerUser.findById(userId);
   
-    const {password, repeatPassword}= req.body;
 
     if(password !== repeatPassword){
       res.status(400).send('Passwords must match')
     }
-    const updatedUser = await InfluencerUser.findByIdAndUpdate(user, {password:hashPass});
+    const updatedUser = await InfluencerUser.findByIdAndUpdate(user._id, {password:hashPass});
 
   res.status(200).json({updatedUser})
 

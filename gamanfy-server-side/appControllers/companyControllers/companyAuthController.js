@@ -246,13 +246,13 @@ exports.passwordReset = async (req, res, next) => {
 
   try {
 
+    const { password } = req.body;
     const salt = bcrypt.genSaltSync(saltRounds);
     const hashPass = bcrypt.hashSync(password, salt);
-    const { companyId } = req.params.companyId;
+    const { companyId } = req.params;
 
     const company = await Company.findById(companyId);
 
-    const { password } = req.body;
 
     const updatedCompany = await Company.findByIdAndUpdate(company, { password:hashPass });
 
