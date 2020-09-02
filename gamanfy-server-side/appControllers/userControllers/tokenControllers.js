@@ -41,12 +41,18 @@ exports.confirmationToken = function (req, res, next) {
                         to: email,
                         subject: 'Gamanfy Staff',
                         html: `
+                        <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
             <div> 
                 <p>¡Bienvenido! Muchas gracias por registrarse en Gamanfy para poder ver las mejores ofertas.\n
             
                 Gamanfy Staff
             </div>
-            `
+            `,
+                        attachments: [{
+                            filename: 'Anotación 2020-07-30 172748.png',
+                            path: 'public/Anotación 2020-07-30 172748.png',
+                            cid: 'unique@nodemailer.com'
+                        }]
                     };
 
                     transporter.sendMail(mailOptions, function (error, info) {

@@ -43,12 +43,19 @@ exports.confirmationToken = function (req, res, next) {
                         to: email,
                         subject: 'Gamanfy Staff',
                         html: `
+                        <img style='height:6em'  src="cid:unique@nodemailer.com"/>
             <div> 
-                <p>Thanks for registering in Gamanfy\n
+                <p>Gracias por registrarse en  Gamanfy\n
             
                 Gamanfy Staff
             </div>
-            `
+            `,
+                        attachments: [
+                            {
+                                filename: 'Anotación 2020-07-30 172748.png',
+                                path: 'public/Anotación 2020-07-30 172748.png',
+                                cid: 'unique@nodemailer.com'
+                            }]
                     };
 
                     transporter.sendMail(mailOptions, function (error, info) {
@@ -106,7 +113,7 @@ exports.resendToken = function (req, res, next) {
                     to: email,
                     subject: 'Account Verification Token',
                     html:
-                    `
+                        `
                 <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
                 <div>
                     <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> ¡Hola ${companyInDB.firstName}! Nos alegramos mucho<br> de poder contar contigo </p>\n
@@ -117,11 +124,11 @@ exports.resendToken = function (req, res, next) {
                     </div>
                     <a href="${process.env.PUBLIC_DOMAIN}/auth-co/confirmation/${companyInDB._id}/${token.token}" style="color:white; text-decoration:none; border:none !important; background-color:rgb(255,188,73); border-radius:5px; width:14em; padding:.2em .5em .2em .5em; height:2.5em; margin-top:2em; margin-left:11em; font-weight:500">Verificar cuenta</a><br/>
                 </div> \n`,
-                attachments: [{
-                    filename: 'logo-gamanfy-email.png',
-                    path: 'public/logo-gamanfy-email.png',
-                    cid: 'unique@nodemailer.com'
-                }]
+                    attachments: [{
+                        filename: 'Anotación 2020-07-30 172748.png',
+                        path: 'public/Anotación 2020-07-30 172748.png',
+                        cid: 'unique@nodemailer.com'
+                    }]
                 };
 
                 transporter.sendMail(mailOptions, function (err) {

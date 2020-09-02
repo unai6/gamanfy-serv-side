@@ -293,7 +293,7 @@ exports.resetPasswordRoute =  async (req, res) => {
       html: `
       <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
       <div>
-          <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> ¡Hola ${user.firstName}! </p>\n
+          <p style='font-weight:600; color:#535353; font-size:18px; text-align:center'> ¡Hola ${user.firstName}! </p>\n
 
            <div style='font-weight:300; color:#535353; font-size:14px; margin:1.5em 0 1em 1em'>
                Haz click en el botón para restablecer tu contraseña. </br>
@@ -302,8 +302,8 @@ exports.resetPasswordRoute =  async (req, res) => {
           <a href="${process.env.PUBLIC_DOMAIN}/auth/user/password-reset/${user._id}" style="color:white; text-decoration:none; border:none !important; background-color:rgb(255,188,73); border-radius:5px; width:14em; padding:.2em .5em .2em .5em; height:2.5em; margin-top:2em; margin-left:11em; font-weight:500">Haz click aquí</a><br/>
       </div> \n`,
       attachments: [{
-        filename: 'logo-gamanfy-email.png',
-        path: 'public/logo-gamanfy-email.png',
+        filename: 'Anotación 2020-07-30 172748.png',
+        path: 'public/Anotación 2020-07-30 172748.png',
         cid: 'unique@nodemailer.com'
       }]
     };
