@@ -377,7 +377,7 @@ exports.requestCandidateInfo = async (req, res) => {
             html: `
            <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
             <div>
-            <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> ¡Hola ${company.companyName}!, como se ha requerido, <br/> te adjuntamos el informe del candidato. </p>\n
+            <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> ¡Hola ${company.companyName}!, Aquí tienes el informe del candidato ${recommendation.recommendedFirstName}, tal y como nos has solicitado.</p>\n
             <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'>Saludos,</p>\n
             <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> Gamanfy Staff.</p>\n
             <div style='font-weight:300; color:#535353; font-size:14px'>
@@ -385,6 +385,20 @@ exports.requestCandidateInfo = async (req, res) => {
             </div>
               <div style='font-weight:300; color:#535353; font-size:14px; margin-top:1.5em'>
               <button type='submit' style='border:none; background-color:rgb(255,188,73); border-radius:5px; width:18em; height:2.5em; margin-top:2em; margin-left:9em'><a href=${process.env.PUBLIC_DOMAIN}/${recommendationId}/candidate-info style='color:white; text-decoration:none; font-weight:500'>Ver informe del candidato</a></button><br/>
+            
+            <p>¿Qué debo hacer a continuación para continuar con el proceso de selección? </p>
+            <p><u>Es muy sencillo:</u></p>
+            <ol>
+            <li>examina con atención el informe del candidato. ¡Toda la info que necesitas está ahí!</p>
+            <li> Si el perfil del candidato se ajusta a tus expectativas, solicítanos una videoentrevista y un test de personalidad</li>
+            <li>Ya está todo hecho. En breves los recibirás en tu email y podrás conocer más de cerca al candidato.</li>
+            </ol>
+
+            <p>Ahora todo está en tu mano. Si decides contratarlo, recuerda avisarnos por email para que podamos dar la <br/>
+            recompensa al Influencer que ha encontrado a ese talento para ti.</p>
+            <p>¿El candidato no es lo que esperabas? Recuerda descartarlo del proceso de selección en tu Dashboard</p>
+            
+            <p>Saludos, <br/> el Equipo de Gamanfy<p>
               </div>
           
           </div>
