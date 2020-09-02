@@ -2,6 +2,8 @@ const UserToken = require('../../models/UserToken');
 const InfluencerUser = require('../../models/InfluencerUser');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+let inLineCss = require('nodemailer-juice');
+
 
 exports.confirmationToken = function (req, res, next) {
     const { token, email } = req.body
@@ -35,6 +37,7 @@ exports.confirmationToken = function (req, res, next) {
                         },
 
                     });
+                    transporter.use('compile', inLineCss());
 
                     let mailOptions = {
                         from: process.env.HOST_MAIL,
@@ -43,9 +46,15 @@ exports.confirmationToken = function (req, res, next) {
                         html: `
                         <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
             <div> 
-                <p>¡Bienvenido! Muchas gracias por registrarse en Gamanfy para poder ver las mejores ofertas.\n
-            
+                <p style='text-align:center'><b>¡Bienvenido!</b></p> 
+                <p>Muchas gracias por registrarse en Gamanfy para poder ver las mejores ofertas.\n
+                <p>Gamanfy es la primera solución que permite a cualquiera recomendar a un profesional para una oferta de trabajo y cobrar por ello.</p>
                 Gamanfy Staff
+
+                <p><b>¿Empezamos?</b></p>
+
+            <button type='submit' style="border:none; background-color:rgb(255,188,73); border-radius:5px; width:18.5em; height:3em; margin-top:2em; margin-left:9em"><a href='${process.env.PUBLIC_DOMAIN}/auth/login' style='color:white; text-decoration:none; font-weight:500'>Acceder a mi cuenta</a></button><br/>
+            <p>Si tienes alguna duda, escríbenos a <b>info@gamanfy.com</b></p>
             </div>
             `,
                         attachments: [{
@@ -105,11 +114,12 @@ exports.resendToken = function (req, res, next) {
                     },
 
                 });
+                transporter.use('compile', inLineCss());
 
                 let mailOptions = {
                     from: process.env.HOST_MAIL,
                     to: email,
-                    subject: 'Account Verification Token',
+                    subject: 'Verificación de la cuenta',
                     html:
                         `
                     <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
