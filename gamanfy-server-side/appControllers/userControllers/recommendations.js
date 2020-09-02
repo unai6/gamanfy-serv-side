@@ -388,7 +388,60 @@ exports.setCandidateInProcess =  async (req, res) => {
     let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
     let offerIdent = recInsideOffer.recommendedTimes[0]._id
     let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent) }, { $set: { 'additionalServices.hasVideoInterview': true, 'additionalServices.hasPersonalityTest': true, 'recommendedTimes.$.inProcess': true } }, { new: true })
+    
+    let transporter = nodemailer.createTransport({
+      host: 'smtp.ionos.es',
+      port: 587,
+      logger: true,
+      // debug: true,
+      tls: {
+          secure: false,
+          ignoreTLS: true,
+          rejectUnauthorized: false
+      },
+      auth: {
+          user: process.env.HOST_MAIL,
+          pass: process.env.HOST_MAIL_PASSWORD
+      },
+  });
+
+  transporter.use('compile', inLineCss());
+
+
+
+  let mailOptionsToGamanfy = {
+      from: process.env.HOST_MAIL,
+      to: 'gamanfy@gmail.com',
+      subject: 'Gamanfy, Informe de candidato',
+      html: `
+      <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
+      <div>
+      <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
+      La empresa con identificación : ${offerIdent} ha cambiado la recomendación  con indentificación  : ${recommendationId} a en proceso.
+      Email del candidato : ${updatedRec.recommendedEmail}
+      </p>\n
+      
+      </div>
+      `,
+      attachments: [{
+          filename: 'Anotación 2020-07-30 172748.png',
+          path: 'public/Anotación 2020-07-30 172748.png',
+          cid: 'unique@nodemailer.com'
+      }]
+  }
+
+
+  transporter.sendMail(mailOptionsToGamanfy, function (err) {
+      if (err) { return res.status(500).send({ msg: err.message }); } else {
+          res.status(200)
+      }
+  });
+
+  
     res.status(200).json(updatedOffer)
+  
+  
+  
   } catch (error) {
     res.status(400).json({ error: 'An error occurred while updating' })
   }
