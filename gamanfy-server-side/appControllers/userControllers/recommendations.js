@@ -147,22 +147,37 @@ exports.influencerUserRecommendation = async (req, res) => {
       html: `
       <img style='height:6em'  src="cid:unique@nodemailer.com"/>
       
-      <div style='width:25em; height:49.5em;'>
-      <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em; height:2em'> ¡Hola ${recommendedFirstName}! <b>${influencerUserName}</b>  te ha recomendado <br/> para una oferta de trabajo en Gamanfy. </p>\n
+      <div style='width:25em; height:63.5em;'>
+      <p style='font-weight:600; color:#535353; font-size:18px; text-align:center; height:2em'> ¡Hola ${recommendedFirstName}! <b>${influencerUserName}</b>  te ha recomendado <br/> para una oferta de trabajo en Gamanfy. </p>\n
       <img  src="cid:naranjaabstract@naranja.com" style='height:6em; display:inline-block'/>
       <div style='font-weight:300; color:#535353; font-size:14px ; width:33em; height:28em'>
-      Puesto: ${jobName}<br/>
-      Empresa: ${theCompany}<br/> 
-      Salario base: ${minGrossSalary}-${maxGrossSalary}<br/>
+      <b>Puesto:</b> ${jobName}<br/>
+      <b>Empresa:</b> ${theCompany}<br/> 
+      <b>Salario base:</b> ${minGrossSalary}-${maxGrossSalary}<br/>
       
       Misión principal del puesto de trabajo : ${mainMission}
       
       <div style='font-weight:300; color:#535353; font-size:14px; margin-top:1.5em'>
-      Si quieres ver la oferta completa  y enterarte de todo lo que Gamanfy </br>puede ofrecerte, haz click en <b><u><a href='${process.env.PUBLIC_DOMAIN}/auth/user/signup' style='color:#535353; text-decoration:none'>Regístrarte</a> </u></b><br/>
+      <p> Si quieres ver la oferta completa haz clic en este botón y podrás inscribirte a la oferta de manera sencilla.</p>
           <button type='submit' style="border:none; background-color:rgb(255,188,73); border-radius:5px; width:18.5em; height:3em; margin-top:2em; margin-left:9em"><a href='${process.env.PUBLIC_DOMAIN}/offer-details-accept-rec/${theOffer._id}/${recommendedPeople._id}' style='color:white; text-decoration:none; font-weight:500'>Ver detalles de la oferta</a></button><br/>
-          <p style='color:#535353; font-weight:300; font-size:14px; margin-left:1.5em; margin-top:4em'>¿No estas interesado ? Haz click <a href='${process.env.PUBLIC_DOMAIN}/recommend/user/reject-rec/${recommendedPeople._id}/${theOffer._id}' style='color:#535353; font-weight:600'>aquí</a> para indicar que no quieres</br> participar en la oferta</p>\n
           
-        </div>
+          <p>¿Cómo funciona el proceso de selección Gamanfy?</p>
+
+          <p>Es muy sencillo:</p>
+          <ol>
+      <li>Examina con atención la oferta de trabajo.</li>
+      <li>Si estas interesado/a haz clic en el botón que encontraras debajo de la oferta de trabajo “Aceptar Recomendación y Registrarse”</li>
+      <li>Ya está todo hecho. Si tu perfil se ajusta a la oferta de trabajo recibirás un e-mail para realizar una primera entrevista.</li>
+      </ol>
+      
+      <p>¿No estas interesado?</p>
+      <p style='color:#535353; font-weight:300; font-size:14px; margin-left:1.5em; margin-top:4em'>¿No estas interesado ? Haz click <a href='${process.env.PUBLIC_DOMAIN}/recommend/user/reject-rec/${recommendedPeople._id}/${theOffer._id}' style='color:#535353; font-weight:600'>aquí</a> para indicar que no quieres</br> participar en la oferta</p>\n
+      <p style='tex-align:center'><b>Tu también puedes transfórmate en un influencer de talento</b><p>
+      <p>Gamanfy es la primera plataforma que te permite recomendar a tus mejores contactos para una oferta de trabajo y cobrar por ello. </p>
+      <p>Para mas información, visita nuestra pagina https://gamanfy.com/influencers</p>
+      <p>Saludos, <br/> el Equipo de Gamanfy<p>
+
+      </div>
         
         </div>
         </div>
@@ -272,29 +287,46 @@ exports.companyUserRecommendation =  async (req, res) => {
       from: process.env.HOST_MAIL,
       to: recommendedEmail,
       subject: 'Gamanfy, ¡Te damos la bienvenida!',
-      html: `
+      html:`
       <img style='height:6em'  src="cid:unique@nodemailer.com"/>
-      <div style='width:25em; height:49.5em;'>
-      <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em; height:2em'> ¡Hola ${recommendedFirstName}! <b>${influencerUserName}</b>  te ha recomendado <br/> para una oferta de trabajo en Gamanfy. </p>\n
+      
+      <div style='width:25em; height:63.5em;'>
+      <p style='font-weight:600; color:#535353; font-size:18px; text-align:center; height:2em'> ¡Hola ${recommendedFirstName}! <b>${influencerUserName}</b>  te ha recomendado <br/> para una oferta de trabajo en Gamanfy. </p>\n
       <img  src="cid:naranjaabstract@naranja.com" style='height:6em; display:inline-block'/>
       <div style='font-weight:300; color:#535353; font-size:14px ; width:33em; height:28em'>
-      Puesto: ${jobName}<br/>
-      Empresa: ${theCompany}<br/> 
-      Salario base: ${minGrossSalary}-${maxGrossSalary}<br/>
+      <b>Puesto:</b> ${jobName}<br/>
+      <b>Empresa:</b> ${theCompany}<br/> 
+      <b>Salario base:</b> ${minGrossSalary}-${maxGrossSalary}<br/>
       
       Misión principal del puesto de trabajo : ${mainMission}
       
       <div style='font-weight:300; color:#535353; font-size:14px; margin-top:1.5em'>
-      Si quieres ver la oferta completa  y enterarte de todo lo que Gamanfy </br>puede ofrecerte, haz click en <b><u><a href='${process.env.PUBLIC_DOMAIN}/auth/user/signup' style='color:#535353; text-decoration:none'>Regístrarte</a> </u></b><br/>
-      <button type='submit' style="border:none; background-color:rgb(255,188,73); border-radius:5px; width:18.5em; height:3em; margin-top:2em; margin-left:9em"><a href='${process.env.PUBLIC_DOMAIN}/offer-details-accept-rec/${theOffer._id}/${recommendedPeople._id}' style='color:white; text-decoration:none; font-weight:500'>Ver detalles de la oferta</a></button><br/>
-      <p style='color:#535353; font-weight:300; font-size:14px; margin-left:1.5em; margin-top:4em'>No estas interesado ? Haz click <a href=${process.env.PUBLIC_DOMAIN}/recommend/user/reject-rec/${recommendedPeople._id}/${theOffer._id} style='color:#535353; font-weight:600'>aquí</a> para indicar que no quieres</br> participar en la oferta</p>\n
+      <p> Si quieres ver la oferta completa haz clic en este botón y podrás inscribirte a la oferta de manera sencilla.</p>
+          <button type='submit' style="border:none; background-color:rgb(255,188,73); border-radius:5px; width:18.5em; height:3em; margin-top:2em; margin-left:9em"><a href='${process.env.PUBLIC_DOMAIN}/offer-details-accept-rec/${theOffer._id}/${recommendedPeople._id}' style='color:white; text-decoration:none; font-weight:500'>Ver detalles de la oferta</a></button><br/>
+          
+          <p>¿Cómo funciona el proceso de selección Gamanfy?</p>
+
+          <p>Es muy sencillo:</p>
+          <ol>
+      <li>Examina con atención la oferta de trabajo.</li>
+      <li>Si estas interesado/a haz clic en el botón que encontraras debajo de la oferta de trabajo “Aceptar Recomendación y Registrarse”</li>
+      <li>Ya está todo hecho. Si tu perfil se ajusta a la oferta de trabajo recibirás un e-mail para realizar una primera entrevista.</li>
+      </ol>
       
+      <p>¿No estas interesado?</p>
+      <p style='color:#535353; font-weight:300; font-size:14px; margin-left:1.5em; margin-top:4em'>¿No estas interesado ? Haz click <a href='${process.env.PUBLIC_DOMAIN}/recommend/user/reject-rec/${recommendedPeople._id}/${theOffer._id}' style='color:#535353; font-weight:600'>aquí</a> para indicar que no quieres</br> participar en la oferta</p>\n
+      <p style='tex-align:center'><b>Tu también puedes transfórmate en un influencer de talento</b><p>
+      <p>Gamanfy es la primera plataforma que te permite recomendar a tus mejores contactos para una oferta de trabajo y cobrar por ello. </p>
+      <p>Para mas información, visita nuestra pagina https://gamanfy.com/influencers</p>
+      <p>Saludos, <br/> el Equipo de Gamanfy<p>
+
       </div>
-      
-      </div>
-      </div>
-      <img  src="cid:abstract@abstract.com" style='height:9em; display:inline-block '/>
-      `,
+        
+        </div>
+        </div>
+        <img  src="cid:abstract@abstract.com" style='height:9em; display:inline-block'/>
+     
+        `,
       attachments: [
         {
           filename: 'abstract-background_25-01.png',
