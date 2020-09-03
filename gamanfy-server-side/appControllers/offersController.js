@@ -377,9 +377,7 @@ exports.requestCandidateInfo = async (req, res) => {
             html: `
            <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
             <div>
-            <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> ¡Hola ${company.companyName}!, Aquí tienes el informe del candidato ${recommendation.recommendedFirstName}, tal y como nos has solicitado.</p>\n
-            <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'>Saludos,</p>\n
-            <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> Gamanfy Staff.</p>\n
+            <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> ¡Hola ${company.companyName}!, <br/> Aquí tienes el informe del candidato ${recommendation.recommendedFirstName}, tal y como nos has solicitado.</p>\n
             <div style='font-weight:300; color:#535353; font-size:14px'>
     
             </div>

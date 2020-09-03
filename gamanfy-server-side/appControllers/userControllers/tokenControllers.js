@@ -53,8 +53,8 @@ exports.confirmationToken = function (req, res, next) {
 
                 <p><b>¿Empezamos?</b></p>
 
-            <button type='submit' style="border:none; background-color:rgb(255,188,73); border-radius:5px; width:18.5em; height:3em; margin-top:2em; margin-left:9em"><a href='${process.env.PUBLIC_DOMAIN}/auth/login' style='color:white; text-decoration:none; font-weight:500'>Acceder a mi cuenta</a></button><br/>
-            <p>Si tienes alguna duda, escríbenos a <b>info@gamanfy.com</b></p>
+             <button type='submit' style="border:none; background:rgb(255,188,73); border-radius:5px; width:18.5em; height:3em; margin-top:2em; margin-left:9em"><a href='${process.env.PUBLIC_DOMAIN}/auth/login' style='color:white; text-decoration:none; font-weight:500'>Acceder a mi cuenta</a></button><br/>
+             <p>Si tienes alguna duda, escríbenos a <b>info@gamanfy.com</b></p>
             </div>
             `,
                         attachments: [{
@@ -133,8 +133,8 @@ exports.resendToken = function (req, res, next) {
                         <a href="${process.env.PUBLIC_DOMAIN}/auth/confirmation/${userinDB._id}/${token.token}/${userinDB.isCompany}" style="color:white; text-decoration:none; border:none !important; background-color:rgb(255,188,73); border-radius:5px; width:14em; padding:.2em .5em .2em .5em; height:2.5em; margin-top:2em; margin-left:11em; font-weight:500">Verificar cuenta</a><br/>
                     </div> \n`,
                     attachments: [{
-                        filename: 'logo-gamanfy-email.png',
-                        path: 'public/logo-gamanfy-email.png',
+                        filename: 'Anotación 2020-07-30 172748.png',
+                        path: 'public/Anotación 2020-07-30 172748.png',
                         cid: 'unique@nodemailer.com'
                     }]
                 };

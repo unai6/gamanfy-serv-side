@@ -111,7 +111,7 @@ exports.resendToken = function (req, res, next) {
                 let mailOptions = {
                     from: process.env.HOST_MAIL,
                     to: email,
-                    subject: 'Account Verification Token',
+                    subject: 'Verificación de la cuenta',
                     html:
                         `
                 <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
