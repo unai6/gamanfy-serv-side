@@ -211,8 +211,8 @@ exports.userSignup = async (req, res, next) => {
             <a href="${process.env.PUBLIC_DOMAIN}/auth/confirmation/${newUser._id}/${token.token}/${newUser.isCompany}" style="color:white; text-decoration:none; border:none !important; background-color:rgb(255,188,73); border-radius:5px; width:14em; padding:.2em .5em .2em .5em; height:2.5em; margin-top:2em; margin-left:11em; font-weight:500">Verificar cuenta</a><br/>
         </div> \n`,
         attachments: [{
-          filename: 'logo-gamanfy-email.png',
-          path: 'public/logo-gamanfy-email.png',
+          filename: 'Anotación 2020-07-30 172748.png',
+          path: 'public/Anotación 2020-07-30 172748.png',
           cid: 'unique@nodemailer.com'
         }]
       };
