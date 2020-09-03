@@ -53,7 +53,7 @@ exports.confirmationToken = function (req, res, next) {
 
                 <p><b>¿Empezamos?</b></p>
 
-             <button type='submit' style="border:none; background:rgb(255,188,73); border-radius:5px; width:18.5em; height:3em; margin-top:2em; margin-left:9em"><a href='${process.env.PUBLIC_DOMAIN}/auth/login' style='color:white; text-decoration:none; font-weight:500'>Acceder a mi cuenta</a></button><br/>
+                <a href="${process.env.PUBLIC_DOMAIN}/auth/login" style="color:white; text-decoration:none; border:none !important; background-color:rgb(255,188,73); border-radius:5px; width:18.5em; padding:.2em .5em .2em .5em; height:2.5em; margin-top:2em; margin-left:11em; font-weight:500">Acceder a mi cuenta</a><br/>
              <p>Si tienes alguna duda, escríbenos a <b>info@gamanfy.com</b></p>
             </div>
             `,
