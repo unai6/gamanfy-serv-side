@@ -2,26 +2,17 @@ const express = require("express");
 const router = express.Router();
 
 const picUploader = require('../../config/picsUploader');
-const offersDashboard = require('../../appControllers/offersController.js');
-const offerDetails = require('../../appControllers/offersController');
-const candidatesInOffer = require('../../appControllers/offersController');
-const companyRejectCandidate = require('../../appControllers/offersController');
-const getCompanyData = require('../../appControllers/offersController');
-const postJobOffer = require('../../appControllers/offersController');
-const editJobOffer = require('../../appControllers/offersController');
-const deleteJobOffer = require('../../appControllers/offersController');
-const requestCandidateInfo = require('../../appControllers/offersController');
-const candidateInfo = require('../../appControllers/offersController');
+const offersController = require('../../appControllers/offersController.js');
 
-router.get('/dashboard', offersDashboard.offersDashboard);
-router.get('/offer-details/:offerId', offerDetails.offerDetails);
-router.get('/candidates/:offerId/:companyId', candidatesInOffer.candidatesInOffer);
-router.post('/candidates/reject-candidate/:offerId/:companyId/:recommendationId', companyRejectCandidate.companyRejectCandidate);
-router.get('/getData/:companyId', getCompanyData.getCompanyData)
-router.post('/:companyId/post-job-offer', picUploader.single('offerPicture'), postJobOffer.postJobOffer);
-router.put('/:companyId/:offerId/edit-offer', editJobOffer.editJobOffer);
-router.post('/:companyId/:offerId/delete-offer', deleteJobOffer.deleteJobOffer);
-router.post('/company/infoRequest/:offerId/:companyId/:recommendationId', requestCandidateInfo.requestCandidateInfo);
-router.post('/:recommendationId/candidate-info', candidateInfo.candidateInfo);
+router.get('/dashboard', offersController.offersDashboard);
+router.get('/offer-details/:offerId', offersController.offerDetails);
+router.get('/candidates/:offerId/:companyId', offersController.candidatesInOffer);
+router.post('/candidates/reject-candidate/:offerId/:companyId/:recommendationId', offersController.companyRejectCandidate);
+router.get('/getData/:companyId', offersController.getCompanyData)
+router.post('/:companyId/post-job-offer', picUploader.single('offerPicture'), offersController.postJobOffer);
+router.put('/:companyId/:offerId/edit-offer', offersController.editJobOffer);
+router.post('/:companyId/:offerId/delete-offer', offersController.deleteJobOffer);
+router.post('/company/infoRequest/:offerId/:companyId/:recommendationId', offersController.requestCandidateInfo);
+router.post('/:recommendationId/candidate-info', offersController.candidateInfo);
 
 module.exports = router

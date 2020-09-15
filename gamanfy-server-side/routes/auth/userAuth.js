@@ -3,7 +3,6 @@ const router = express.Router();
 
 
 const picUploader = require('../../config/picsUploader');
-const getUserData = require('../../appControllers/userControllers/userAuthController');
 const userAuthController = require('../../appControllers/userControllers/userAuthController');
 const userEditProfileController = require('../../appControllers/userControllers/editProfile');
 const userChangeProfilePic = require('../../appControllers/userControllers/editProfile');
@@ -11,9 +10,6 @@ const {confirmationToken, resendToken } = require('../../appControllers/userCont
 const getDashboardController= require('../../appControllers/userControllers/getDahsboard');
 const sendMailController = require('../../appControllers/sendMailController/sendMail');
 const {  validationLoggin, checkToken} = require("../../helpers/middlewares");
-const resetPasswordRoute = require('../../appControllers/userControllers/userAuthController');
-const passwordReset = require('../../appControllers/userControllers/userAuthController');
-const logout = require('../../appControllers/userControllers/userAuthController');
 
 
 router.post('/user/signup', userAuthController.userSignup);
@@ -24,10 +20,10 @@ router.get('/user/:userId/dashboard', checkToken, getDashboardController.getUser
 router.post('/user/:userId/:isaCompany/complete-profile', userAuthController.userCompleteProfile);
 router.put('/user/:userId/edit-profile', userEditProfileController.editProfile);
 router.post('/user/:userId/change-profile-picture', picUploader.single("imageUrl"), userChangeProfilePic.userChangeProfilePic)
-router.post("/user/logout", logout.userLogout);
-router.get('/user/getData/:userId', getUserData.getUserData);
-router.post('/user/reset-password-email', resetPasswordRoute.resetPasswordRoute);
-router.post('/user/password-reset/:userId', passwordReset.passwordReset);
-router.post('/send-mail', sendMailController.sendMail);
+router.post("/user/logout", userAuthController.userLogout);
+router.get('/user/getData/:userId', userAuthController.getUserData);
+router.post('/user/reset-password-email', userAuthController.resetPasswordRoute);
+router.post('/user/password-reset/:userId', userAuthController.passwordReset);
+router.post('/send-mail', sendMailController.sendMaidl);
 
 module.exports = router
