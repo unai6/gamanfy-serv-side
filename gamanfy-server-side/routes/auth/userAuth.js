@@ -24,6 +24,6 @@ router.post("/user/logout", userAuthController.userLogout);
 router.get('/user/getData/:userId', userAuthController.getUserData);
 router.post('/user/reset-password-email', userAuthController.resetPasswordRoute);
 router.post('/user/password-reset/:userId', userAuthController.passwordReset);
-router.post('/send-mail', sendMailController.sendMaidl);
+router.post('/send-mail', sendMailController.sendMail);
 
 module.exports = router
