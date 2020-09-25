@@ -215,7 +215,7 @@ exports.influencerUserRecommendation = async (req, res) => {
   }
 }
 
-exports.companyUserRecommendation =  async (req, res) => {
+exports.companyUserRecommendation =  async (req, res) => {  
   
   try {
     // const url = req.protocol + '://' + req.get('host')
