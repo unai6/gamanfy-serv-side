@@ -119,7 +119,7 @@ exports.influencerUserRecommendation = async (req, res) => {
 
     historicRecommendations = recommendedPeople
 
-    const updatedUser = await InfluencerUser.findByIdAndUpdate(influencerUserId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id, recommendedTimes: recommendedTimes._id }, $inc: { 'influencerUserPunctuation': 5 } }, { new: true })
+    const updatedUser = await InfluencerUser.findByIdAndUpdate(influencerUserId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id, recommendedTimes: recommendedTimes._id }, $inc: { 'influencerUserPunctuation': 20 } }, { new: true })
     
     let transporter = nodemailer.createTransport({
 
@@ -261,7 +261,7 @@ exports.companyUserRecommendation =  async (req, res) => {
     
     historicRecommendations = recommendedPeople
     
-    let companyUser = await CompanyUser.findByIdAndUpdate(influencerUserId.companyUser, { $inc: { 'companyUserPunctuation': 5 } }, { new: true })
+    let companyUser = await CompanyUser.findByIdAndUpdate(influencerUserId.companyUser, { $inc: { 'companyUserPunctuation': 20 } }, { new: true })
     const updatedUser = await InfluencerUser.findByIdAndUpdate(influencerUserId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id }, companyUser }, { new: true })
 
     let transporter =  nodemailer.createTransport({
