@@ -15,7 +15,7 @@ let inLineCss = require('nodemailer-juice');
 exports.offersDashboard = async (req, res, next) => {
 
     try {
-        await Offers.find({ "contractServices.hasSourcingWithInfluencer": true }).populate([{
+        await Offers.find({ "contractServices.hasSourcingWithInfluencer": true }).sort({"createdAt": -1}).populate([{
             path: 'addressId contractId sectorId',
         }]).exec(function (err, offerIdPopulated) {
             offerIdPopulated.length !== 0

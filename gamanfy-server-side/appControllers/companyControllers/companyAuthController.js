@@ -268,7 +268,7 @@ exports.getCompanyData = async (req, res) => {
   try {
     const { companyId } = req.params;
 
-    let getCompanyData = await Company.findById(companyId);
+    let getCompanyData = await Company.findById(companyId)
 
     res.status(200).json(getCompanyData);
 

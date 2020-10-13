@@ -24,7 +24,14 @@ const jobOfferSchema = new Schema([{
       keyKnowledge : {type:Object, required: true},
       videoInterviewQuestions: { type: Object, required: true },
       recommendedTimes : Array
-}])
+}],
+{
+      timestamps: {
+          createdAt: 'createdAt',
+          updatedAt: 'updatedAt'
+      }
+
+  })
 
 
 
