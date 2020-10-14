@@ -7,7 +7,6 @@ const Recommended = require('../../models/Recommended');
 const nodemailer = require('nodemailer');
 let inLineCss = require('nodemailer-juice');
 
-
 exports.getUserRecommendationsDashboard = async (req, res) => {
 
   try {
@@ -68,19 +67,19 @@ exports.deleteRecommendation = async (req, res) => {
 };
 
 exports.rejectRecommendation = async (req, res) => {
-  
-    try {
-      const { offerId, recommendationId } = req.params;
-  
-      let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { recommendationAccepted: false, recommendationRejected: true }, { new: true })
-      let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
-      let offerIdent = recInsideOffer.recommendedTimes[0]._id
-      let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': offerIdent }, { $set: { 'recommendedTimes.$.recommendationRejected': true } }, { new: true })
-      res.status(200).json(updatedOffer)
-    } catch (error) {
-      res.status(400).json({ error: 'An error occurred while updating' })
-    }
-  };
+
+  try {
+    const { offerId, recommendationId } = req.params;
+
+    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { recommendationAccepted: false, recommendationRejected: true }, { new: true })
+    let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
+    let offerIdent = recInsideOffer.recommendedTimes[0]._id
+    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': offerIdent }, { $set: { 'recommendedTimes.$.recommendationRejected': true } }, { new: true })
+    res.status(200).json(updatedOffer)
+  } catch (error) {
+    res.status(400).json({ error: 'An error occurred while updating' })
+  }
+};
 
 exports.influencerUserRecommendation = async (req, res) => {
 
@@ -88,10 +87,11 @@ exports.influencerUserRecommendation = async (req, res) => {
     const { idCompany, idUser, idOffer } = req.params;
     const { recommendedEmail, recommendedFirstName, recommendedLastName, whyRec, recommendedAge, recommendedLinkedin, recommendedPhoneNumber,
       candidateEducation, language, candidateLocation, experiences, similarExp, lastJob, age, ownDescription, motivations, whyFits,
-      availability, moneyExpec, currentSituation, otherAspects} = req.body;
+      availability, moneyExpec, currentSituation, otherAspects } = req.body;
 
     const theOffer = await Offers.findById(idOffer);
     const influencerUserId = await InfluencerUser.findById(idUser).populate('recommendedPeople');
+    const recommendedBy = influencerUserId.email;
     const influencerUserMoneyperRec = influencerUserId.influencerUserPunctuation;
     const influencerUserName = `${influencerUserId.firstName} ${influencerUserId.lastName}`;
     const companyId = await Company.findById(idCompany)
@@ -101,6 +101,7 @@ exports.influencerUserRecommendation = async (req, res) => {
     const jobName = theOffer.jobOfferData.jobName
     const mainMission = theOffer.jobDescription.mainMission
 
+
     let recommendedPeople;
     let historicRecommendations;
     let recommendedTimes;
@@ -108,9 +109,10 @@ exports.influencerUserRecommendation = async (req, res) => {
       recommendedEmail, recommendedFirstName, recommendedLastName, recommendedLinkedin, offerId: theOffer,
       whyRec, recommendedPhoneNumber, recommendedAge, moneyForRec: influencerUserMoneyperRec,
       candidateInfo: {
-        candidateEducation:'', language:'', candidateLocation:'', experiences:'', similarEx:'', lastJob:'', age:'', ownDescription:'', motivations:'', whyFits:'',
-        availability:'', moneyExpec:'', currentSituation:'', otherAspects:''
-      }
+        candidateEducation: '', language: '', candidateLocation: '', experiences: '', similarEx: '', lastJob: '', age: '', ownDescription: '', motivations: '', whyFits: '',
+        availability: '', moneyExpec: '', currentSituation: '', otherAspects: ''
+      },
+      recommendedBy
     });
 
     recommendedTimes = await Offers.findByIdAndUpdate(theOffer, {
@@ -120,7 +122,7 @@ exports.influencerUserRecommendation = async (req, res) => {
     historicRecommendations = recommendedPeople
 
     const updatedUser = await InfluencerUser.findByIdAndUpdate(influencerUserId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id, recommendedTimes: recommendedTimes._id }, $inc: { 'influencerUserPunctuation': 20 } }, { new: true })
-    
+
     let transporter = nodemailer.createTransport({
 
       host: 'smtp.ionos.es',
@@ -136,7 +138,7 @@ exports.influencerUserRecommendation = async (req, res) => {
         user: process.env.HOST_MAIL,
         pass: process.env.HOST_MAIL_PASSWORD
       },
-      
+
     });
     transporter.use('compile', inLineCss());
 
@@ -184,9 +186,9 @@ exports.influencerUserRecommendation = async (req, res) => {
         <img  src="cid:abstract@abstract.com" style='height:9em; display:inline-block'/>
      
         `,
-        attachments: [
-          {
-            filename: 'abstract-background_25-01.png',
+      attachments: [
+        {
+          filename: 'abstract-background_25-01.png',
           path: 'public/abstract-background_25-01.png',
           cid: 'abstract@abstract.com'
         },
@@ -202,21 +204,21 @@ exports.influencerUserRecommendation = async (req, res) => {
         }
       ]
     };
-    
+
     transporter.sendMail(mailOptions, function (err) {
       if (err) { return res.status(500).send({ msg: err.message }); } else {
         res.status(200).send('A verification recommendedEmail has been sent to ' + recommendedEmail + '.');
       }
     });
-    
+
     res.status(200).json({ updatedUser })
   } catch (error) {
     console.log(error)
   }
 }
 
-exports.companyUserRecommendation =  async (req, res) => {  
-  
+exports.companyUserRecommendation = async (req, res) => {
+
   try {
     // const url = req.protocol + '://' + req.get('host')
     const { company, userId, offerId } = req.params;
@@ -225,9 +227,10 @@ exports.companyUserRecommendation =  async (req, res) => {
       ownDescription, motivations, whyFits,
       availability, moneyExpec, currentSituation, otherAspects } = req.body;
 
-      
+
     const theOffer = await Offers.findById(offerId);
     const influencerUserId = await InfluencerUser.findById(userId).populate('recommendedPeople companyUser');
+    const recommendedBy = influencerUserId.email;
     const companyUserMoneyPerRec = influencerUserId.companyUser.companyUserPunctuation;
     const influencerUserName = `${influencerUserId.firstName} ${influencerUserId.lastName}`;
     const companyId = await Company.findById(company)
@@ -241,30 +244,31 @@ exports.companyUserRecommendation =  async (req, res) => {
     let recommendedPeople;
     let historicRecommendations;
     let recommendedTimes;
-    
-   
-      recommendedPeople = await Recommended.create({
-        recommendedEmail, recommendedFirstName, recommendedLastName, offerId: theOffer, recommendedPhoneNumber,
-      recommendedLinkedin, howFoundCandidate, 
+
+
+    recommendedPeople = await Recommended.create({
+      recommendedEmail, recommendedFirstName, recommendedLastName, offerId: theOffer, recommendedPhoneNumber,
+      recommendedLinkedin, howFoundCandidate,
       // curriculum:url + '/public/uploads/' + curriculum,
-      curriculum:curriculum,
+      curriculum: curriculum,
       candidateInfo: {
         candidateEducation, language, candidateLocation, experiences, similarExp, lastJob, age, ownDescription, motivations, whyFits,
         availability, moneyExpec, currentSituation, otherAspects
       },
-      moneyForRec: companyUserMoneyPerRec
+      moneyForRec: companyUserMoneyPerRec,
+      recommendedBy
     });
-    
+
     recommendedTimes = await Offers.findByIdAndUpdate(theOffer, {
       $push: { recommendedTimes: recommendedPeople }
     }, { new: true })
-    
+
     historicRecommendations = recommendedPeople
-    
+
     let companyUser = await CompanyUser.findByIdAndUpdate(influencerUserId.companyUser, { $inc: { 'companyUserPunctuation': 20 } }, { new: true })
     const updatedUser = await InfluencerUser.findByIdAndUpdate(influencerUserId, { $push: { recommendedPeople: recommendedPeople._id, historicRecommendations: historicRecommendations._id }, companyUser }, { new: true })
 
-    let transporter =  nodemailer.createTransport({
+    let transporter = nodemailer.createTransport({
 
       host: 'smtp.ionos.es',
       port: 587,
@@ -279,15 +283,15 @@ exports.companyUserRecommendation =  async (req, res) => {
         user: process.env.HOST_MAIL,
         pass: process.env.HOST_MAIL_PASSWORD
       },
-      
+
     });
     transporter.use('compile', inLineCss());
-    
+
     let mailOptions = {
       from: process.env.HOST_MAIL,
       to: recommendedEmail,
       subject: 'Gamanfy, ¡Te damos la bienvenida!',
-      html:`
+      html: `
       <img style='height:6em'  src="cid:unique@nodemailer.com"/>
       
       <div style='width:25em; height:63.5em;'>
@@ -352,8 +356,8 @@ exports.companyUserRecommendation =  async (req, res) => {
       }
     });
     res.status(200).send({ updatedUser })
-  
-    
+
+
   } catch (error) {
     res.status(400).json({ error: 'An error occurred while sending recommendation' })
   }
@@ -384,14 +388,67 @@ exports.validateCandidate = async (req, res) => {
 
   try {
     const { offerId, recommendationId } = req.params;
-
-    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { recommendationValidated: true }, { new: true })
+    await Recommended.findByIdAndUpdate(recommendationId, { recommendationValidated: true }, { new: true })
     let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
-    let offerIdent = recInsideOffer.recommendedTimes[0]._id
-    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent)}, { $set: { 'recommendedTimes.$.recommendationValidated': true } }, { new: true })
-    res.status(200).json(updatedOffer);
+    let offerIdent = recInsideOffer.recommendedTimes[0]._id;
+    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent) }, { $set: { 'recommendedTimes.$.recommendationValidated': true } }, { new: true })
+      .populate("companyThatOffersJob");
+
+    //email sender
+    let transporter = nodemailer.createTransport({
+
+      host: 'smtp.ionos.es',
+      port: 587,
+      logger: true,
+      debug: true,
+      tls: {
+        secure: false,
+        ignoreTLS: true,
+        rejectUnauthorized: false
+      },
+      auth: {
+        user: process.env.HOST_MAIL,
+        pass: process.env.HOST_MAIL_PASSWORD
+      },
+
+    });
+    transporter.use('compile', inLineCss());
+
+    let mailOptions = {
+      from: process.env.HOST_MAIL,
+      to: updatedOffer.companyThatOffersJob.email,
+      subject: 'Notificación de candidato Validado',
+      html: `
+      <img style='height:6em' width=150 height=120   src="cid:unique2@nodemailer.com"/>
+      
+      <div style='width:25em; height:63.5em;'>
+      Estamos encantados de ponernos en contacto contigo ${updatedOffer.companyThatOffersJob.email}, tenemos un nuevo candidato para
+        tu oferta de trabajo ${updatedOffer.jobOfferData.jobName}. Chequeala aquí: ${process.env.PUBLIC_DOMAIN}/offer-details/${updatedOffer._id} 
+        <div>
+        <img  src="cid:abstract2@abstract.com"  width=150 height=120  style='height:9em; display:inline-block'/>
+        
+        `,
+      attachments: [
+        {
+          filename: 'abstract-background_25-01.png',
+          path: 'public/abstract-background_25-01.png',
+          cid: 'abstract2@abstract.com'
+        },
+        {
+          filename: 'Anotación 2020-07-30 172748.png',
+          path: 'public/Anotación 2020-07-30 172748.png',
+          cid: 'unique2@nodemailer.com'
+        }
+      ]
+    };
+
+    transporter.sendMail(mailOptions, function (err) {
+      if (err) { return res.status(500).send({ msg: err.message }); } else { res.status(200).json({ updatedOffer }) }
+    });
+
+    res.status(200).json(updatedOffer)
   } catch (error) {
-    res.status(400).json({ error: 'An error occurred while updating' });
+    res.json({ error: 'An error occurred while updating' });
   }
 };
 
@@ -404,14 +461,14 @@ exports.candidateAcceptRec = async (req, res) => {
     let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { recommendationAccepted: true }, { new: true })
     let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
     let offerIdent = recInsideOffer.recommendedTimes[0]._id
-    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent) }, { $set: {'recommendedTimes.$.recommendationAccepted': true } }, { new: true })
+    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent) }, { $set: { 'recommendedTimes.$.recommendationAccepted': true } }, { new: true })
     res.status(200).json(updatedOffer)
   } catch (error) {
     res.status(400).json({ error: 'An error occurred while updating' })
   }
 };
 
-exports.setCandidateInProcess =  async (req, res) => {
+exports.setCandidateInProcess = async (req, res) => {
 
   try {
     const { offerId, recommendationId } = req.params;
@@ -420,61 +477,110 @@ exports.setCandidateInProcess =  async (req, res) => {
     let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
     let offerIdent = recInsideOffer.recommendedTimes[0]._id
     let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent) }, { $set: { 'additionalServices.hasVideoInterview': true, 'additionalServices.hasPersonalityTest': true, 'recommendedTimes.$.inProcess': true } }, { new: true })
-    
+    .populate("companyThatOffersJob");
+
     let transporter = nodemailer.createTransport({
       host: 'smtp.ionos.es',
       port: 587,
       logger: true,
       // debug: true,
       tls: {
-          secure: false,
-          ignoreTLS: true,
-          rejectUnauthorized: false
+        secure: false,
+        ignoreTLS: true,
+        rejectUnauthorized: false
       },
       auth: {
-          user: process.env.HOST_MAIL,
-          pass: process.env.HOST_MAIL_PASSWORD
+        user: process.env.HOST_MAIL,
+        pass: process.env.HOST_MAIL_PASSWORD
       },
-  });
+    });
 
-  transporter.use('compile', inLineCss());
+    transporter.use('compile', inLineCss());
 
 
 
-  let mailOptionsToGamanfy = {
+    let mailOptionsToGamanfy = {
       from: process.env.HOST_MAIL,
       to: 'gamanfy@gmail.com',
-      subject: 'Gamanfy, Informe de candidato',
+      subject: 'Gamanfy, Proceso de Selección',
       html: `
       <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
       <div>
       <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
-      La empresa con identificación : ${offerIdent} ha cambiado la recomendación  con indentificación  : ${recommendationId} a en proceso.
+      La empresa ${updatedOffer.companyThatOffersJob.companyName} ha cambiado la recomendación  con indentificación: ${recommendationId} a en proceso.
       Email del candidato : ${updatedRec.recommendedEmail}
       </p>\n
       
       </div>
       `,
       attachments: [{
-          filename: 'Anotación 2020-07-30 172748.png',
-          path: 'public/Anotación 2020-07-30 172748.png',
-          cid: 'unique@nodemailer.com'
+        filename: 'Anotación 2020-07-30 172748.png',
+        path: 'public/Anotación 2020-07-30 172748.png',
+        cid: 'unique@nodemailer.com'
       }]
-  }
+    }
 
+    let mailOptionsToInfluencer = {
+      from: process.env.HOST_MAIL,
+      to: updatedRec.recommendedBy,
+      subject: 'Gamanfy, Proceso de Selección',
+      html: `
+      <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
+      <div>
+      <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
+       ${updatedOffer.companyThatOffersJob.companyName} ha cambiado la recomendación  con indentificación  : ${recommendationId} a en proceso.
+      Email de tu recomendado : ${updatedRec.recommendedEmail}
+      </p>\n
+      
+      </div>
+      `,
+      attachments: [{
+        filename: 'Anotación 2020-07-30 172748.png',
+        path: 'public/Anotación 2020-07-30 172748.png',
+        cid: 'unique@nodemailer.com'
+      }]
+    }
 
-  transporter.sendMail(mailOptionsToGamanfy, function (err) {
-      if (err) { return res.status(500).send({ msg: err.message }); } else {
-          res.status(200)
+    let mailOptionsToCandidate = {
+      from: process.env.HOST_MAIL,
+      to: updatedRec.recommendedEmail,
+      subject: 'Gamanfy, Informe de candidato',
+      html: `
+      <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
+      <div>
+      <p>Hola ${updatedRec.recommendedEmai}</p>
+      <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
+      ${updatedOffer.companyThatOffersJob.companyName} ha incluido tu candidatura entre las que siguen en el
+      </p>\n
+      
+      </div>
+      `,
+      attachments: [{
+        filename: 'Anotación 2020-07-30 172748.png',
+        path: 'public/Anotación 2020-07-30 172748.png',
+        cid: 'unique@nodemailer.com'
+      }]
+    };
+
+    transporter.sendMail(mailOptionsToGamanfy, function (err) {
+      if (err) { return res.status(500).send({ msg: err.message }); } else {res.status(200)
       }
-  });
+    });
+    transporter.sendMail(mailOptionsToInfluencer, function (err) {
 
-  
-    res.status(200).json(updatedOffer)
-  
-  
-  
+      if (err) { return res.status(500).json({ msg: err.message }); } else {
+        res.status(200)
+      }
+    });
+    transporter.sendMail(mailOptionsToCandidate, function (err) {
+      if (err) { return res.status(500).json({ msg: err.message }); } else {
+        res.status(200)
+      }
+    });
+     res.status(200).json(updatedOffer)
+
   } catch (error) {
+    console.log(error)
     res.status(400).json({ error: 'An error occurred while updating' })
   }
 };
@@ -487,7 +593,7 @@ exports.setCandidateHired = async (req, res) => {
     let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { hired: true, stillInProcess: false, inProcess: true, recommendationAccepted: true }, { new: true })
     let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
     let offerIdent = recInsideOffer.recommendedTimes[0]._id
-    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent)}, { $set: { 'recommendedTimes.$.hired': true } }, { new: true })
+    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent) }, { $set: { 'recommendedTimes.$.hired': true } }, { new: true })
     res.status(200).json(updatedOffer)
   } catch (error) {
     res.status(400).json({ error: 'An error occurred while updating' })

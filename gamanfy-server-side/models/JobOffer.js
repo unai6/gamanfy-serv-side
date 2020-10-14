@@ -13,6 +13,7 @@ const jobOfferSchema = new Schema([{
       jobDescription: {type:Object, required:true},
       benefits:{type:Object},
       showMoney:{type:Boolean, default: false, required:true},
+      companyThatOffersJob: {type: Schema.Types.ObjectId, ref: 'Company', required: true },
       addressId: { type: Schema.Types.ObjectId, ref: 'Address', required: true },
       sectorId: { type: Schema.Types.ObjectId, ref: 'Sector', required: true },
       categoryId: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
