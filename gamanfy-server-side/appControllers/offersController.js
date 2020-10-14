@@ -96,8 +96,10 @@ exports.getCompanyData = async (req, res) => {
                 {
                     path: 'postedOffers',
                     populate: {
-                        path: 'addressId sectorId contractId'
-                    }
+                        path: 'addressId sectorId contractId',
+                    },
+                    options: { sort : { 'createdAt' : -1 }}
+                    
 
                 },
                 {
@@ -118,14 +120,13 @@ exports.getCompanyData = async (req, res) => {
                     populate: {
                         path: 'taxAddress'
                     }
-                },
-            ]
-
-            ).exec(function (err, offerIdPopulated) {
+                },    
+            ])  
+            .exec(function (err, offerIdPopulated) {
                 if (err) {
                     console.log(err)
                 } else {
-                    res.status(200).json({ user: offerIdPopulated })
+                    res.status(200).send({ user: offerIdPopulated})
                 }
             })
     } catch (error) {
