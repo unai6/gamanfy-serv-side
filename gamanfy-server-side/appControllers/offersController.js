@@ -294,7 +294,7 @@ exports.postJobOffer = async (req, res, next) => {
 
     } catch (error) {
         console.log(error)
-        res.status(400).json('An error occurred while saving offer data')
+        res.status(400).json({mssg: 'An error occurred while saving offer data', 'error': error})
     }
 
 };
