@@ -47,10 +47,8 @@ exports.confirmationToken = function (req, res, next) {
                         <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
             <div> 
                 <p style='text-align:center'><b>¡Bienvenido!</b></p> 
-                <p>Muchas gracias por registrarse en Gamanfy para poder ver las mejores ofertas.\n
-                <p>Gamanfy es la primera solución que permite a cualquiera recomendar a un profesional para una oferta de trabajo y cobrar por ello.</p>
-                Gamanfy Staff
-
+                <p>Estamos encantados de que formes parte de la comunidad Empresa de Gamanfy..\n
+                <p>Gamanfy es la primera plataforma de selección de personal 2.0 que combina las nuevas tecnologías con un programa de referenciadores de candidatos externo elaborado por profesionales e influencers de talento ambos expertos en su sector.
                 <p><b>¿Empezamos?</b></p>
 
                 <a href="${process.env.PUBLIC_DOMAIN}/auth/login" style="color:white; text-decoration:none; border:none !important; background-color:rgb(255,188,73); border-radius:5px; width:18.5em; padding:.2em .5em .2em .5em; height:2.5em; margin-top:2em; margin-left:11em; font-weight:500">Acceder a mi cuenta</a><br/>
