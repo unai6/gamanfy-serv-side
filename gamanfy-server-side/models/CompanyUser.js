@@ -16,7 +16,8 @@ const companyUserSchema = new Schema({
     phoneNumber: String,
     website: String,
     description: String,
-    sectorId: { type: Schema.Types.ObjectId, ref: 'Sector' }
+    sectorId: { type: Schema.Types.ObjectId, ref: 'Sector' },
+    uploadedCurriculum: {type:String},
 },
     {
         timestamps: true

@@ -63,6 +63,15 @@ exports.userCompleteProfile = async (req, res) => {
     const { companyName, documentType, documentNumber, contactPerson, taxId, website, city, phoneNumber, numberOfEmployees,
       urlLinkedin, birthDate, hasExp, countryCode, countryName, provinceINEcode, municipalityINEcode,
       street, number, zip, invited, webCreated, province, municipality } = req.body;
+    
+    let curriculum;
+
+    if(req.file !== undefined) {
+      curriculum = req.file.path
+    } else {
+      curriculum = '';
+    }
+
 
     const checkUser = await InfluencerUser.findById(userId);
 
@@ -90,7 +99,7 @@ exports.userCompleteProfile = async (req, res) => {
 
       const token = signToken(checkUser)
 
-      const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { companyUser, addressId, isCompleted:true }, { new: true });
+      const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { companyUser, addressId, isCompleted:true, curriculum: curriculum, hasExp }, { new: true });
       res.status(200).json({
         updatedUser, token,
         user: {
@@ -117,7 +126,7 @@ exports.userCompleteProfile = async (req, res) => {
         .status(200)
 
       const token = signToken(checkUser)
-      const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { addressId, city, phoneNumber, urlLinkedin, birthDate, hasExp, isCompleted:true }, { new: true });
+      const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { addressId, city, phoneNumber, urlLinkedin, birthDate, hasExp, isCompleted:true, curriculum: curriculum}, { new: true });
      
       res.status(200).json({
         updatedUser, token,
@@ -139,6 +148,7 @@ exports.userCompleteProfile = async (req, res) => {
     };
 
   } catch (error) {
+    console.log(error)
     res.status(400).json({ error: 'An error ocurred while saving data' })
   }
 
