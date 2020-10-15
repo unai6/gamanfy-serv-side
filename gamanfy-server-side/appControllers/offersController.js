@@ -74,11 +74,90 @@ exports.companyRejectCandidate =  async (req, res) => {
 
         const { offerId, companyId, recommendationId } = req.params;
 
-        let updatedOffer = await Offers.findByIdAndUpdate(offerId, { $pull: { "recommendedTimes": { _id: mongoose.Types.ObjectId(recommendationId) } } }, { new: true })
-        await Recommended.findByIdAndUpdate(recommendationId, { recommendationRejected: true, recommendationAccepted: false, inProcess: false, stillInProcess: false })
-        res.json(updatedOffer)
+        let updatedOffer = await Offers.findByIdAndUpdate(offerId, { $pull: { "recommendedTimes": { _id: mongoose.Types.ObjectId(recommendationId) } } }, { new: true }).populate("companyThatOffersJob")
+        let recommendation = await Recommended.findByIdAndUpdate(recommendationId, { recommendationRejected: true, recommendationAccepted: false, inProcess: false, stillInProcess: false })
+        res.json({'recommendation': recommendation, 'updatedOffer':updatedOffer});
 
-        await Company.findById(companyId)
+        await Company.findById(companyId);
+
+        let transporter = nodemailer.createTransport({
+            host: 'smtp.ionos.es',
+            port: 587,
+            logger: true,
+            // debug: true,
+            tls: {
+              secure: false,
+              ignoreTLS: true,
+              rejectUnauthorized: false
+            },
+            auth: {
+              user: process.env.HOST_MAIL,
+              pass: process.env.HOST_MAIL_PASSWORD
+            },
+          });
+      
+          transporter.use('compile', inLineCss());
+      
+    
+          let mailOptionsToInfluencer = {
+            from: process.env.HOST_MAIL,
+            to: recommendation.recommendedBy,
+            subject: 'Gamanfy, Proceso de Selección',
+            html: `
+            <img style='height:6em' <img src="cid:unique4@nodemailer.com"/>
+            <div>
+            <p>Hola ${recommendation.recommendedBy}</p>
+            <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
+             ${updatedOffer.companyThatOffersJob.companyName} ha rechazado tu recomendación para la oferta ${updatedOffer.jobOfferData.jobName}\n
+                Nombre de tu recomendado:${recommendation.recommendedFirstName}\n
+                Email de tu recomendado : ${recommendation.recommendedEmail}
+            </p>\n
+            
+            </div>
+            `,
+            attachments: [{
+              filename: 'Anotación 2020-07-30 172748.png',
+              path: 'public/Anotación 2020-07-30 172748.png',
+              cid: 'unique4@nodemailer.com'
+            }]
+          }
+      
+          let mailOptionsToCandidate = {
+            from: process.env.HOST_MAIL,
+            to: recommendation.recommendedEmail,
+            subject: 'Gamanfy, Informe de candidato',
+            html: `
+            <img style='height:6em' <img src="cid:unique3@nodemailer.com"/>
+            <div>
+            <p>Hola ${recommendation.recommendedFirstName}</p>
+            <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
+            ${updatedOffer.companyThatOffersJob.companyName} ha descartado tu candidatura para la oferta ${updatedOffer.jobOfferData.jobName}.
+            </p>\n
+            
+            </div>
+            `,
+            attachments: [{
+              filename: 'Anotación 2020-07-30 172748.png',
+              path: 'public/Anotación 2020-07-30 172748.png',
+              cid: 'unique3@nodemailer.com'
+            }]
+          };
+      
+          transporter.sendMail(mailOptionsToCandidate, function (err) {
+            if (err) { return res.status(500).send({ msg: err.message }); } else {res.status(200)
+            }
+          });
+          transporter.sendMail(mailOptionsToInfluencer, function (err) {
+      
+            if (err) { return res.status(500).json({ msg: err.message }); } else {
+              res.status(200)
+            }
+          });
+          transporter.sendMail(mailOptionsToCandidate, function (err) {
+            if (err) { return res.status(500).json({ msg: err.message }); } else {
+              res.status(200)
+            }
+          });
 
     } catch (error) {
         res.status(400).json({ error: 'Error' })
@@ -171,7 +250,7 @@ exports.postJobOffer = async (req, res, next) => {
         const { benefits } = req.body;
         // const offerPicture = req.file.filename
         const offerPicture = req.file.path
-        console.log(req.file)
+        // console.log(req.file)
         
         let company = await Company.findById(companyId);
 
@@ -207,12 +286,14 @@ exports.postJobOffer = async (req, res, next) => {
             minRequirements: { minExp, minStudies, minReqDescription, language },
             keyKnowledge: { keyKnowledge },
             keyCompetences: { keyComp },
-            videoInterviewQuestions: { question1, question2, question3, question4, question5 }
+            videoInterviewQuestions: { question1, question2, question3, question4, question5 },
+            companyThatOffersJob: company._id
         });
         let updatedCompany = await Company.findByIdAndUpdate(company, { $push: { postedOffers: postedOffers._id } }, { new: true })
         res.status(200).json({ updatedCompany });
 
     } catch (error) {
+        console.log(error)
         res.status(400).json('An error occurred while saving offer data')
     }
 
@@ -295,13 +376,14 @@ exports.editJobOffer = async (req, res) => {
 exports.deleteJobOffer = async (req, res) => {
     try {
         const { companyId, offerId } = req.params;
-        await Company.findByIdAndUpdate(companyId, { $pull: { postedOffers: { $in: [offerId] } } }, { multi: true });
+        await Company.findByIdAndUpdate(companyId, { $pull: { postedOffers: { $in: [offerId] } } }, { new: true });
         await Offers.findByIdAndRemove(offerId);
         await Recommended.deleteOne({ offerId: offerId });
         await InfluencerUser.findOneAndUpdate({}, { $pull: { recommendedPeople: { $in: [offerId] } } }, { new: true });
         res.status(200).json({ message: 'offer deleted succesfully' });
 
     } catch (error) {
+        console.log(error)
         res.status(400).json({ message: 'An error occurred while trying to delete the offer' });
     }
 };
@@ -349,7 +431,7 @@ exports.requestCandidateInfo = async (req, res) => {
 
 
 
-        let mailOptionsToGamanfy = {
+        let mailOptionsToCandidate = {
             from: process.env.HOST_MAIL,
             to: 'gamanfy@gmail.com',
             subject: 'Gamanfy, Informe de candidato',

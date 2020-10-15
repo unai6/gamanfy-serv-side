@@ -157,7 +157,7 @@ exports.influencerUserRecommendation = async (req, res) => {
       <b>Empresa:</b> ${theCompany}<br/> 
       <b>Salario base:</b> ${minGrossSalary}-${maxGrossSalary}<br/>
       
-      Misión principal del puesto de trabajo : ${mainMission}
+
       
       <div style='font-weight:300; color:#535353; font-size:14px; margin-top:1.5em'>
       <p> Si quieres ver la oferta completa haz clic en este botón y podrás inscribirte a la oferta de manera sencilla.</p>
@@ -205,7 +205,23 @@ exports.influencerUserRecommendation = async (req, res) => {
       ]
     };
 
+    let mailOptionsToGamanfy = {
+      from: process.env.HOST_MAIL,
+      to: 'gamanfy@gmail.com',
+      subject: 'Gamanfy, Recomendaciones',
+      html:`
+      ${influencerUserName} con email ${recommendedBy} ha hecho una nueva recomendación para la oferta ${jobName}.
+      Nombre del candidato: ${recommendedFirstName},\n
+      Email del candidato: ${recommendedEmail}
+      `
+    }
+
     transporter.sendMail(mailOptions, function (err) {
+      if (err) { return res.status(500).send({ msg: err.message }); } else {
+        res.status(200).send('A verification recommendedEmail has been sent to ' + recommendedEmail + '.');
+      }
+    });
+    transporter.sendMail(mailOptionsToGamanfy, function (err) {
       if (err) { return res.status(500).send({ msg: err.message }); } else {
         res.status(200).send('A verification recommendedEmail has been sent to ' + recommendedEmail + '.');
       }
@@ -302,7 +318,7 @@ exports.companyUserRecommendation = async (req, res) => {
       <b>Empresa:</b> ${theCompany}<br/> 
       <b>Salario base:</b> ${minGrossSalary}-${maxGrossSalary}<br/>
       
-      Misión principal del puesto de trabajo : ${mainMission}
+     
       
       <div style='font-weight:300; color:#535353; font-size:14px; margin-top:1.5em'>
       <p> Si quieres ver la oferta completa haz clic en este botón y podrás inscribirte a la oferta de manera sencilla.</p>
@@ -350,11 +366,28 @@ exports.companyUserRecommendation = async (req, res) => {
       ]
     };
 
+    let mailOptionsToGamanfy = {
+      from: process.env.HOST_MAIL,
+      to: recommendedEmail,
+      subject: 'Gamanfy, Recomendaciones',
+      html:`
+      ${influencerUserName} con email ${recommendedBy} ha hecho una nueva recomendación para la oferta ${jobName}.
+      Nombre del candidato: ${recommendedFirstName},\n
+      Email del candidato: ${recommendedEmail}
+      `
+    }
+
     transporter.sendMail(mailOptions, function (err) {
       if (err) { return res.status(500).send({ msg: err.message }); } else {
         res.status(200).send('A verification recommendedEmail has been sent to ' + recommendedEmail + '.');
       }
     });
+    transporter.sendMail(mailOptionsToGamanfy, function (err) {
+      if (err) { return res.status(500).send({ msg: err.message }); } else {
+        res.status(200).send('A verification recommendedEmail has been sent to ' + recommendedEmail + '.');
+      }
+    });
+
     res.status(200).send({ updatedUser })
 
 
@@ -504,11 +537,12 @@ exports.setCandidateInProcess = async (req, res) => {
       to: 'gamanfy@gmail.com',
       subject: 'Gamanfy, Proceso de Selección',
       html: `
-      <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
+      <img style='height:6em' <img src="cid:unique5@nodemailer.com"/>
       <div>
       <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
       La empresa ${updatedOffer.companyThatOffersJob.companyName} ha cambiado la recomendación  con indentificación: ${recommendationId} a en proceso.
-      Email del candidato : ${updatedRec.recommendedEmail}
+      Email del candidato : ${updatedRec.recommendedEmail},
+      Email del influencer : ${updatedRec.recommendedBy}
       </p>\n
       
       </div>
@@ -516,7 +550,7 @@ exports.setCandidateInProcess = async (req, res) => {
       attachments: [{
         filename: 'Anotación 2020-07-30 172748.png',
         path: 'public/Anotación 2020-07-30 172748.png',
-        cid: 'unique@nodemailer.com'
+        cid: 'unique5@nodemailer.com'
       }]
     }
 
@@ -525,7 +559,7 @@ exports.setCandidateInProcess = async (req, res) => {
       to: updatedRec.recommendedBy,
       subject: 'Gamanfy, Proceso de Selección',
       html: `
-      <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
+      <img style='height:6em' <img src="cid:unique4@nodemailer.com"/>
       <div>
       <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
        ${updatedOffer.companyThatOffersJob.companyName} ha cambiado la recomendación  con indentificación  : ${recommendationId} a en proceso.
@@ -537,7 +571,7 @@ exports.setCandidateInProcess = async (req, res) => {
       attachments: [{
         filename: 'Anotación 2020-07-30 172748.png',
         path: 'public/Anotación 2020-07-30 172748.png',
-        cid: 'unique@nodemailer.com'
+        cid: 'unique4@nodemailer.com'
       }]
     }
 
@@ -546,11 +580,11 @@ exports.setCandidateInProcess = async (req, res) => {
       to: updatedRec.recommendedEmail,
       subject: 'Gamanfy, Informe de candidato',
       html: `
-      <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
+      <img style='height:6em' <img src="cid:unique3@nodemailer.com"/>
       <div>
-      <p>Hola ${updatedRec.recommendedEmai}</p>
+      <p>Hola ${updatedRec.recommendedEmail}</p>
       <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
-      ${updatedOffer.companyThatOffersJob.companyName} ha incluido tu candidatura entre las que siguen en el
+      ${updatedOffer.companyThatOffersJob.companyName} ha incluido tu candidatura entre las que siguen en el proceso.
       </p>\n
       
       </div>
@@ -558,7 +592,7 @@ exports.setCandidateInProcess = async (req, res) => {
       attachments: [{
         filename: 'Anotación 2020-07-30 172748.png',
         path: 'public/Anotación 2020-07-30 172748.png',
-        cid: 'unique@nodemailer.com'
+        cid: 'unique3@nodemailer.com'
       }]
     };
 
