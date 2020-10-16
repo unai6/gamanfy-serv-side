@@ -2,6 +2,8 @@ const CompanyToken = require('../../models/CompanyToken');
 const Company = require('../../models/Company');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const hbs = require('nodemailer-express-handlebars');
+const path = require('path');
 
 exports.confirmationToken = function (req, res, next) {
 
@@ -19,7 +21,16 @@ exports.confirmationToken = function (req, res, next) {
                 if (err) { return res.status(500).send({ msg: err.message }); }
                 try {
 
+                    const handlebarOptions = {
+                        viewEngine: {
+                            extName: ".hbs",
+                            defaultLayout: path.resolve(__dirname, "../../views/layout.hbs"),
+                        },
+                        viewPath: path.resolve(__dirname, "../../views"),
+                        extName: ".hbs",
+                    };
 
+                    
                     let transporter = nodemailer.createTransport({
 
                         host: 'smtp.ionos.es',
@@ -38,18 +49,16 @@ exports.confirmationToken = function (req, res, next) {
 
                     });
 
+                    
+
+                    transporter.use('compile', hbs(handlebarOptions));
+
                     let mailOptions = {
                         from: process.env.HOST_MAIL,
                         to: email,
                         subject: 'Gamanfy Staff',
-                        html: `
-                        <img style='height:6em'  src="cid:unique@nodemailer.com"/>
-            <div> 
-                <p>Gracias por registrarse en  Gamanfy\n
-            
-                Gamanfy Staff
-            </div>
-            `,
+                        template:'messageWelcomeCompany',
+                        context:{env: process.env.PUBLIC_DOMAIN },
                         attachments: [
                             {
                                 filename: 'Anotación 2020-07-30 172748.png',

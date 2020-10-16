@@ -47,7 +47,7 @@ exports.confirmationToken = function (req, res, next) {
                         <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
             <div> 
                 <p style='text-align:center'><b>¡Bienvenido!</b></p> 
-                <p>Estamos encantados de que formes parte de la comunidad Empresa de Gamanfy..\n
+                <p>Estamos encantados de que formes parte de la comunidad Gamanfy.\n
                 <p>Gamanfy es la primera plataforma de selección de personal 2.0 que combina las nuevas tecnologías con un programa de referenciadores de candidatos externo elaborado por profesionales e influencers de talento ambos expertos en su sector.
                 <p><b>¿Empezamos?</b></p>
 
