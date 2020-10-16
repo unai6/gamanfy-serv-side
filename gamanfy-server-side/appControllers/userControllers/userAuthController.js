@@ -69,7 +69,7 @@ exports.userCompleteProfile = async (req, res) => {
     if(req.file !== undefined) {
       curriculum = req.file.path
     } else {
-      curriculum = '';
+      curriculum = 'No curriculum provided';
     }
 
 

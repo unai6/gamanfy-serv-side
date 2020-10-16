@@ -255,7 +255,13 @@ exports.companyUserRecommendation = async (req, res) => {
     const maxGrossSalary = theOffer.retribution.maxGrossSalary;
     const jobName = theOffer.jobOfferData.jobName
     const mainMission = theOffer.jobDescription.mainMission
-    const curriculum = req.file.path
+    let curriculum;
+
+    if(req.file !== undefined) {
+      curriculum = req.file.path
+    } else {
+      curriculum = 'No curriculum provided';
+    }
 
     let recommendedPeople;
     let historicRecommendations;
@@ -392,6 +398,7 @@ exports.companyUserRecommendation = async (req, res) => {
 
 
   } catch (error) {
+    console.log(error)
     res.status(400).json({ error: 'An error occurred while sending recommendation' })
   }
 };
