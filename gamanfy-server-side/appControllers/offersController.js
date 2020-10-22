@@ -270,12 +270,12 @@ exports.postJobOffer = async (req, res, next) => {
             moneyPerRec,
             // imgPath: '/public/companyPictures/' + offerPicture,
             offerPicture: offerPicture,
-            contractServices: { hasSourcingWithInfluencer: Boolean(hasSourcingWithInfluencer), hasExclusiveHeadHunter: Boolean(hasExclusiveHeadHunter) },
-            additionalServices: { hasPersonalityTest: Boolean(hasPersonalityTest), hasVideoInterview: Boolean(hasVideoInterview), hasKitOnBoardingGamanfy: Boolean(hasKitOnBoardingGamanfy) },
+            contractServices: { hasSourcingWithInfluencer: hasSourcingWithInfluencer, hasExclusiveHeadHunter: hasExclusiveHeadHunter },
+            additionalServices: { hasPersonalityTest: hasPersonalityTest, hasVideoInterview: hasVideoInterview, hasKitOnBoardingGamanfy: hasKitOnBoardingGamanfy },
             gamanfyFee: { totalFee },
             companyData: { processNum, description, website, recruiter, companyName: company.companyName, companyId: company._id },
             jobOfferData: {
-                jobName, onDate, offDate, processState: Boolean(processState), isRemote: Boolean(isRemote), personsOnCharge
+                jobName, onDate, offDate, processState: processState, isRemote: isRemote, personsOnCharge
             },
             benefits: [benefits],
             jobDescription: { mainMission, team, jobDescription },
