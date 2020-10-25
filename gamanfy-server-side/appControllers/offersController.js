@@ -15,13 +15,17 @@ let inLineCss = require('nodemailer-juice');
 exports.offersDashboard = async (req, res, next) => {
 
     try {
-        await Offers.find({ "contractServices.hasSourcingWithInfluencer": true }).sort({"createdAt": -1}).populate([{
+       let offerId =  await Offers.find().sort({"createdAt": -1}).populate([{
             path: 'addressId contractId sectorId',
         }]).exec(function (err, offerIdPopulated) {
-            offerIdPopulated.length !== 0
+        
+            offerIdPopulated.length > 0
                 ? res.json({ offers: offerIdPopulated })
                 : res.json({ message: "No products found!" });
         })
+        // { "contractServices.hasSourcingWithInfluencer": true }
+
+        console.log(offerId)
 
 
 
