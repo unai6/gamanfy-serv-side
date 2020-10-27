@@ -307,6 +307,7 @@ exports.companyUserRecommendation = async (req, res) => {
       },
 
     });
+
     transporter.use('compile', inLineCss());
 
     let mailOptions = {
@@ -374,7 +375,7 @@ exports.companyUserRecommendation = async (req, res) => {
 
     let mailOptionsToGamanfy = {
       from: process.env.HOST_MAIL,
-      to: recommendedEmail,
+      to: 'hello@gamanfy.com',
       subject: 'Gamanfy, Recomendaciones',
       html:`
       ${influencerUserName} con email ${recommendedBy} ha hecho una nueva recomendación para la oferta ${jobName}.
