@@ -227,15 +227,8 @@ exports.postJobOffer = async (req, res, next) => {
         const { companyId } = req.params;
         //scorepunc
         const { scorePerRec, moneyPerRec } = req.body;
-        //contract services
-        const { hasSourcingWithInfluencer, hasExclusiveHeadHunter } = req.body;
-        //additional services
-        const { hasPersonalityTest, hasVideoInterview, hasKitOnBoardingGamanfy } = req.body;
-        //gamanfy fee plus additional services
-        const { totalFee } = req.body;
         //company data 
-        let { processNum, description, website, recruiter, companyName } = req.body;
-        processNum = crypto.randomBytes(2).toString('hex')
+        let {description, website, recruiter, companyName } = req.body;
         //job offer data
         const { jobName, onDate, offDate, processState, isRemote, personsOnCharge, team } = req.body;
         //job description
@@ -274,10 +267,7 @@ exports.postJobOffer = async (req, res, next) => {
             moneyPerRec,
             // imgPath: '/public/companyPictures/' + offerPicture,
             offerPicture: offerPicture,
-            contractServices: { hasSourcingWithInfluencer: hasSourcingWithInfluencer, hasExclusiveHeadHunter: hasExclusiveHeadHunter },
-            additionalServices: { hasPersonalityTest: hasPersonalityTest, hasVideoInterview: hasVideoInterview, hasKitOnBoardingGamanfy: hasKitOnBoardingGamanfy },
-            gamanfyFee: { totalFee },
-            companyData: { processNum, description, website, recruiter, companyName: company.companyName, companyId: company._id },
+            companyData: { description, website, recruiter, companyName: company.companyName, companyId: company._id },
             jobOfferData: {
                 jobName, onDate, offDate, processState: processState, isRemote: isRemote, personsOnCharge
             },
@@ -290,7 +280,6 @@ exports.postJobOffer = async (req, res, next) => {
             minRequirements: { minExp, minStudies, minReqDescription, language },
             keyKnowledge: { keyKnowledge },
             keyCompetences: { keyComp },
-            videoInterviewQuestions: { question1, question2, question3, question4, question5 },
             companyThatOffersJob: company._id
         });
         let updatedCompany = await Company.findByIdAndUpdate(company, { $push: { postedOffers: postedOffers._id } }, { new: true })
@@ -311,17 +300,8 @@ exports.editJobOffer = async (req, res) => {
         //scorepunc
         const { scorePerRec, moneyPerRec, sector, category, contract } = req.body;
 
-        //contract services
-        const { hasSourcingWithInfluencer, hasExclusiveHeadHunter } = req.body;
-
-        //additional services
-        const { hasPersonalityTest, hasVideoInterview, hasKitOnBoardingGamanfy } = req.body;
-
-        //gamanfy fee plus additional services
-        const { totalFee } = req.body;
-
         //company data 
-        const { processNum, description, website, recruiter } = req.body;
+        const { description, website, recruiter } = req.body;
 
         //job offer data
         const { jobName, onDate, offDate, processState, isRemote, personsOnCharge, team } = req.body;
@@ -349,9 +329,7 @@ exports.editJobOffer = async (req, res) => {
 
         let updatedOffer = await Offers.findByIdAndUpdate(offerInDB._id, {
             $set: {
-                contractServices: { hasSourcingWithInfluencer, hasExclusiveHeadHunter },
-                additionalServices: { hasPersonalityTest, hasVideoInterview, hasKitOnBoardingGamanfy },
-                gamanfyFee: { totalFee },
+
                 companyData: { processNum, description, website, recruiter },
                 jobOfferData: {
                     jobName, onDate, offDate, processState, isRemote, personsOnCharge
@@ -363,7 +341,6 @@ exports.editJobOffer = async (req, res) => {
                 minRequirements: { minExp, minStudies, minReqDescription, language },
                 keyCompetences: { keyComp },
                 keyKnowledge: { keyKnowledge },
-                videoInterviewQuestions: { question1, question2, question3, question4, question5 },
                 scorePerRec, moneyPerRec, addressId, sectorId, categoryId, contractId
             },
         }, { new: true });

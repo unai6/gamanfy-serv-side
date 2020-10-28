@@ -22,6 +22,7 @@ const recommendedSchema = new Schema({
     curriculum: {type:String},
     howFoundCandidate : String,
     candidateInfo: {type:Object},
+    recommendedByInfluencerPro : {type:Boolean, default:false}
  
 },
 

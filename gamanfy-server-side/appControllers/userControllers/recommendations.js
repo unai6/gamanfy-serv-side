@@ -85,9 +85,7 @@ exports.influencerUserRecommendation = async (req, res) => {
 
   try {
     const { idCompany, idUser, idOffer } = req.params;
-    const { recommendedEmail, recommendedFirstName, recommendedLastName, whyRec, recommendedAge, recommendedLinkedin, recommendedPhoneNumber,
-      candidateEducation, language, candidateLocation, experiences, similarExp, lastJob, age, ownDescription, motivations, whyFits,
-      availability, moneyExpec, currentSituation, otherAspects } = req.body;
+    const { recommendedEmail, recommendedFirstName, recommendedLastName, whyRec, recommendedAge, recommendedLinkedin, recommendedPhoneNumber } = req.body;
 
     const theOffer = await Offers.findById(idOffer);
     const influencerUserId = await InfluencerUser.findById(idUser).populate('recommendedPeople');
@@ -278,7 +276,9 @@ exports.companyUserRecommendation = async (req, res) => {
         availability, moneyExpec, currentSituation, otherAspects
       },
       moneyForRec: companyUserMoneyPerRec,
-      recommendedBy
+      recommendedBy,
+      recommendedByInfluencerPro:true
+
     });
 
     recommendedTimes = await Offers.findByIdAndUpdate(theOffer, {

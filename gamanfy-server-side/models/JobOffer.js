@@ -5,9 +5,6 @@ const jobOfferSchema = new Schema([{
       scorePerRec: { type: String, default: '20' },
       moneyPerRec: String,
       offerPicture:{type:String, default:'https://image.flaticon.com/icons/svg/2472/2472458.svg'},
-      contractServices: { type: Object, required: true },
-      additionalServices: { type: Object, required: true },
-      gamanfyFee: { type: Object, required: true },
       companyData: { type: Object, required: true },
       jobOfferData: { type: Object, required: true },
       jobDescription: {type:Object, required:true},
@@ -23,7 +20,6 @@ const jobOfferSchema = new Schema([{
       manager: { type: Object, required: true },
       keyCompetences: { type: Object, required: true },
       keyKnowledge : {type:Object, required: true},
-      videoInterviewQuestions: { type: Object, required: true },
       recommendedTimes : Array
 }],
 {
