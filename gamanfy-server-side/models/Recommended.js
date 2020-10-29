@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 const recommendedSchema = new Schema({
     moneyForRec:Number,
     recommendedBy:String,
+    influencerUserName:String,
     recommendationAccepted : {type: Boolean, default:false},
     recommendationRejected: {type: Boolean, default:false},
     recommendationValidated:{type: Boolean, default:false},

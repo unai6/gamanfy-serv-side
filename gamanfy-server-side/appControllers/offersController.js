@@ -15,10 +15,10 @@ let inLineCss = require('nodemailer-juice');
 exports.offersDashboard = async (req, res, next) => {
 
     try {
-       let offerId =  await Offers.find().sort({"createdAt": -1}).populate([{
+        let offerId = await Offers.find().sort({ "createdAt": -1 }).populate([{
             path: 'addressId contractId sectorId',
         }]).exec(function (err, offerIdPopulated) {
-        
+
             offerIdPopulated.length > 0
                 ? res.json({ offers: offerIdPopulated })
                 : res.json({ message: "No products found!" });
@@ -73,14 +73,14 @@ exports.candidatesInOffer = async (req, res) => {
 };
 
 
-exports.companyRejectCandidate =  async (req, res) => {
+exports.companyRejectCandidate = async (req, res) => {
     try {
 
         const { offerId, companyId, recommendationId } = req.params;
 
         let updatedOffer = await Offers.findByIdAndUpdate(offerId, { $pull: { "recommendedTimes": { _id: mongoose.Types.ObjectId(recommendationId) } } }, { new: true }).populate("companyThatOffersJob")
         let recommendation = await Recommended.findByIdAndUpdate(recommendationId, { recommendationRejected: true, recommendationAccepted: false, inProcess: false, stillInProcess: false })
-        res.json({'recommendation': recommendation, 'updatedOffer':updatedOffer});
+        res.json({ 'recommendation': recommendation, 'updatedOffer': updatedOffer });
 
         await Company.findById(companyId);
 
@@ -90,43 +90,44 @@ exports.companyRejectCandidate =  async (req, res) => {
             logger: true,
             // debug: true,
             tls: {
-              secure: false,
-              ignoreTLS: true,
-              rejectUnauthorized: false
+                secure: false,
+                ignoreTLS: true,
+                rejectUnauthorized: false
             },
             auth: {
-              user: process.env.HOST_MAIL,
-              pass: process.env.HOST_MAIL_PASSWORD
+                user: process.env.HOST_MAIL,
+                pass: process.env.HOST_MAIL_PASSWORD
             },
-          });
-      
-          transporter.use('compile', inLineCss());
-      
-    
-          let mailOptionsToInfluencer = {
+        });
+
+        transporter.use('compile', inLineCss());
+
+
+        let mailOptionsToInfluencer = {
             from: process.env.HOST_MAIL,
             to: recommendation.recommendedBy,
             subject: 'Gamanfy, Proceso de Selección',
             html: `
-            <img style='height:6em' <img src="cid:unique4@nodemailer.com"/>
+            <img style='height:13em width:100%' <img src="cid:unique4@nodemailer.com"/>
             <div>
-            <p>Hola ${recommendation.recommendedBy}</p>
-            <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
-             ${updatedOffer.companyThatOffersJob.companyName} ha rechazado tu recomendación para la oferta ${updatedOffer.jobOfferData.jobName}\n
-                Nombre de tu recomendado:${recommendation.recommendedFirstName}\n
-                Email de tu recomendado : ${recommendation.recommendedEmail}
-            </p>\n
-            
+            <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em width:100%'>Hola ${recommendation.influencerUserName}</p>
+            <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em width:100%'> 
+             ${updatedOffer.companyThatOffersJob.companyName} ha rechazado su recomendación para la oferta ${updatedOffer.jobOfferData.jobName}<br/>
+                Nombre de la persona recomendada:${recommendation.recommendedFirstName}<br/>
+                Email de la persona : ${recommendation.recommendedEmail}<br/>
+                Si tienes cualquier pregunta no dudes en ponerte en contacto con nosotros.
+            </p><br/>
+            <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em width:100%'>Un saludo, el equipo de Gamanfy</p>
             </div>
             `,
             attachments: [{
-              filename: 'Anotación 2020-07-30 172748.png',
-              path: 'public/Anotación 2020-07-30 172748.png',
-              cid: 'unique4@nodemailer.com'
+                filename: 'Anotación 2020-07-30 172748.png',
+                path: 'public/Anotación 2020-07-30 172748.png',
+                cid: 'unique4@nodemailer.com'
             }]
-          }
-      
-          let mailOptionsToCandidate = {
+        }
+
+        let mailOptionsToCandidate = {
             from: process.env.HOST_MAIL,
             to: recommendation.recommendedEmail,
             subject: 'Gamanfy, Informe de candidato',
@@ -141,27 +142,24 @@ exports.companyRejectCandidate =  async (req, res) => {
             </div>
             `,
             attachments: [{
-              filename: 'Anotación 2020-07-30 172748.png',
-              path: 'public/Anotación 2020-07-30 172748.png',
-              cid: 'unique3@nodemailer.com'
+                filename: 'Anotación 2020-07-30 172748.png',
+                path: 'public/Anotación 2020-07-30 172748.png',
+                cid: 'unique3@nodemailer.com'
             }]
-          };
-      
-          transporter.sendMail(mailOptionsToCandidate, function (err) {
-            if (err) { return res.status(500).send({ msg: err.message }); } else {res.status(200)
+        };
+
+        transporter.sendMail(mailOptionsToCandidate, function (err) {
+            if (err) { return res.status(500).send({ msg: err.message }); } else {
+                res.status(200)
             }
-          });
-          transporter.sendMail(mailOptionsToInfluencer, function (err) {
-      
+        });
+        transporter.sendMail(mailOptionsToInfluencer, function (err) {
+
             if (err) { return res.status(500).json({ msg: err.message }); } else {
-              res.status(200)
+                res.status(200)
             }
-          });
-          transporter.sendMail(mailOptionsToCandidate, function (err) {
-            if (err) { return res.status(500).json({ msg: err.message }); } else {
-              res.status(200)
-            }
-          });
+        });
+   
 
     } catch (error) {
         res.status(400).json({ error: 'Error' })
@@ -181,8 +179,8 @@ exports.getCompanyData = async (req, res) => {
                     populate: {
                         path: 'addressId sectorId contractId',
                     },
-                    options: { sort : { 'createdAt' : -1 }}
-                    
+                    options: { sort: { 'createdAt': -1 } }
+
 
                 },
                 {
@@ -203,13 +201,13 @@ exports.getCompanyData = async (req, res) => {
                     populate: {
                         path: 'taxAddress'
                     }
-                },    
-            ])  
+                },
+            ])
             .exec(function (err, offerIdPopulated) {
                 if (err) {
                     console.log(err)
                 } else {
-                    res.status(200).send({ user: offerIdPopulated})
+                    res.status(200).send({ user: offerIdPopulated })
                 }
             })
     } catch (error) {
@@ -228,7 +226,7 @@ exports.postJobOffer = async (req, res, next) => {
         //scorepunc
         const { scorePerRec, moneyPerRec } = req.body;
         //company data 
-        let {description, website, recruiter, companyName } = req.body;
+        let { description, website, recruiter, companyName } = req.body;
         //job offer data
         const { jobName, onDate, offDate, processState, isRemote, personsOnCharge, team } = req.body;
         //job description
@@ -242,16 +240,16 @@ exports.postJobOffer = async (req, res, next) => {
         // min requirements
         const { minExp, minStudies, keyKnowledge, keyComp, minReqDescription, language, } = req.body;
         //interview Questions
-        const { question1, question2, question3, question4, question5} = req.body;
+        const { question1, question2, question3, question4, question5 } = req.body;
         //benfits
         const { benefits } = req.body;
         // const offerPicture = req.file.filename
         const offerPicture = req.file.path
         // console.log(req.file)
-        
+
         let company = await Company.findById(companyId);
 
-     
+
         if (company.description !== '' || null) {
             description = company.description;
         } else if (company.companyName !== '' || null) {
@@ -287,7 +285,7 @@ exports.postJobOffer = async (req, res, next) => {
 
     } catch (error) {
         console.log(error)
-        res.status(400).json({mssg: 'An error occurred while saving offer data', 'error': error})
+        res.status(400).json({ mssg: 'An error occurred while saving offer data', 'error': error })
     }
 
 };
@@ -412,7 +410,7 @@ exports.requestCandidateInfo = async (req, res) => {
 
 
 
-        let mailOptionsToCandidate = {
+        let mailOptionsToGamanfy = {
             from: process.env.HOST_MAIL,
             to: 'gamanfy@gmail.com',
             subject: 'Gamanfy, Informe de candidato',

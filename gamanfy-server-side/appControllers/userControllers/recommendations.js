@@ -110,7 +110,8 @@ exports.influencerUserRecommendation = async (req, res) => {
         candidateEducation: '', language: '', candidateLocation: '', experiences: '', similarEx: '', lastJob: '', age: '', ownDescription: '', motivations: '', whyFits: '',
         availability: '', moneyExpec: '', currentSituation: '', otherAspects: ''
       },
-      recommendedBy
+      recommendedBy,
+      influencerUserName,
     });
 
     recommendedTimes = await Offers.findByIdAndUpdate(theOffer, {
@@ -210,7 +211,11 @@ exports.influencerUserRecommendation = async (req, res) => {
       html:`
       ${influencerUserName} con email ${recommendedBy} ha hecho una nueva recomendación para la oferta ${jobName}.
       Nombre del candidato: ${recommendedFirstName},\n
-      Email del candidato: ${recommendedEmail}
+      Email del candidato: ${recommendedEmail},
+
+      ID Empresa: ${idCompany}
+      ID Influencer: ${influencerUserId}
+      ID Oferta: ${idOffer}
       `
     }
 
@@ -277,6 +282,7 @@ exports.companyUserRecommendation = async (req, res) => {
       },
       moneyForRec: companyUserMoneyPerRec,
       recommendedBy,
+      influencerUserName,
       recommendedByInfluencerPro:true
 
     });
@@ -517,7 +523,7 @@ exports.setCandidateInProcess = async (req, res) => {
     let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { inProcess: true }, { new: true })
     let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
     let offerIdent = recInsideOffer.recommendedTimes[0]._id
-    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent) }, { $set: { 'additionalServices.hasVideoInterview': true, 'additionalServices.hasPersonalityTest': true, 'recommendedTimes.$.inProcess': true } }, { new: true })
+    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent) }, { $set: { 'recommendedTimes.$.inProcess': true } }, { new: true })
     .populate("companyThatOffersJob");
 
     let transporter = nodemailer.createTransport({
@@ -549,6 +555,7 @@ exports.setCandidateInProcess = async (req, res) => {
       <div>
       <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
       La empresa ${updatedOffer.companyThatOffersJob.companyName} ha cambiado la recomendación  con indentificación: ${recommendationId} a en proceso.
+      Nombre del proceso: ${updatedOffer.jobOfferData.jobName}
       Email del candidato : ${updatedRec.recommendedEmail},
       Email del influencer : ${updatedRec.recommendedBy}
       </p>\n
@@ -570,7 +577,7 @@ exports.setCandidateInProcess = async (req, res) => {
       <img style='height:6em' <img src="cid:unique4@nodemailer.com"/>
       <div>
       <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
-       ${updatedOffer.companyThatOffersJob.companyName} ha cambiado la recomendación  con indentificación  : ${recommendationId} a en proceso.
+       ${updatedOffer.companyThatOffersJob.companyName} ha cambiado tu recomendación para la oferta ${updatedOffer.jobOfferData.jobName} a en proceso.
       Email de tu recomendado : ${updatedRec.recommendedEmail}
       </p>\n
       
