@@ -208,13 +208,13 @@ exports.influencerUserRecommendation = async (req, res) => {
       from: process.env.HOST_MAIL,
       to: 'gamanfy@gmail.com',
       subject: 'Gamanfy, Recomendaciones',
-      html:`
+      html: `
       ${influencerUserName} con email ${recommendedBy} ha hecho una nueva recomendación para la oferta ${jobName}.
       Nombre del candidato: ${recommendedFirstName},\n
       Email del candidato: ${recommendedEmail},
 
       ID Empresa: ${idCompany}
-      ID Influencer: ${influencerUserId}
+      ID Influencer: ${influencerUserId._id}
       ID Oferta: ${idOffer}
       `
     }
@@ -260,7 +260,7 @@ exports.companyUserRecommendation = async (req, res) => {
     const mainMission = theOffer.jobDescription.mainMission
     let curriculum;
 
-    if(req.file !== undefined) {
+    if (req.file !== undefined) {
       curriculum = req.file.path
     } else {
       curriculum = 'No curriculum provided';
@@ -283,7 +283,7 @@ exports.companyUserRecommendation = async (req, res) => {
       moneyForRec: companyUserMoneyPerRec,
       recommendedBy,
       influencerUserName,
-      recommendedByInfluencerPro:true
+      recommendedByInfluencerPro: true
 
     });
 
@@ -383,10 +383,15 @@ exports.companyUserRecommendation = async (req, res) => {
       from: process.env.HOST_MAIL,
       to: 'hello@gamanfy.com',
       subject: 'Gamanfy, Recomendaciones',
-      html:`
+      html: `
       ${influencerUserName} con email ${recommendedBy} ha hecho una nueva recomendación para la oferta ${jobName}.
       Nombre del candidato: ${recommendedFirstName},\n
-      Email del candidato: ${recommendedEmail}
+      Email del candidato: ${recommendedEmail},
+
+      ID Empresa: ${idCompany}
+      ID Influencer: ${influencerUserId._id}
+      ID Oferta: ${idOffer}
+
       `
     }
 
@@ -440,6 +445,7 @@ exports.validateCandidate = async (req, res) => {
     let offerIdent = recInsideOffer.recommendedTimes[0]._id;
     let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent) }, { $set: { 'recommendedTimes.$.recommendationValidated': true } }, { new: true })
       .populate("companyThatOffersJob");
+    console.log(updatedOffer.companyThatOffersJob.email)
 
     //email sender
     let transporter = nodemailer.createTransport({
@@ -447,7 +453,7 @@ exports.validateCandidate = async (req, res) => {
       host: 'smtp.ionos.es',
       port: 587,
       logger: true,
-      debug: true,
+      // debug: true,
       tls: {
         secure: false,
         ignoreTLS: true,
@@ -466,20 +472,26 @@ exports.validateCandidate = async (req, res) => {
       to: updatedOffer.companyThatOffersJob.email,
       subject: 'Notificación de candidato Validado',
       html: `
-      <img style='height:6em' width=150 height=120   src="cid:unique2@nodemailer.com"/>
+      <img style='height:auto; width:auto' src="cid:unique2@nodemailer.com"/>
       
-      <div style='width:25em; height:63.5em;'>
-      Estamos encantados de ponernos en contacto contigo ${updatedOffer.companyThatOffersJob.email}, tenemos un nuevo candidato para
-        tu oferta de trabajo ${updatedOffer.jobOfferData.jobName}. Chequeala aquí: ${process.env.PUBLIC_DOMAIN}/offer-details/${updatedOffer._id} 
+      <div style='width:80%'>
+      Hola, ${updatedOffer.companyThatOffersJob.email}
+
+      Un influencer Gamanfy ha recomendado una persona para el puesto de trabajo ${updatedOffer.jobOfferData.jobName}.
+
+      Accede directamente a la recomendación desde nuestra plataforma https://app.gamanfy.com en la sección "Mis procesos de selección", <br/>
+      o haz click en el enlace: ${process.env.PUBLIC_DOMAIN}/offer-details/${updatedOffer._id}. <br/>
+      Si tienes cualquier pregunta no dudes en ponerte en contacto con nosotros.
+
         <div>
-        <img  src="cid:abstract2@abstract.com"  width=150 height=120  style='height:9em; display:inline-block'/>
+        <img  src="cid:abstract2@nodemailer.com"  width=150 height=120  style='height:9em; display:inline-block'/>
         
         `,
       attachments: [
         {
           filename: 'abstract-background_25-01.png',
           path: 'public/abstract-background_25-01.png',
-          cid: 'abstract2@abstract.com'
+          cid: 'abstract2@nodemailer.com'
         },
         {
           filename: 'Anotación 2020-07-30 172748.png',
@@ -493,7 +505,6 @@ exports.validateCandidate = async (req, res) => {
       if (err) { return res.status(500).send({ msg: err.message }); } else { res.status(200).json({ updatedOffer }) }
     });
 
-    res.status(200).json(updatedOffer)
   } catch (error) {
     res.json({ error: 'An error occurred while updating' });
   }
@@ -524,7 +535,7 @@ exports.setCandidateInProcess = async (req, res) => {
     let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
     let offerIdent = recInsideOffer.recommendedTimes[0]._id
     let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent) }, { $set: { 'recommendedTimes.$.inProcess': true } }, { new: true })
-    .populate("companyThatOffersJob");
+      .populate("companyThatOffersJob");
 
     let transporter = nodemailer.createTransport({
       host: 'smtp.ionos.es',
@@ -612,7 +623,8 @@ exports.setCandidateInProcess = async (req, res) => {
     };
 
     transporter.sendMail(mailOptionsToGamanfy, function (err) {
-      if (err) { return res.status(500).send({ msg: err.message }); } else {res.status(200)
+      if (err) { return res.status(500).send({ msg: err.message }); } else {
+        res.status(200)
       }
     });
     transporter.sendMail(mailOptionsToInfluencer, function (err) {
@@ -626,7 +638,7 @@ exports.setCandidateInProcess = async (req, res) => {
         res.status(200)
       }
     });
-     res.status(200).json(updatedOffer)
+    res.status(200).json(updatedOffer)
 
   } catch (error) {
     console.log(error)
