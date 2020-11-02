@@ -131,7 +131,7 @@ exports.companySignUp = async (req, res, next) => {
         host: 'smtp.ionos.es',
         port: 587,
         logger: true,
-        debug: true,
+        // debug: true,
         tls: {
           secure: false,
           ignoreTLS: true,
@@ -169,10 +169,9 @@ exports.companySignUp = async (req, res, next) => {
 
       transporter.sendMail(mailOptions, function (err) {
         if (err) { return res.status(500).send({ msg: err.message }); }
-        res.status(200).send('A verification email has been sent to ' + newCompany.email + '.');
+        res.status(200).send('A verification email has been sent to ' + newCompany+ '.');
       });
 
-      res.status(200).json(newCompany);
 
     }
   } catch (error) {

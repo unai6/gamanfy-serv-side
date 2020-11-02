@@ -388,9 +388,9 @@ exports.companyUserRecommendation = async (req, res) => {
       Nombre del candidato: ${recommendedFirstName},\n
       Email del candidato: ${recommendedEmail},
 
-      ID Empresa: ${idCompany}
+      ID Empresa: ${company}
       ID Influencer: ${influencerUserId._id}
-      ID Oferta: ${idOffer}
+      ID Oferta: ${offerId}
 
       `
     }
@@ -569,7 +569,7 @@ exports.setCandidateInProcess = async (req, res) => {
       Nombre del proceso: ${updatedOffer.jobOfferData.jobName}
       Email del candidato : ${updatedRec.recommendedEmail},
       Email del influencer : ${updatedRec.recommendedBy}
-      </p>\n
+      </p>
       
       </div>
       `,
@@ -608,10 +608,18 @@ exports.setCandidateInProcess = async (req, res) => {
       html: `
       <img style='height:6em' <img src="cid:unique3@nodemailer.com"/>
       <div>
-      <p>Hola ${updatedRec.recommendedEmail}</p>
+     
       <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
-      ${updatedOffer.companyThatOffersJob.companyName} ha incluido tu candidatura entre las que siguen en el proceso.
-      </p>\n
+        Hola ${updatedRec.recommendedFirstName}, <br/>
+
+        ${updatedOffer.companyThatOffersJob.companyName} ha pasado tu candidatura para ${updatedOffer.jobOfferData.jobName} a "En proceso". <br/>
+
+        En breve nos pondremos en contacto contigo para realizar una primera entrevista por video diferido. <br/>
+
+        Si tienes cualquier pregunta no dudes en ponerte en contacto con nosotros. <br/>
+
+        Un saludo, el equipo de Gamanfy
+      </p>
       
       </div>
       `,
