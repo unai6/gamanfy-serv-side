@@ -415,11 +415,14 @@ exports.requestCandidateInfo = async (req, res) => {
             to: 'gamanfy@gmail.com',
             subject: 'Gamanfy, Informe de candidato',
             html: `
-            <img style='height:6em' <img src="cid:unique@nodemailer.com"/>
+            <img style='height:auto; width:auto' <img src="cid:unique@nodemailer.com"/>
             <div>
             <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
-            La empresa ${company.companyName} ha requerido un informe del candidato con indentificación de recomendación : ${recommendationId}
-            Email del candidato : ${recommendation.recommendedEmail}
+            La empresa ${company.companyName} ha requerido un informe del candidato con indentificación de recomendación : ${recommendationId} <br/>
+            Email del candidato : ${recommendation.recommendedEmail},<br/>
+            Nombre del candidato: ${recommendation.recommendedFirstName},<br/>,
+            Email Empresa : ${company.email}, <br/>,
+            ID Empresa: ${companyId}
             </p>\n
             
             </div>

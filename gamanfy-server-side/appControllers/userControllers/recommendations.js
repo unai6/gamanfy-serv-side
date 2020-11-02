@@ -565,10 +565,12 @@ exports.setCandidateInProcess = async (req, res) => {
       <img style='height:6em' <img src="cid:unique5@nodemailer.com"/>
       <div>
       <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
-      La empresa ${updatedOffer.companyThatOffersJob.companyName} ha cambiado la recomendación  con indentificación: ${recommendationId} a en proceso.
-      Nombre del proceso: ${updatedOffer.jobOfferData.jobName}
-      Email del candidato : ${updatedRec.recommendedEmail},
-      Email del influencer : ${updatedRec.recommendedBy}
+      La empresa ${updatedOffer.companyThatOffersJob.companyName} ha cambiado la recomendación  con indentificación: ${recommendationId} a en proceso. <br/>
+      Nombre del proceso: ${updatedOffer.jobOfferData.jobName} <br/>
+      Email del candidato : ${updatedRec.recommendedEmail}, <br/>
+      Email del influencer : ${updatedRec.recommendedBy} <br/>,
+      Email empresa: ${updatedOffer.companyThatOffersJob.email}, <br/>
+      
       </p>
       
       </div>
