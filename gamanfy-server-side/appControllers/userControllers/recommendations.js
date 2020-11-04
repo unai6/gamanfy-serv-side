@@ -475,13 +475,14 @@ exports.validateCandidate = async (req, res) => {
       <img style='height:auto; width:auto' src="cid:unique2@nodemailer.com"/>
       
       <div style='width:80%'>
-      Hola, ${updatedOffer.companyThatOffersJob.email}
+        Hola, ${updatedOffer.companyThatOffersJob.companyName} <br/>
 
-      Un influencer Gamanfy ha recomendado una persona para el puesto de trabajo ${updatedOffer.jobOfferData.jobName}.
+        Un influencer Gamanfy ha recomendado una persona para el puesto de trabajo ${updatedOffer.jobOfferData.jobName}. <br/>
 
-      Accede directamente a la recomendación desde nuestra plataforma https://app.gamanfy.com en la sección "Mis procesos de selección", <br/>
-      o haz click en el enlace: ${process.env.PUBLIC_DOMAIN}/offer-details/${updatedOffer._id}. <br/>
-      Si tienes cualquier pregunta no dudes en ponerte en contacto con nosotros.
+        Accede directamente a la recomendación desde nuestra plataforma https://app.gamanfy.com en la sección "Mis procesos de selección", <br/>
+        o haz click en el enlace: ${process.env.PUBLIC_DOMAIN}/offer-details/${updatedOffer._id}. <br/>
+        Si tienes cualquier pregunta no dudes en ponerte en contacto con nosotros, <br/>
+        Un saludo, el equipo Gamanfy.
 
         <div>
         <img  src="cid:abstract2@nodemailer.com"  width=150 height=120  style='height:9em; display:inline-block'/>
@@ -590,10 +591,15 @@ exports.setCandidateInProcess = async (req, res) => {
       <img style='height:6em' <img src="cid:unique4@nodemailer.com"/>
       <div>
       <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
-       ${updatedOffer.companyThatOffersJob.companyName} ha cambiado tu recomendación para la oferta ${updatedOffer.jobOfferData.jobName} a en proceso.
-      Email de tu recomendado : ${updatedRec.recommendedEmail}
-      </p>\n
-      
+        Hola ${influencerUserName},
+
+        Le informamos que ${updatedOffer.companyThatOffersJob.companyName} está interesada en la candidatura de ${updatedRec.recommendedFirstName} ${updatedRec.recommendedLastName}. 
+        En Breve le contactaremos para realizar una primera entrevista.
+
+        Si tienes cualquier pregunta no dudes en ponerte en contacto con nosotros.
+
+        Un saludo, el equipo de Gamanfy
+        </p> 
       </div>
       `,
       attachments: [{
@@ -645,10 +651,10 @@ exports.setCandidateInProcess = async (req, res) => {
     });
     transporter.sendMail(mailOptionsToCandidate, function (err) {
       if (err) { return res.status(500).json({ msg: err.message }); } else {
-        res.status(200)
+        res.status(200).json(updatedOffer)
       }
     });
-    res.status(200).json(updatedOffer)
+    
 
   } catch (error) {
     console.log(error)

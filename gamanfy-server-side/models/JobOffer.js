@@ -20,6 +20,7 @@ const jobOfferSchema = new Schema([{
       manager: { type: Object, required: true },
       keyCompetences: { type: Object, required: true },
       keyKnowledge : {type:Object, required: true},
+      knowMore: {type:String},
       recommendedTimes : Array
 }],
 {

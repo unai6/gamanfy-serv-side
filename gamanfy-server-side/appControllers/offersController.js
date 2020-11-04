@@ -11,6 +11,8 @@ const Recommended = require('../models/Recommended');
 const InfluencerUser = require("../models/InfluencerUser.js");
 const nodemailer = require('nodemailer');
 let inLineCss = require('nodemailer-juice');
+const hbs = require('nodemailer-express-handlebars');
+const path = require('path');
 
 exports.offersDashboard = async (req, res, next) => {
 
@@ -84,6 +86,15 @@ exports.companyRejectCandidate = async (req, res) => {
 
         await Company.findById(companyId);
 
+        const handlebarOptions = {
+            viewEngine: {
+                extName: ".hbs",
+                defaultLayout: path.resolve(__dirname, "../views/layout.hbs"),
+            },
+            viewPath: path.resolve(__dirname, "../views"),
+            extName: ".hbs",
+        };
+
         let transporter = nodemailer.createTransport({
             host: 'smtp.ionos.es',
             port: 587,
@@ -100,26 +111,21 @@ exports.companyRejectCandidate = async (req, res) => {
             },
         });
 
-        transporter.use('compile', inLineCss());
+        transporter.use('compile', hbs(handlebarOptions));
 
 
         let mailOptionsToInfluencer = {
             from: process.env.HOST_MAIL,
             to: recommendation.recommendedBy,
             subject: 'Gamanfy, Proceso de Selección',
-            html: `
-            <img style='height:13em width:100%' <img src="cid:unique4@nodemailer.com"/>
-            <div>
-            <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em width:100%'>Hola ${recommendation.influencerUserName}</p>
-            <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em width:100%'> 
-             ${updatedOffer.companyThatOffersJob.companyName} ha rechazado su recomendación para la oferta ${updatedOffer.jobOfferData.jobName}<br/>
-                Nombre de la persona recomendada:${recommendation.recommendedFirstName}<br/>
-                Email de la persona : ${recommendation.recommendedEmail}<br/>
-                Si tienes cualquier pregunta no dudes en ponerte en contacto con nosotros.
-            </p><br/>
-            <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em width:100%'>Un saludo, el equipo de Gamanfy</p>
-            </div>
-            `,
+            template:'rejectCandidateForInfluencer',
+            context: {
+                influencerUserName: recommendation.influencerUserName,
+                recommendedFirstName: recommendation.recommendedFirstName,
+                recommendedEmail: recommendation.recommendedEmail, 
+                companyName: updatedOffer.companyThatOffersJob.companyName, 
+                jobName:updatedOffer.jobOfferData.jobName 
+            },
             attachments: [{
                 filename: 'Anotación 2020-07-30 172748.png',
                 path: 'public/Anotación 2020-07-30 172748.png',
@@ -131,16 +137,12 @@ exports.companyRejectCandidate = async (req, res) => {
             from: process.env.HOST_MAIL,
             to: recommendation.recommendedEmail,
             subject: 'Gamanfy, Informe de candidato',
-            html: `
-            <img style='height:6em' <img src="cid:unique3@nodemailer.com"/>
-            <div>
-            <p>Hola ${recommendation.recommendedFirstName}</p>
-            <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
-            ${updatedOffer.companyThatOffersJob.companyName} ha descartado tu candidatura para la oferta ${updatedOffer.jobOfferData.jobName}.
-            </p>\n
-            
-            </div>
-            `,
+            template:'rejectCandidateForCandidate',
+            context: {
+                recommendedFirstName: recommendation.recommendedFirstName, 
+                companyName: updatedOffer.companyThatOffersJob.companyName, 
+                jobName:updatedOffer.jobOfferData.jobName 
+            },
             attachments: [{
                 filename: 'Anotación 2020-07-30 172748.png',
                 path: 'public/Anotación 2020-07-30 172748.png',
@@ -261,6 +263,7 @@ exports.postJobOffer = async (req, res, next) => {
         let categoryId = await Category.create(req.body);
         let contractId = await Contract.create(req.body);
         let postedOffers = await Offers.create({
+            knowMore:'',
             scorePerRec,
             moneyPerRec,
             // imgPath: '/public/companyPictures/' + offerPicture,
@@ -327,7 +330,7 @@ exports.editJobOffer = async (req, res) => {
 
         let updatedOffer = await Offers.findByIdAndUpdate(offerInDB._id, {
             $set: {
-
+                knowMore,
                 companyData: { processNum, description, website, recruiter },
                 jobOfferData: {
                     jobName, onDate, offDate, processState, isRemote, personsOnCharge
@@ -452,7 +455,7 @@ exports.requestCandidateInfo = async (req, res) => {
             <p>¿Qué debo hacer a continuación para continuar con el proceso de selección? </p>
             <p><u>Es muy sencillo:</u></p>
             <ol>
-            <li>examina con atención el informe del candidato. ¡Toda la info que necesitas está ahí!</p>
+            <li>Examina con atención el informe del candidato. ¡Toda la info que necesitas está ahí!</p>
             <li> Si el perfil del candidato se ajusta a tus expectativas, solicítanos una videoentrevista y un test de personalidad</li>
             <li>Ya está todo hecho. En breves los recibirás en tu email y podrás conocer más de cerca al candidato.</li>
             </ol>
