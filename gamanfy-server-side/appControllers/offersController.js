@@ -254,7 +254,8 @@ exports.postJobOffer = async (req, res, next) => {
 
         if (company.description !== '' || null) {
             description = company.description;
-        } else if (company.companyName !== '' || null) {
+        } 
+        if (company.companyName !== '' || null) {
             companyName = company.companyName;
         };
 
