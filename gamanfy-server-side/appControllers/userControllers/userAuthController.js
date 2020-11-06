@@ -30,8 +30,8 @@ exports.login = async (req, res) => {
         httpOnly: true,
         sameSite: 'none',
         secure: true,
-      })
-        .status(200)
+      }).status(200)
+
 
       const token = signToken(user, remember);
       res.status(200).json({
