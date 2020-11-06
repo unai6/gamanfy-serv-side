@@ -532,7 +532,8 @@ exports.setCandidateInProcess = async (req, res) => {
   try {
     const { offerId, recommendationId } = req.params;
 
-    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { inProcess: true }, { new: true })
+    let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { inProcess: true }, { new: true });
+    console.log(updatedRec.recommendedBy)
     let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
     let offerIdent = recInsideOffer.recommendedTimes[0]._id
     let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent) }, { $set: { 'recommendedTimes.$.inProcess': true } }, { new: true })
@@ -583,7 +584,7 @@ exports.setCandidateInProcess = async (req, res) => {
       }]
     }
 
-    let mailOptionsToInfluencer = {
+    let mailOptionsToInfluencer = { 
       from: process.env.HOST_MAIL,
       to: updatedRec.recommendedBy,
       subject: 'Gamanfy, Proceso de Selección',
@@ -591,7 +592,7 @@ exports.setCandidateInProcess = async (req, res) => {
       <img style='height:6em' <img src="cid:unique4@nodemailer.com"/>
       <div>
       <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
-        Hola ${influencerUserName},
+        Hola ${updatedRec.influencerUserName},
 
         Le informamos que ${updatedOffer.companyThatOffersJob.companyName} está interesada en la candidatura de ${updatedRec.recommendedFirstName} ${updatedRec.recommendedLastName}. 
         En Breve le contactaremos para realizar una primera entrevista.
