@@ -10,7 +10,7 @@ router.get('/welcome-company', async (req, res, next) => {
 
 router.get('/reject-candidate', async (req, res, next) => {
   
-  res.render('rejectCandidate');
+  res.render('rejectCandidateForInfluencer');
 });
 
 module.exports = router;

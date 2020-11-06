@@ -475,12 +475,12 @@ exports.validateCandidate = async (req, res) => {
       <img style='height:auto; width:auto' src="cid:unique2@nodemailer.com"/>
       
       <div style='width:80%'>
-        Hola, ${updatedOffer.companyThatOffersJob.companyName} <br/>
+        Hola ${updatedOffer.companyThatOffersJob.companyName},<br/>
 
         Un influencer Gamanfy ha recomendado una persona para el puesto de trabajo ${updatedOffer.jobOfferData.jobName}. <br/>
 
         Accede directamente a la recomendación desde nuestra plataforma https://app.gamanfy.com en la sección "Mis procesos de selección", <br/>
-        o haz click en el enlace: ${process.env.PUBLIC_DOMAIN}/offer-details/${updatedOffer._id}. <br/>
+        o haz click en el enlace: ${process.env.PUBLIC_DOMAIN}/company/${updatedOffer.companyThatOffersJob._id}/${updatedOffer._id}. <br/>
         Si tienes cualquier pregunta no dudes en ponerte en contacto con nosotros, <br/>
         Un saludo, el equipo Gamanfy.
 
@@ -564,7 +564,7 @@ exports.setCandidateInProcess = async (req, res) => {
       to: 'gamanfy@gmail.com',
       subject: 'Gamanfy, Proceso de Selección',
       html: `
-      <img style='height:6em' <img src="cid:unique5@nodemailer.com"/>
+      <img style='height:auto; width:auto' <img src="cid:unique5@nodemailer.com"/>
       <div>
       <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
       La empresa ${updatedOffer.companyThatOffersJob.companyName} ha cambiado la recomendación  con indentificación: ${recommendationId} a en proceso. <br/>
@@ -589,15 +589,15 @@ exports.setCandidateInProcess = async (req, res) => {
       to: updatedRec.recommendedBy,
       subject: 'Gamanfy, Proceso de Selección',
       html: `
-      <img style='height:6em' <img src="cid:unique4@nodemailer.com"/>
+      <img style='height:auto; width:auto' <img src="cid:unique4@nodemailer.com"/>
       <div>
       <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
-        Hola ${updatedRec.influencerUserName},
+        Hola ${updatedRec.influencerUserName}, <br/>
 
-        Le informamos que ${updatedOffer.companyThatOffersJob.companyName} está interesada en la candidatura de ${updatedRec.recommendedFirstName} ${updatedRec.recommendedLastName}. 
+        Le informamos que la empresa ${updatedOffer.companyThatOffersJob.companyName} está interesada en la candidatura de ${updatedRec.recommendedFirstName} ${updatedRec.recommendedLastName}. 
         En Breve le contactaremos para realizar una primera entrevista.
 
-        Si tienes cualquier pregunta no dudes en ponerte en contacto con nosotros.
+        Si tiene cualquier pregunta no dudes en ponerte en contacto con nosotros.
 
         Un saludo, el equipo de Gamanfy
         </p> 
@@ -615,7 +615,7 @@ exports.setCandidateInProcess = async (req, res) => {
       to: updatedRec.recommendedEmail,
       subject: 'Gamanfy, Informe de candidato',
       html: `
-      <img style='height:6em' <img src="cid:unique3@nodemailer.com"/>
+      <img style='height:auto; width:auto' <img src="cid:unique3@nodemailer.com"/>
       <div>
      
       <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
