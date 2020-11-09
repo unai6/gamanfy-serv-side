@@ -97,8 +97,7 @@ exports.influencerUserRecommendation = async (req, res) => {
     const minGrossSalary = theOffer.retribution.minGrossSalary;
     const maxGrossSalary = theOffer.retribution.maxGrossSalary;
     const jobName = theOffer.jobOfferData.jobName
-    const mainMission = theOffer.jobDescription.mainMission
-
+    const showMoney = theOffer.showMoney
 
     let recommendedPeople;
     let historicRecommendations;
@@ -140,12 +139,14 @@ exports.influencerUserRecommendation = async (req, res) => {
 
     });
     transporter.use('compile', inLineCss());
-
-    let mailOptions = {
-      from: process.env.HOST_MAIL,
-      to: recommendedEmail,
-      subject: 'Gamanfy, ¡Te damos la bienvenida!',
-      html: `
+    let mailOptions;
+    
+    if (showMoney) {
+      mailOptions = {
+        from: process.env.HOST_MAIL,
+        to: recommendedEmail,
+        subject: 'Gamanfy, ¡Te damos la bienvenida!',
+        html: `
       <img style='height:6em'  src="cid:unique@nodemailer.com"/>
       
       <div style='width:25em; height:63.5em;'>
@@ -185,24 +186,86 @@ exports.influencerUserRecommendation = async (req, res) => {
         <img  src="cid:abstract@abstract.com" style='height:9em; display:inline-block'/>
      
         `,
-      attachments: [
-        {
-          filename: 'abstract-background_25-01.png',
-          path: 'public/abstract-background_25-01.png',
-          cid: 'abstract@abstract.com'
-        },
-        {
-          filename: 'Anotación 2020-07-30 172748.png',
-          path: 'public/Anotación 2020-07-30 172748.png',
-          cid: 'unique@nodemailer.com'
-        },
-        {
-          filename: 'nranja.abstract-background_6-01.png',
-          path: 'public/nranja.abstract-background_6-01.png',
-          cid: 'naranjaabstract@naranja.com'
-        }
-      ]
-    };
+        attachments: [
+          {
+            filename: 'abstract-background_25-01.png',
+            path: 'public/abstract-background_25-01.png',
+            cid: 'abstract@abstract.com'
+          },
+          {
+            filename: 'Anotación 2020-07-30 172748.png',
+            path: 'public/Anotación 2020-07-30 172748.png',
+            cid: 'unique@nodemailer.com'
+          },
+          {
+            filename: 'nranja.abstract-background_6-01.png',
+            path: 'public/nranja.abstract-background_6-01.png',
+            cid: 'naranjaabstract@naranja.com'
+          }
+        ]
+      };
+    } else {
+      mailOptions = {
+        from: process.env.HOST_MAIL,
+        to: recommendedEmail,
+        subject: 'Gamanfy, ¡Te damos la bienvenida!',
+        html: `
+        <img style='height:6em'  src="cid:unique@nodemailer.com"/>
+        
+        <div style='width:25em; height:63.5em;'>
+        <p style='font-weight:600; color:#535353; font-size:18px; text-align:center; height:2em'> ¡Hola ${recommendedFirstName}! <b>${influencerUserName}</b>  te ha recomendado <br/> para una oferta de trabajo en Gamanfy. </p>\n
+        <img  src="cid:naranjaabstract@naranja.com" style='height:6em; display:inline-block'/>
+        <div style='font-weight:300; color:#535353; font-size:14px ; width:33em; height:28em'>
+        <b>Puesto:</b> ${jobName}<br/>
+        <b>Empresa:</b> ${theCompany}<br/> 
+ 
+        <div style='font-weight:300; color:#535353; font-size:14px; margin-top:1.5em'>
+        <p> Si quieres ver la oferta completa haz clic en este botón y podrás inscribirte a la oferta de manera sencilla.</p>
+            <button type='submit' style="border:none; background-color:rgb(255,188,73); border-radius:5px; width:18.5em; height:3em; margin-top:2em; margin-left:9em"><a href='${process.env.PUBLIC_DOMAIN}/offer-details-accept-rec/${theOffer._id}/${recommendedPeople._id}' style='color:white; text-decoration:none; font-weight:500'>Ver detalles de la oferta</a></button><br/>
+            
+            <p>¿Cómo funciona el proceso de selección Gamanfy?</p>
+  
+            <p>Es muy sencillo:</p>
+            <ol>
+        <li>Examina con atención la oferta de trabajo.</li>
+        <li>Si estas interesado/a haz clic en el botón que encontraras debajo de la oferta de trabajo “Aceptar Recomendación y Registrarse”</li>
+        <li>Ya está todo hecho. Si tu perfil se ajusta a la oferta de trabajo recibirás un e-mail para realizar una primera entrevista.</li>
+        </ol>
+        
+        <p>¿No estas interesado?</p>
+        <p style='color:#535353; font-weight:300; font-size:14px; margin-left:1.5em; margin-top:4em'>¿No estas interesado ? Haz click <a href='${process.env.PUBLIC_DOMAIN}/recommend/user/reject-rec/${recommendedPeople._id}/${theOffer._id}' style='color:#535353; font-weight:600'>aquí</a> para indicar que no quieres</br> participar en la oferta</p>\n
+        <p style='tex-align:center'><b>Tu también puedes transfórmate en un influencer de talento</b><p>
+        <p>Gamanfy es la primera plataforma que te permite recomendar a tus mejores contactos para una oferta de trabajo y cobrar por ello. </p>
+        <p>Para mas información, visita nuestra pagina https://gamanfy.com/influencers</p>
+        <p>Saludos, <br/> el Equipo de Gamanfy<p>
+  
+        </div>
+          
+          </div>
+          </div>
+          <img  src="cid:abstract@abstract.com" style='height:9em; display:inline-block'/>
+       
+          `,
+        attachments: [
+          {
+            filename: 'abstract-background_25-01.png',
+            path: 'public/abstract-background_25-01.png',
+            cid: 'abstract@abstract.com'
+          },
+          {
+            filename: 'Anotación 2020-07-30 172748.png',
+            path: 'public/Anotación 2020-07-30 172748.png',
+            cid: 'unique@nodemailer.com'
+          },
+          {
+            filename: 'nranja.abstract-background_6-01.png',
+            path: 'public/nranja.abstract-background_6-01.png',
+            cid: 'naranjaabstract@naranja.com'
+          }
+        ]
+      };
+
+    }
 
     let mailOptionsToGamanfy = {
       from: process.env.HOST_MAIL,
@@ -257,7 +320,7 @@ exports.companyUserRecommendation = async (req, res) => {
     const minGrossSalary = theOffer.retribution.minGrossSalary;
     const maxGrossSalary = theOffer.retribution.maxGrossSalary;
     const jobName = theOffer.jobOfferData.jobName
-    const mainMission = theOffer.jobDescription.mainMission
+    const showMoney = theOffer.showMoney;
     let curriculum;
 
     if (req.file !== undefined) {
@@ -316,11 +379,12 @@ exports.companyUserRecommendation = async (req, res) => {
 
     transporter.use('compile', inLineCss());
 
-    let mailOptions = {
-      from: process.env.HOST_MAIL,
-      to: recommendedEmail,
-      subject: 'Gamanfy, ¡Te damos la bienvenida!',
-      html: `
+    if (showMoney) {
+      mailOptions = {
+        from: process.env.HOST_MAIL,
+        to: recommendedEmail,
+        subject: 'Gamanfy, ¡Te damos la bienvenida!',
+        html: `
       <img style='height:6em'  src="cid:unique@nodemailer.com"/>
       
       <div style='width:25em; height:63.5em;'>
@@ -331,7 +395,7 @@ exports.companyUserRecommendation = async (req, res) => {
       <b>Empresa:</b> ${theCompany}<br/> 
       <b>Salario base:</b> ${minGrossSalary}-${maxGrossSalary}<br/>
       
-     
+
       
       <div style='font-weight:300; color:#535353; font-size:14px; margin-top:1.5em'>
       <p> Si quieres ver la oferta completa haz clic en este botón y podrás inscribirte a la oferta de manera sencilla.</p>
@@ -360,24 +424,88 @@ exports.companyUserRecommendation = async (req, res) => {
         <img  src="cid:abstract@abstract.com" style='height:9em; display:inline-block'/>
      
         `,
-      attachments: [
-        {
-          filename: 'abstract-background_25-01.png',
-          path: 'public/abstract-background_25-01.png',
-          cid: 'abstract@abstract.com'
-        },
-        {
-          filename: 'Anotación 2020-07-30 172748.png',
-          path: 'public/Anotación 2020-07-30 172748.png',
-          cid: 'unique@nodemailer.com'
-        },
-        {
-          filename: 'nranja.abstract-background_6-01.png',
-          path: 'public/nranja.abstract-background_6-01.png',
-          cid: 'naranjaabstract@naranja.com'
-        }
-      ]
-    };
+        attachments: [
+          {
+            filename: 'abstract-background_25-01.png',
+            path: 'public/abstract-background_25-01.png',
+            cid: 'abstract@abstract.com'
+          },
+          {
+            filename: 'Anotación 2020-07-30 172748.png',
+            path: 'public/Anotación 2020-07-30 172748.png',
+            cid: 'unique@nodemailer.com'
+          },
+          {
+            filename: 'nranja.abstract-background_6-01.png',
+            path: 'public/nranja.abstract-background_6-01.png',
+            cid: 'naranjaabstract@naranja.com'
+          }
+        ]
+      };
+    } else {
+      mailOptions = {
+        from: process.env.HOST_MAIL,
+        to: recommendedEmail,
+        subject: 'Gamanfy, ¡Te damos la bienvenida!',
+        html: `
+        <img style='height:6em'  src="cid:unique@nodemailer.com"/>
+        
+        <div style='width:25em; height:63.5em;'>
+        <p style='font-weight:600; color:#535353; font-size:18px; text-align:center; height:2em'> ¡Hola ${recommendedFirstName}! <b>${influencerUserName}</b>  te ha recomendado <br/> para una oferta de trabajo en Gamanfy. </p>\n
+        <img  src="cid:naranjaabstract@naranja.com" style='height:6em; display:inline-block'/>
+        <div style='font-weight:300; color:#535353; font-size:14px ; width:33em; height:28em'>
+        <b>Puesto:</b> ${jobName}<br/>
+        <b>Empresa:</b> ${theCompany}<br/> 
+ 
+        <div style='font-weight:300; color:#535353; font-size:14px; margin-top:1.5em'>
+        <p> Si quieres ver la oferta completa haz clic en este botón y podrás inscribirte a la oferta de manera sencilla.</p>
+            <button type='submit' style="border:none; background-color:rgb(255,188,73); border-radius:5px; width:18.5em; height:3em; margin-top:2em; margin-left:9em"><a href='${process.env.PUBLIC_DOMAIN}/offer-details-accept-rec/${theOffer._id}/${recommendedPeople._id}' style='color:white; text-decoration:none; font-weight:500'>Ver detalles de la oferta</a></button><br/>
+            
+            <p>¿Cómo funciona el proceso de selección Gamanfy?</p>
+  
+            <p>Es muy sencillo:</p>
+            <ol>
+        <li>Examina con atención la oferta de trabajo.</li>
+        <li>Si estas interesado/a haz clic en el botón que encontraras debajo de la oferta de trabajo “Aceptar Recomendación y Registrarse”</li>
+        <li>Ya está todo hecho. Si tu perfil se ajusta a la oferta de trabajo recibirás un e-mail para realizar una primera entrevista.</li>
+        </ol>
+        
+        <p>¿No estas interesado?</p>
+        <p style='color:#535353; font-weight:300; font-size:14px; margin-left:1.5em; margin-top:4em'>¿No estas interesado ? Haz click <a href='${process.env.PUBLIC_DOMAIN}/recommend/user/reject-rec/${recommendedPeople._id}/${theOffer._id}' style='color:#535353; font-weight:600'>aquí</a> para indicar que no quieres</br> participar en la oferta</p>\n
+        <p style='tex-align:center'><b>Tu también puedes transfórmate en un influencer de talento</b><p>
+        <p>Gamanfy es la primera plataforma que te permite recomendar a tus mejores contactos para una oferta de trabajo y cobrar por ello. </p>
+        <p>Para mas información, visita nuestra pagina https://gamanfy.com/influencers</p>
+        <p>Saludos, <br/> el Equipo de Gamanfy<p>
+  
+        </div>
+          
+          </div>
+          </div>
+          <img  src="cid:abstract@abstract.com" style='height:9em; display:inline-block'/>
+       
+          `,
+        attachments: [
+          {
+            filename: 'abstract-background_25-01.png',
+            path: 'public/abstract-background_25-01.png',
+            cid: 'abstract@abstract.com'
+          },
+          {
+            filename: 'Anotación 2020-07-30 172748.png',
+            path: 'public/Anotación 2020-07-30 172748.png',
+            cid: 'unique@nodemailer.com'
+          },
+          {
+            filename: 'nranja.abstract-background_6-01.png',
+            path: 'public/nranja.abstract-background_6-01.png',
+            cid: 'naranjaabstract@naranja.com'
+          }
+        ]
+      };
+
+    }
+
+  
 
     let mailOptionsToGamanfy = {
       from: process.env.HOST_MAIL,
@@ -445,7 +573,7 @@ exports.validateCandidate = async (req, res) => {
     let offerIdent = recInsideOffer.recommendedTimes[0]._id;
     let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent) }, { $set: { 'recommendedTimes.$.recommendationValidated': true } }, { new: true })
       .populate("companyThatOffersJob");
-    console.log(updatedOffer.companyThatOffersJob.email)
+
 
     //email sender
     let transporter = nodemailer.createTransport({
@@ -480,7 +608,7 @@ exports.validateCandidate = async (req, res) => {
         Un influencer Gamanfy ha recomendado una persona para el puesto de trabajo ${updatedOffer.jobOfferData.jobName}. <br/>
 
         Accede directamente a la recomendación desde nuestra plataforma https://app.gamanfy.com en la sección "Mis procesos de selección", <br/>
-        o haz click en el enlace: ${process.env.PUBLIC_DOMAIN}/company/${updatedOffer.companyThatOffersJob._id}/${updatedOffer._id}. <br/>
+        o haz click en el enlace: ${process.env.PUBLIC_DOMAIN}/candidates/${updatedOffer._id}/${updatedOffer.companyThatOffersJob._id}.<br/>
         Si tienes cualquier pregunta no dudes en ponerte en contacto con nosotros, <br/>
         Un saludo, el equipo Gamanfy.
 
@@ -533,7 +661,7 @@ exports.setCandidateInProcess = async (req, res) => {
     const { offerId, recommendationId } = req.params;
 
     let updatedRec = await Recommended.findByIdAndUpdate(recommendationId, { inProcess: true }, { new: true });
-    console.log(updatedRec.recommendedBy)
+  
     let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
     let offerIdent = recInsideOffer.recommendedTimes[0]._id
     let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent) }, { $set: { 'recommendedTimes.$.inProcess': true } }, { new: true })
@@ -584,7 +712,7 @@ exports.setCandidateInProcess = async (req, res) => {
       }]
     }
 
-    let mailOptionsToInfluencer = { 
+    let mailOptionsToInfluencer = {
       from: process.env.HOST_MAIL,
       to: updatedRec.recommendedBy,
       subject: 'Gamanfy, Proceso de Selección',
@@ -655,7 +783,7 @@ exports.setCandidateInProcess = async (req, res) => {
         res.status(200).json(updatedOffer)
       }
     });
-    
+
 
   } catch (error) {
     console.log(error)
