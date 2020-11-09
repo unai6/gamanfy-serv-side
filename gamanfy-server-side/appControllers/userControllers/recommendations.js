@@ -571,8 +571,7 @@ exports.validateCandidate = async (req, res) => {
     await Recommended.findByIdAndUpdate(recommendationId, { recommendationValidated: true }, { new: true })
     let recInsideOffer = await Offers.findById(offerId, { _id: 0, recommendedTimes: { $elemMatch: { _id: mongoose.Types.ObjectId(recommendationId) } } })
     let offerIdent = recInsideOffer.recommendedTimes[0]._id;
-    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent) }, { $set: { 'recommendedTimes.$.recommendationValidated': true } }, { new: true })
-      .populate("companyThatOffersJob");
+    let updatedOffer = await Offers.findOneAndUpdate({ 'recommendedTimes._id': mongoose.Types.ObjectId(offerIdent) }, { $set: { 'recommendedTimes.$.recommendationValidated': true } }, { new: true }).populate("companyThatOffersJob");
 
 
     //email sender
@@ -608,7 +607,7 @@ exports.validateCandidate = async (req, res) => {
         Un influencer Gamanfy ha recomendado una persona para el puesto de trabajo ${updatedOffer.jobOfferData.jobName}. <br/>
 
         Accede directamente a la recomendación desde nuestra plataforma https://app.gamanfy.com en la sección "Mis procesos de selección", <br/>
-        o haz click en el enlace: ${process.env.PUBLIC_DOMAIN}/candidates/${updatedOffer._id}/${updatedOffer.companyThatOffersJob._id}.<br/>
+        o haz click en el enlace: ${process.env.PUBLIC_DOMAIN}/candidates/${updatedOffer._id}/${updatedOffer.companyThatOffersJob._id}<br/>
         Si tienes cualquier pregunta no dudes en ponerte en contacto con nosotros, <br/>
         Un saludo, el equipo Gamanfy.
 
@@ -694,7 +693,7 @@ exports.setCandidateInProcess = async (req, res) => {
       html: `
       <img style='height:auto; width:auto' <img src="cid:unique5@nodemailer.com"/>
       <div>
-      <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
+      <p style='margin-left:1em'> 
       La empresa ${updatedOffer.companyThatOffersJob.companyName} ha cambiado la recomendación  con indentificación: ${recommendationId} a en proceso. <br/>
       Nombre del proceso: ${updatedOffer.jobOfferData.jobName} <br/>
       Email del candidato : ${updatedRec.recommendedEmail}, <br/>
@@ -719,7 +718,7 @@ exports.setCandidateInProcess = async (req, res) => {
       html: `
       <img style='height:auto; width:auto' <img src="cid:unique4@nodemailer.com"/>
       <div>
-      <p style='font-weight:600; color:#535353; font-size:18px; margin-left:1em'> 
+      <p style=' margin-left:1em'> 
         Hola ${updatedRec.influencerUserName}, <br/>
 
         Le informamos que la empresa ${updatedOffer.companyThatOffersJob.companyName} está interesada en la candidatura de ${updatedRec.recommendedFirstName} ${updatedRec.recommendedLastName}. 
