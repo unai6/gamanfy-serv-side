@@ -225,11 +225,11 @@ exports.userSignup = async (req, res, next) => {
         }]
       };
 
-       transporter.sendMail(mailOptions, function (err) {
+       transporter.sendMail(mailOptions, function (err, response) {
         if (err) { 
-           res.status(500).send(err); 
+           res.status(500).send(err);   
         } else {
-          res.status(200).json({message:`Email enviado correctamente a ${newUser.email} desde ${process.env.HOST_MAIL}`})
+          res.status(200).json({message:`Email enviado correctamente a ${newUser.email} desde ${process.env.HOST_MAIL}`, response})
       }});
  
    
