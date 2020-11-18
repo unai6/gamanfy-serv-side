@@ -193,7 +193,7 @@ exports.userSignup = async (req, res, next) => {
         // debug: true,
         tls: {
           secure: false,
-          ignoreTLS: true,
+          ignoreTLS: false,
           rejectUnauthorized: false
         },
         auth: {
