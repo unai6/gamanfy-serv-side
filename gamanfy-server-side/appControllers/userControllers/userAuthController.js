@@ -229,7 +229,7 @@ exports.userSignup = async (req, res, next) => {
         if (err) { 
            res.status(500).send(err); 
         } else {
-          res.status(200).json({message:`Email enviado correctamente a ${newUser.email}`})
+          res.status(200).json({message:`Email enviado correctamente a ${newUser.email} desde ${process.env.HOST_MAIL}`})
       }});
  
    
