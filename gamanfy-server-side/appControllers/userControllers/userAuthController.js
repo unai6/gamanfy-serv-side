@@ -157,7 +157,7 @@ exports.userCompleteProfile = async (req, res) => {
 
 exports.userSignup = async (req, res, next) => {
 
-  let { email, password, repeatPassword, firstName, lastName, isCompany, isCandidate, termsAccepted} = req.body;
+  let { email, password, repeatPassword, firstName, lastName, isCompany, termsAccepted} = req.body;
   try {
 
     if (isCompany === 'on') {
@@ -228,9 +228,11 @@ exports.userSignup = async (req, res, next) => {
       };
 
       transporter.sendMail(mailOptions, function (err) {
-        if (err) { return res.status(500).send({ msg: err.message }); }
-        res.status(200).json(newUser)
-      });
+        if (err) { 
+          return res.status(500).send({ msg: err.message }); 
+        } else {
+          res.status(200).json({message:'Email enviado correctamente a ' + newUser})
+      }});
  
    
 
