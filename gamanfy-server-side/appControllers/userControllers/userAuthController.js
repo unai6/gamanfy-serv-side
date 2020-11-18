@@ -229,7 +229,7 @@ exports.userSignup = async (req, res, next) => {
 
        transporter.sendMail(mailOptions, function (err) {
         if (err) { 
-          return res.status(500).send({ msg: err.message }); 
+           res.status(500).send({ msg: err.message }); 
         } else {
           res.status(200).json({message:`Email enviado correctamente a ${newUser}`})
       }});
