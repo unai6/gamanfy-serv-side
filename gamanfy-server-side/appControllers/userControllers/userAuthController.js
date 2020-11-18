@@ -162,8 +162,6 @@ exports.userSignup = async (req, res, next) => {
 
     if (isCompany === 'on') {
       isCompany = true
-    } else if (isCandidate === 'on') {
-      isCandidate = true
     } else if (password !== repeatPassword) {
       return console.log('Passwords must match');
     }
@@ -229,9 +227,9 @@ exports.userSignup = async (req, res, next) => {
 
        transporter.sendMail(mailOptions, function (err) {
         if (err) { 
-           res.status(500).send({ msg: err.message }); 
+           res.status(500).send(err); 
         } else {
-          res.status(200).json({message:`Email enviado correctamente a ${newUser}`})
+          res.status(200).json({message:`Email enviado correctamente a ${newUser.email}`})
       }});
  
    
