@@ -231,9 +231,6 @@ exports.userSignup = async (req, res, next) => {
         } else {
           res.status(200).json({message:`Email enviado correctamente a ${newUser.email} desde ${process.env.HOST_MAIL}`, response})
       }});
- 
-   
-
     }
   } catch (error) {
     next(error);
