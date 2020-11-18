@@ -52,7 +52,7 @@ influencerUserSchema.methods.toJSON = function () {
 }
 
 influencerUserSchema.plugin(uniqueValidator, {
-    message: '{PATH} it has to be unique'
+    message: ' it has to be unique'
 })
 
 
