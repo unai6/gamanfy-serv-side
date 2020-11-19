@@ -188,7 +188,7 @@ exports.userSignup = async (req, res, next) => {
         host: 'smtp.ionos.es',
         port: 587,
         logger: true,
-        debug: true,
+        // debug: true,
         tls: {
           secure: false,
           ignoreTLS: true,
@@ -224,15 +224,15 @@ exports.userSignup = async (req, res, next) => {
           cid: 'unique@nodemailer.com'
         }]
       };
-      // verify connection configuration
-      transporter.verify(function (error, success) {
+      /* verify connection configuration
+      transporter.verify(function (error, success) {  
         if (error) {
           console.log(error);
         } else {
           res.status(200).json(success)
-          console.log("Server is ready to take our messages");
+          console.log("Server is ready to take our messages", success);
         }
-      });
+      });*/
 
       transporter.sendMail(mailOptions, function (err, response) {
         if (err) {
