@@ -43,7 +43,7 @@ exports.login = async (req, res) => {
           isVerified: user.isVerified,
           isCompleted: user.isCompleted,
           isCompany: user.isCompany,
-          isItaCompany:false
+          isItaCompany: false
 
         }
       });
@@ -63,10 +63,10 @@ exports.userCompleteProfile = async (req, res) => {
     const { companyName, documentType, documentNumber, contactPerson, taxId, website, city, phoneNumber, numberOfEmployees,
       urlLinkedin, birthDate, hasExp, countryCode, countryName, provinceINEcode, municipalityINEcode,
       street, number, zip, invited, webCreated, province, municipality } = req.body;
-    
+
     let curriculum;
 
-    if(req.file !== undefined) {
+    if (req.file !== undefined) {
       curriculum = req.file.path
     } else {
       curriculum = 'No curriculum provided';
@@ -99,7 +99,7 @@ exports.userCompleteProfile = async (req, res) => {
 
       const token = signToken(checkUser)
 
-      const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { companyUser, addressId, isCompleted:true, curriculum: curriculum, hasExp }, { new: true });
+      const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { companyUser, addressId, isCompleted: true, curriculum: curriculum, hasExp }, { new: true });
       res.status(200).json({
         updatedUser, token,
         user: {
@@ -109,7 +109,7 @@ exports.userCompleteProfile = async (req, res) => {
           isVerified: checkUser.isVerified,
           isCompleted: checkUser.isCompleted,
           isCompany: checkUser.isCompany,
-          isItaCompany:false
+          isItaCompany: false
 
         }
       });
@@ -126,8 +126,8 @@ exports.userCompleteProfile = async (req, res) => {
         .status(200)
 
       const token = signToken(checkUser)
-      const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { addressId, city, phoneNumber, urlLinkedin, birthDate, hasExp, isCompleted:true, curriculum: curriculum}, { new: true });
-     
+      const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { addressId, city, phoneNumber, urlLinkedin, birthDate, hasExp, isCompleted: true, curriculum: curriculum }, { new: true });
+
       res.status(200).json({
         updatedUser, token,
         user: {
@@ -137,7 +137,7 @@ exports.userCompleteProfile = async (req, res) => {
           isVerified: checkUser.isVerified,
           isCompleted: checkUser.isCompleted,
           isCompany: checkUser.isCompany,
-          isItaCompany:false
+          isItaCompany: false
         }
       });
 
@@ -157,7 +157,7 @@ exports.userCompleteProfile = async (req, res) => {
 
 exports.userSignup = async (req, res, next) => {
 
-  let { email, password, repeatPassword, firstName, lastName, isCompany, termsAccepted} = req.body;
+  let { email, password, repeatPassword, firstName, lastName, isCompany, termsAccepted } = req.body;
   try {
 
     if (isCompany === 'on') {
@@ -225,12 +225,13 @@ exports.userSignup = async (req, res, next) => {
         }]
       };
 
-       transporter.sendMail(mailOptions, function (err, response) {
-        if (err) { 
-           res.status(500).send(err);   
+      transporter.sendMail(mailOptions, function (err, response) {
+        if (err) {
+          return res.status(500).send({ msg: err.message });
         } else {
-          res.status(200).json({message:`Email enviado correctamente a ${newUser.email} desde ${process.env.HOST_MAIL}`, response})
-      }});
+          res.status(200).send({ message: `A verification recommendedEmail has been sent to ${newUser.email} from ${process.env.HOST_MAIL}`, response: response });
+        }
+      });
     }
   } catch (error) {
     next(error);
@@ -241,38 +242,38 @@ exports.userSignup = async (req, res, next) => {
 exports.getUserData = async (req, res) => {
 
   try {
-      const { userId } = req.params;
+    const { userId } = req.params;
 
-      let getUserData = await InfluencerUser.findById(userId).populate('companyUser addressId recommendedPeople');
+    let getUserData = await InfluencerUser.findById(userId).populate('companyUser addressId recommendedPeople');
 
-      res.status(200).json(getUserData);
+    res.status(200).json(getUserData);
 
   } catch (error) {
-      res.status(400).json({ mssg: 'error' })
+    res.status(400).json({ mssg: 'error' })
   }
 
 };
 
-exports.userLogout =  async (req, res, next) => {
+exports.userLogout = async (req, res, next) => {
   try {
-      res.clearCookie(process.env.PUBLIC_DOMAIN);
-      res.status(200).json({ msg: "Log out sucesfully" });
-    } catch (e) {
-      console.error(e);
-      res.status(500).json({ msg: "Server error" });
-    }
+    res.clearCookie(process.env.PUBLIC_DOMAIN);
+    res.status(200).json({ msg: "Log out sucesfully" });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ msg: "Server error" });
+  }
   return;
 };
 
 
-exports.resetPasswordRoute =  async (req, res) => {
-  
-  const {email} = req.body;
-  try{
+exports.resetPasswordRoute = async (req, res) => {
 
-    const user = await InfluencerUser.findOne({email})
-    
-    
+  const { email } = req.body;
+  try {
+
+    const user = await InfluencerUser.findOne({ email })
+
+
     let transporter = nodemailer.createTransport({
 
       host: 'smtp.ionos.es',
@@ -321,31 +322,31 @@ exports.resetPasswordRoute =  async (req, res) => {
     });
 
 
-  } catch(error) {
+  } catch (error) {
     res.send(error)
   }
 
 }
 
 exports.passwordReset = async (req, res, next) => {
-  
-  
-  try{
-    const {userId} = req.params;
-    const {password, repeatPassword}= req.body;
+
+
+  try {
+    const { userId } = req.params;
+    const { password, repeatPassword } = req.body;
     const salt = bcrypt.genSaltSync(saltRounds);
     const hashPass = bcrypt.hashSync(password, salt);
     const user = await InfluencerUser.findById(userId);
-  
 
-    if(password !== repeatPassword){
+
+    if (password !== repeatPassword) {
       res.status(400).send('Passwords must match')
     }
-    const updatedUser = await InfluencerUser.findByIdAndUpdate(user._id, {password:hashPass});
+    const updatedUser = await InfluencerUser.findByIdAndUpdate(user._id, { password: hashPass });
 
-  res.status(200).json({updatedUser})
+    res.status(200).json({ updatedUser })
 
-  }catch(error){
+  } catch (error) {
     next(error)
   }
 

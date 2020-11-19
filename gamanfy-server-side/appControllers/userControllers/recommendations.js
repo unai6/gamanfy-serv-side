@@ -138,6 +138,7 @@ exports.influencerUserRecommendation = async (req, res) => {
       },
 
     });
+    
     transporter.use('compile', inLineCss());
     let mailOptions;
     
