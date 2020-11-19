@@ -139,7 +139,9 @@ exports.resendToken = function (req, res, next) {
 
                 transporter.sendMail(mailOptions, function (err) {
                     if (err) { return res.status(500).send({ msg: err.message }); }
-                    res.status(200).send('A verification email has been sent to ' + email + '.');
+                    else{
+                        res.status(200).send('A verification email has been sent to ' + email + '.');
+                    }
                 });
 
 
