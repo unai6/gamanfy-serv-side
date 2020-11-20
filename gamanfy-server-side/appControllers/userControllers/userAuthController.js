@@ -191,9 +191,9 @@ exports.userSignup = async (req, res, next) => {
         // debug: true,
         tls: {
           ciphers:'SSLv3',
-          secure: false,
-          ignoreTLS: true,
-          rejectUnauthorized: false
+          // secure: false,
+          // ignoreTLS: true,
+          // rejectUnauthorized: false
         },
         auth: {
           user: process.env.HOST_MAIL,
