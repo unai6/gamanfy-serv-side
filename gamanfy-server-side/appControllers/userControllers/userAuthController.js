@@ -190,6 +190,7 @@ exports.userSignup = async (req, res, next) => {
         logger: true,
         // debug: true,
         tls: {
+          ciphers:'SSLv3',
           secure: false,
           ignoreTLS: true,
           rejectUnauthorized: false
