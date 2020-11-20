@@ -13,10 +13,8 @@ const storage = new CloudinaryStorage({
   params: {
     folder: 'company-logos',
     allowedFormats: ['jpg', 'png', 'jpeg'],
-    transformation: [{ width: 500, height: 500, crop: 'limit' }]
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname + "-" + Date.now())
+    transformation: [{ width: 500, height: 500, crop: 'limit' }],
+    public_id: (req, file) => file.originalname + Date.now()
   }
 });
 
