@@ -186,7 +186,7 @@ exports.userSignup = async (req, res, next) => {
       let transporter = nodemailer.createTransport({
 
         host: 'smtp.ionos.es',
-        port: 587,
+        port: 465,
         logger: true,
         secure:false,
         // debug: true,
