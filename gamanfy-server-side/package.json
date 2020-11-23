@@ -1,53 +1,43 @@
 {
-  "name": "api-auth-starter-code",
-  "version": "0.0.0",
-  "private": true,
+  "name": "gamanfy-server-side",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
   "scripts": {
-    "start": "node ./bin/www",
-    "dev": "nodemon ./bin/www"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unai6/gamanfy-serv-side.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/unai6/gamanfy-serv-side/issues"
+  },
+  "homepage": "https://github.com/unai6/gamanfy-serv-side#readme",
   "dependencies": {
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
-    "cloudinary": "^1.22.0",
-    "connect-mongo": "^3.2.0",
-    "constantinople": "^4.0.1",
-    "cookie-parser": "~1.4.4",
+    "cloudinary": "^1.23.0",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
-    "debug": "~2.6.9",
-    "dot-prop": "^5.2.0",
-    "dotenv": "^8.0.0",
-    "express": "~4.16.1",
-    "express-fileupload": "^1.1.9",
-    "express-handlebars": "^5.1.0",
-    "express-session": "^1.17.1",
-    "express-validator": "^6.5.0",
+    "debug": "^4.3.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
     "hbs": "^4.1.1",
-    "http-errors": "^1.7.2",
-    "jade": "^1.11.0",
+    "http": "0.0.1-security",
+    "http-errors": "^1.8.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.10.9",
-    "mongoose-deep-populate": "^3.2.0",
+    "mongoose": "^5.10.15",
     "mongoose-unique-validator": "^2.0.3",
-    "morgan": "~1.9.1",
+    "morgan": "^1.10.0",
     "multer": "^1.4.2",
     "multer-storage-cloudinary": "^4.0.0",
-    "node-gyp": "^4.0.0",
-    "node-localstorage": "^2.1.6",
-    "nodemailer": "^6.4.8",
     "nodemailer-express-handlebars": "^4.0.0",
     "nodemailer-juice": "^1.0.1",
-    "path": "^0.12.7",
-    "react-paginate": "^6.3.2",
-    "react-select-search": "^2.0.3",
-    "store": "^2.0.12",
-    "uuid": "^8.3.0",
-    "uuidv4": "^6.2.2",
-    "xoauth2": "^1.2.0"
-  },
-  "devDependencies": {
-    "clean-css": "^4.2.3",
-    "nodemon": "^1.19.0"
+    "nodemon": "^2.0.6",
+    "path": "^0.12.7"
   }
 }
