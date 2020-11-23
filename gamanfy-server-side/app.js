@@ -41,7 +41,6 @@ app.use(
   cors({
     credentials: true,
     origin:["http://localhost:3000", "https://gamanfy-c2371.web.app", "http://www.fontawesome.com", "https://app.gamanfy.com"],
-    optionsSuccessStatus:200,
   })
   );  
 
