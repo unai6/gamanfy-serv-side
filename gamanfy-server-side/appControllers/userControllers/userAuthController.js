@@ -186,15 +186,13 @@ exports.userSignup = async (req, res, next) => {
       let transporter = nodemailer.createTransport({
 
         host: 'smtp.ionos.es',
-        port: 465,
+        port: 587,
         logger: true,
+        secure:false,
         // debug: true,
-        tls: {
-
-          secure:true,
-          // ignoreTLS: true,
-          // rejectUnauthorized: false
-        },
+        tls:{
+          rejectUnauthorized: false
+     },
         auth: {
           user: process.env.HOST_MAIL,
           pass: process.env.HOST_MAIL_PASSWORD
