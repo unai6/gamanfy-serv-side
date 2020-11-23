@@ -34,22 +34,22 @@ mongoose
   .then(() => console.log(`Connected to database`))
   .catch((err) => console.error(err));
 
-  
- 
-    // CORS MIDDLEWARE SETUP
-    app.use(function(req, res, next) {
-      res.header("Access-Control-Allow-Origin", ["http://localhost:3000", "https://gamanfy-c2371.web.app", "http://www.fontawesome.com", 'https://app.gamanfy.com', process.env.PUBLIC_DOMAIN]);
-      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-      res.header("Access-Control-Allow-Credentials", true);
-      next();
-    });
 
-    // app.use(
-    //   cors({
-    //     credentials: true,
-    //     origin:["http://localhost:3000", "https://gamanfy-c2371.web.app", "http://www.fontawesome.com", 'https://app.gamanfy.com', process.env.PUBLIC_DOMAIN]
-    //   })
-    //   );  
+
+// CORS MIDDLEWARE SETUP
+// app.use(
+//   cors({
+//     credentials: true,
+//     origin:["http://localhost:3000", "https://gamanfy-c2371.web.app", "http://www.fontawesome.com", 'https://app.gamanfy.com', process.env.PUBLIC_DOMAIN]
+//   })
+//   );  
+
+var corsOptions = {
+  origin: '*',
+  optionsSuccessStatus: 200,
+}
+app.use(cors(corsOptions));
+app.use(express.json())
 
 
 // view engine setup
@@ -62,7 +62,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use('/public',  express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.use('/templates', indexRouter);
 app.use('/auth', userAuthRouter);
