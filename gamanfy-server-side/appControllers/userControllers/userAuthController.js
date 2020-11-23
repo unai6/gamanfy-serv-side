@@ -235,13 +235,12 @@ exports.userSignup = async (req, res, next) => {
         }
       });*/
 
-      transporter.sendMail(mailOptions, function (err, response) {
+      const mailSent = await transporter.sendMail(mailOptions)
         if (err) {
           return res.status(500).send({ msg: err.message });
         } else {
-          res.status(200).send({ message: `A verification recommendedEmail has been sent to ${newUser.email} from ${process.env.HOST_MAIL}`, response: response });
+          res.status(200).send({ message: `A verification recommendedEmail has been sent to ${newUser.email} from ${process.env.HOST_MAIL}`, response: mailSent });
         }
-      });
     }
   } catch (error) {
     console.log(error);
