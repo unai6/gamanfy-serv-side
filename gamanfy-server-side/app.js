@@ -37,19 +37,14 @@ mongoose
 
 
 // CORS MIDDLEWARE SETUP
-// app.use(
-//   cors({
-//     credentials: true,
-//     origin:["http://localhost:3000", "https://gamanfy-c2371.web.app", "http://www.fontawesome.com", 'https://app.gamanfy.com', process.env.PUBLIC_DOMAIN]
-//   })
-//   );  
+app.use(
+  cors({
+    credentials: true,
+    origin:["http://localhost:3000", "https://gamanfy-c2371.web.app", "http://www.fontawesome.com", 'https://app.gamanfy.com', process.env.PUBLIC_DOMAIN]
+  })
+  );  
 
-var corsOptions = {
-  origin: [process.env.PUBLIC_DOMAIN, "http://www.fontawesome.com"],
-  optionsSuccessStatus: 200,
-}
-app.use(cors(corsOptions));
-app.use(express.json())
+
 
 
 // view engine setup
