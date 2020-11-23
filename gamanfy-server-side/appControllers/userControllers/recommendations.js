@@ -290,11 +290,11 @@ exports.influencerUserRecommendation = async (req, res) => {
     });
     transporter.sendMail(mailOptionsToGamanfy, function (err) {
       if (err) { return res.status(500).send({ msg: err.message }); } else {
-        res.status(200).send('A verification recommendedEmail has been sent to ' + recommendedEmail + '.');
+        res.status(200).json({ updatedUser });
       }
     });
 
-    res.status(200).json({ updatedUser })
+    
   } catch (error) {
     console.log(error)
   }
@@ -531,11 +531,11 @@ exports.companyUserRecommendation = async (req, res) => {
     });
     transporter.sendMail(mailOptionsToGamanfy, function (err) {
       if (err) { return res.status(500).send({ msg: err.message }); } else {
-        res.status(200).send('A verification recommendedEmail has been sent to ' + recommendedEmail + '.');
+        res.status(200).send({ updatedUser });
       }
     });
 
-    res.status(200).send({ updatedUser })
+    
 
 
   } catch (error) {
