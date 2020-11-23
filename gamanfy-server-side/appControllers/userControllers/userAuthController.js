@@ -189,6 +189,7 @@ exports.userSignup = async (req, res, next) => {
         port: 587,
         logger: true,
         secure:false,
+        requireTLS:true,
         // debug: true,
         tls:{
           rejectUnauthorized: false
