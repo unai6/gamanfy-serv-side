@@ -62,7 +62,7 @@ exports.userCompleteProfile = async (req, res) => {
 
     const { companyName, documentType, documentNumber, contactPerson, taxId, website, city, phoneNumber, numberOfEmployees,
       urlLinkedin, birthDate, hasExp, countryCode, countryName, provinceINEcode, municipalityINEcode,
-      street, number, zip, invited, webCreated, province, municipality, remember} = req.body;
+      street, number, zip, invited, webCreated, province, municipality} = req.body;
 
     let curriculum;
 
@@ -97,7 +97,7 @@ exports.userCompleteProfile = async (req, res) => {
       })
         .status(200)
 
-      const token = signToken(checkUser, remember)
+      const token = signToken(checkUser)
 
       const updatedUser = await InfluencerUser.findByIdAndUpdate(checkUser, { companyUser, addressId, isCompleted: true, curriculum: curriculum, hasExp }, { new: true });
       res.status(200).json({
