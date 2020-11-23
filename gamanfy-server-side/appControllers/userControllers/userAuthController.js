@@ -187,12 +187,12 @@ exports.userSignup = async (req, res, next) => {
 
         host: 'smtp.ionos.es',
         port: 587,
-        logger: true,
         secure:false,
         requireTLS:true,
-        // debug: true,
         tls:{
-          rejectUnauthorized: false
+          // debug: true,
+          rejectUnauthorized: false,
+          logger: true,
      },
         auth: {
           user: process.env.HOST_MAIL,
