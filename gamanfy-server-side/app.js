@@ -15,41 +15,37 @@ const userAuthRouter = require('./routes/auth/userAuth.js');
 const companyAuthRouter = require('./routes/auth/companyAuth.js');
 const offersRouter = require('./routes/offers/offers.js');
 const recommendationsRouter = require('./routes/recommendations/recommendations.js')
-
+const publicDomain = process.env.PUBLIC_DOMAIN || 'http://localhost:3000'
 
 const app = express();
 
 
-app.set('port', process.env.PORT || 5000);
+app.set('port', process.env.PORT || 4000);
 
 
 // MONGOOSE CONNECTION
 mongoose
-  .connect(process.env.MONGODB_URI, {
-    useUnifiedTopology: true,
-    keepAlive: true,
-    useNewUrlParser: true,
-    useFindAndModify: false
-  })
-  .then(() => console.log(`Connected to database`))
-  .catch((err) => console.error(err));
-
+.connect(process.env.MONGODB_URI, {
+  useUnifiedTopology: true,
+  keepAlive: true,
+  useNewUrlParser: true,
+  useFindAndModify: false
+})
+.then(() => console.log(`Connected to database`))
+.catch((err) => console.error(err));
 
 
 // CORS MIDDLEWARE SETUP
-app.use(
-  cors({
-    credentials: true,
-    origin:["http://localhost:3000", "https://gamanfy-c2371.web.app", "http://www.fontawesome.com", "https://app.gamanfy.com"],
-  })
-  );  
-
-
+app.use(cors({
+  credentials: true,
+  origin: [publicDomain]
+}));
+ 
 
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');;
+app.set('view engine', 'hbs');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -57,7 +53,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/public',  express.static(path.join(__dirname, 'public')));
 
 app.use('/templates', indexRouter);
 app.use('/auth', userAuthRouter);
