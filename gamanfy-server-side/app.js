@@ -45,7 +45,7 @@ mongoose
 //   );  
 
 var corsOptions = {
-  origin: '*',
+  origin: [process.env.PUBLIC_DOMAIN, "http://www.fontawesome.com"],
   optionsSuccessStatus: 200,
 }
 app.use(cors(corsOptions));
