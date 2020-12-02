@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const picUploader = require('../../config/picsUploader');
-const offersController = require('../../appControllers/offersController.js');
+const { offersController } = require('../../appControllers');
 
 router.get('/dashboard', offersController.offersDashboard);
 router.get('/offer-details/:offerId', offersController.offerDetails);

@@ -17,7 +17,7 @@ const storage = new CloudinaryStorage({
     public_id: (req, file) => file.originalname + Date.now()
   }
 });
-
+  
 
 const picUploader = multer({ storage });
 

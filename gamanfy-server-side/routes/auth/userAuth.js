@@ -1,29 +1,24 @@
 const express = require("express");
 const router = express.Router();
 
-
+const { user } = require('../../appControllers');
 const picUploader = require('../../config/picsUploader');
-const userAuthController = require('../../appControllers/userControllers/userAuthController');
-const userEditProfileController = require('../../appControllers/userControllers/editProfile');
-const userChangeProfilePic = require('../../appControllers/userControllers/editProfile');
-const {confirmationToken, resendToken } = require('../../appControllers/userControllers/tokenControllers');
-const getDashboardController= require('../../appControllers/userControllers/getDahsboard');
-const sendMailController = require('../../appControllers/sendMailController/sendMail');
-const {  validationLoggin, checkToken} = require("../../helpers/middlewares");
 const uploader = require('../../config/uploadsForPDF');
+const sendMailController = require('../../appControllers/sendMailController/sendMail');
+const { checkToken } = require("../../helpers/middlewares");
 
-router.get('/user/:userId/dashboard', checkToken, getDashboardController.getUserDashboard);
-router.get('/user/getData/:userId', userAuthController.getUserData);
-router.put('/user/:userId/edit-profile', userEditProfileController.editProfile);
-router.post('/user/signup', userAuthController.userSignup);
-router.post(`/confirmation/:userId/:userToken/:isCompany`, confirmationToken);
-router.post('/resend', resendToken);
-router.post('/user/login',  userAuthController.login);
-router.post('/user/:userId/:isaCompany/complete-profile', uploader.single('curriculum'), userAuthController.userCompleteProfile);
-router.post('/user/:userId/change-profile-picture', picUploader.single("imageUrl"), userChangeProfilePic.userChangeProfilePic)
-router.post("/user/logout", userAuthController.userLogout);
-router.post('/user/reset-password-email', userAuthController.resetPasswordRoute);
-router.post('/user/password-reset/:userId', userAuthController.passwordReset);
+router.get('/user/:userId/dashboard', checkToken, user.getUserDashboard);
+router.get('/user/getData/:userId', user.getUserData);
+router.put('/user/:userId/edit-profile', user.editProfile);
+router.post('/user/signup', user.userSignup);
+router.post(`/confirmation/:userId/:userToken/:isCompany`, user.confirmationToken);
+router.post('/resend', user.resendToken);
+router.post('/user/login',  user.login);
+router.post('/user/:userId/:isaCompany/complete-profile', uploader.single('curriculum'), user.userCompleteProfile);
+router.post('/user/:userId/change-profile-picture', picUploader.single("imageUrl"), user.userChangeProfilePic)
+router.post("/user/logout", user.userLogout);
+router.post('/user/reset-password-email', user.resetPasswordRoute);
+router.post('/user/password-reset/:userId', user.passwordReset);
 router.post('/send-mail', sendMailController.sendMail);
 
 module.exports = router
